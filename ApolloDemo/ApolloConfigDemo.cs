@@ -30,7 +30,7 @@ namespace ApolloDemo
         {
             ApolloConfigDemo apolloConfigDemo = new ApolloConfigDemo();
             apolloConfigDemo.PrintEnvInfo();
-	        Console.WriteLine("Apollo Config Demo. Please input key to get the value.");
+	        Console.WriteLine("Apollo Config Demo. Please input key to get the value. Input quit to exit.");
 	        while (true)
 	        {
 	          Console.Write("> ");
