@@ -17,7 +17,6 @@ namespace Com.Ctrip.Framework.Apollo.Util
     class ConfigUtil
     {
         private static readonly ILog logger = LogManager.GetLogger(typeof(ConfigUtil));
-        private static readonly string TOOLING_CLUSTER = "tooling";
         private int refreshInterval = 5 * 60 * 1000; //5 minutes
         private int timeout = 5000; //5 seconds, c# has no connectTimeout but response timeout
         private int readTimeout = 5000; //5 seconds
@@ -248,8 +247,7 @@ namespace Com.Ctrip.Framework.Apollo.Util
         {
             get
             {
-                //TODO call Framework Foundation to get the local cache dir
-                return "D:\\WebSites\\CtripAppTemp";
+                return string.Format("C:\\opt\\data\\{0}", AppId);
             }
         }
 
