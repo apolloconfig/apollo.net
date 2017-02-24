@@ -1,0 +1,10 @@
+language: csharp
+solution: Apollo.sln
+notification:
+  email:
+    recipients:
+      - song_s@ctrip.com,zhanglea@ctrip.com
+    on_failure: always
+branches:
+  only:
+    - master
