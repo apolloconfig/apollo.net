@@ -2120,8 +2120,15 @@ namespace Com.Ctrip.Framework.Apollo.Core.Ioc.LightInject
         public void RegisterAssembly(string searchPattern)
         {
             foreach (Assembly assembly in AssemblyLoader.Load(searchPattern))
-            {                
-                RegisterAssembly(assembly);               
+            {
+                try
+                {
+                    RegisterAssembly(assembly);
+                }
+                catch (Exception)
+                {
+                    //ignore
+                }
             }
         }    
     
