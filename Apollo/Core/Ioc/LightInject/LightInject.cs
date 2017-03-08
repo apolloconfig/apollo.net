@@ -5727,7 +5727,14 @@ namespace Com.Ctrip.Framework.Apollo.Core.Ioc.LightInject
         /// <returns>A list of assemblies based on the given <paramref name="searchPattern"/>.</returns>
         public IEnumerable<Assembly> Load(string searchPattern)
         {
-            string directory = Path.GetDirectoryName(new Uri(typeof(ServiceContainer).Assembly.CodeBase).LocalPath);
+            Uri currentUri = new Uri(typeof(ServiceContainer).Assembly.CodeBase);
+            string path = currentUri.LocalPath;
+            //for path with #
+            if (currentUri.IsAbsoluteUri && !String.IsNullOrEmpty(currentUri.Fragment))
+            {
+                path += currentUri.Fragment;
+            }
+            string directory = Path.GetDirectoryName(path);
             List<Assembly> assemblies = new List<Assembly>();
             if (directory != null)
             {
