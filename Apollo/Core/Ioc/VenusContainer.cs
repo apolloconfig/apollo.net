@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Reflection;
-
-using Com.Ctrip.Framework.Apollo.Core.Ioc.LightInject;
-using Com.Ctrip.Framework.Apollo.Core.Ioc.Adapters.Lifetime;
+﻿using Com.Ctrip.Framework.Apollo.Core.Ioc.Adapters.Lifetime;
 using Com.Ctrip.Framework.Apollo.Core.Ioc.Extensions.Annotation;
+using Com.Ctrip.Framework.Apollo.Core.Ioc.LightInject;
+using System;
+using System.Collections.Generic;
 
 namespace Com.Ctrip.Framework.Apollo.Core.Ioc
 {

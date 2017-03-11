@@ -1,10 +1,7 @@
-﻿using System;
-using Com.Ctrip.Framework.Apollo;
-using Com.Ctrip.Framework.Apollo.VenusBuild;
-using Com.Ctrip.Framework.Foundation;
-using System.IO;
-using Com.Ctrip.Framework.Apollo.Core.Utils;
+﻿using Com.Ctrip.Framework.Apollo;
 using Com.Ctrip.Framework.Apollo.Model;
+using Com.Ctrip.Framework.Foundation;
+using System;
 
 namespace ApolloDemo
 {

@@ -1,6 +1,6 @@
-﻿using System;
-using Com.Ctrip.Framework.Apollo.Core.Ioc;
+﻿using Com.Ctrip.Framework.Apollo.Core.Ioc;
 using Com.Ctrip.Framework.Apollo.Spi;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 

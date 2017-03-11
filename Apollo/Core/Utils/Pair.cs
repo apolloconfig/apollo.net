@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Com.Ctrip.Framework.Apollo.Core.Utils
+﻿namespace Com.Ctrip.Framework.Apollo.Core.Utils
 {
     public class Pair<TKey, TValue>
     {

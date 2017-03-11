@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using Com.Ctrip.Framework.Apollo.Core.Ioc;
+﻿using Com.Ctrip.Framework.Apollo.Core.Ioc;
 using Com.Ctrip.Framework.Apollo.Core.Utils;
+using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace Com.Ctrip.Framework.Apollo.Spi
 {

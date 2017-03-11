@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Com.Ctrip.Framework.Apollo.Enums
+﻿namespace Com.Ctrip.Framework.Apollo.Enums
 {
     public enum PropertyChangeType
     {

@@ -1,7 +1,7 @@
-﻿using System;
-using Com.Ctrip.Framework.Apollo.Newtonsoft.Json;
-using System.Text;
+﻿using Com.Ctrip.Framework.Apollo.Newtonsoft.Json;
 using Com.Ctrip.Framework.Apollo.Newtonsoft.Json.Serialization;
+using System;
+using System.Text;
 
 namespace Com.Ctrip.Framework.Apollo.Core.Utils
 {

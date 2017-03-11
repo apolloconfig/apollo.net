@@ -1,10 +1,8 @@
-﻿using System;
+﻿using Com.Ctrip.Framework.Apollo.Core.Ioc.LightInject;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Reflection;
-
-using Com.Ctrip.Framework.Apollo.Core.Ioc.LightInject;
 
 namespace Com.Ctrip.Framework.Apollo.Core.Ioc.Extensions.Annotation
 {

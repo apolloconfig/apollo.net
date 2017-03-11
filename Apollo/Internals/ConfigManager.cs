@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Com.Ctrip.Framework.Apollo.Internals
+﻿namespace Com.Ctrip.Framework.Apollo.Internals
 {
     public interface ConfigManager
     {

@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Com.Ctrip.Framework.Apollo.Core.Ioc;
+using Com.Ctrip.Framework.Apollo.Internals;
 using Com.Ctrip.Framework.Apollo.Logging;
 using Com.Ctrip.Framework.Apollo.Logging.Spi;
-using Com.Ctrip.Framework.Apollo.Core.Ioc;
-using Com.Ctrip.Framework.Apollo.Internals;
-using System.IO;
 using Com.Ctrip.Framework.Apollo.Util;
+using System;
 
 namespace Com.Ctrip.Framework.Apollo.Spi
 {

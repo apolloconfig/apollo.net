@@ -1,5 +1,4 @@
-﻿using System;
-using Com.Ctrip.Framework.Apollo.Core.Utils;
+﻿using Com.Ctrip.Framework.Apollo.Core.Utils;
 
 namespace Com.Ctrip.Framework.Apollo.Internals
 {
