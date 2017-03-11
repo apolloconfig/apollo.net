@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Com.Ctrip.Framework.Apollo.Core.Utils
 {
-  
+
     public static class CollectionUtil
     {
         public static bool IsNullOrEmpty<T>(List<T> list)

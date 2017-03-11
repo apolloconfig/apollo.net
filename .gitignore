@@ -159,3 +159,5 @@ $RECYCLE.BIN/
 .DS_Store
 
 *.csv
+/.vs/slnx.sqlite
+/.vs/slnx.sqlite

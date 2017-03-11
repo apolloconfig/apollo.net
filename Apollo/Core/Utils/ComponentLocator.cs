@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Com.Ctrip.Framework.Apollo.Core.Ioc;
+﻿using Com.Ctrip.Framework.Apollo.Core.Ioc;
+using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace Com.Ctrip.Framework.Apollo.Core.Utils
 {

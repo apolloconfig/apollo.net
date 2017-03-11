@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Com.Ctrip.Framework.Apollo.Core
+﻿namespace Com.Ctrip.Framework.Apollo.Core
 {
     public class ConfigConsts
     {

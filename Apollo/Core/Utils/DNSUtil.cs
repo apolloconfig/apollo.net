@@ -4,7 +4,7 @@ using System.Net;
 
 namespace Com.Ctrip.Framework.Apollo.Core.Utils
 {
-	public class DNSUtil
+    public class DNSUtil
 	{
 		public static List<string> resolve (String domainName)
 		{

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Com.Ctrip.Framework.Apollo.Amib.Threading;
+﻿using Com.Ctrip.Framework.Apollo.Amib.Threading;
 
 namespace Com.Ctrip.Framework.Apollo.Util
 {

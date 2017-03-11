@@ -1,9 +1,6 @@
 ﻿using Com.Ctrip.Framework.Foundation.Internals.Provider;
 using Com.Ctrip.Framework.Foundation.Spi.Provider;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Com.Ctrip.Framework.Foundation.Internals
 {

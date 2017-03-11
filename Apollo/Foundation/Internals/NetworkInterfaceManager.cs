@@ -1,10 +1,8 @@
-﻿using System;
-using System.Net.Sockets;
+﻿using Com.Ctrip.Framework.Apollo.Logging;
+using Com.Ctrip.Framework.Apollo.Logging.Spi;
+using System;
 using System.Net;
 using System.Web;
-using Com.Ctrip.Framework.Foundation.Internals;
-using Com.Ctrip.Framework.Apollo.Logging;
-using Com.Ctrip.Framework.Apollo.Logging.Spi;
 
 namespace Com.Ctrip.Framework.Foundation.Internals
 {
