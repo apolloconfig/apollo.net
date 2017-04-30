@@ -10,8 +10,8 @@ namespace Com.Ctrip.Framework.Apollo.Logging
     /// </summary>
     public sealed class LogManager
     {
-        private static Dictionary<string, ILog> _logs = new Dictionary<string, ILog>();
-        private static object lockObject = new object();
+        private static readonly Dictionary<string, ILog> _logs = new Dictionary<string, ILog>();
+        private static readonly object lockObject = new object();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LogManager" /> class. 
@@ -58,12 +58,9 @@ namespace Com.Ctrip.Framework.Apollo.Logging
                 {
                     if (!_logs.TryGetValue(loggerName, out log))
                     {
-
                         log = new DefaultLogger(loggerName);
-                        var newLogs = new Dictionary<string, ILog>(_logs);
-                        newLogs.Add(loggerName, log);
-
-                        _logs = newLogs;
+                        
+                        _logs.Add(loggerName, log);
                     }
                 }
             }
