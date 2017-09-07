@@ -19,27 +19,27 @@ namespace Com.Ctrip.Framework.Apollo.Core.Dto
             this.details = details;
         }
 
-        public void put(string key, long notificationId)
+        public void Put(string key, long notificationId)
         {
             details[key] = notificationId;
         }
 
-        public long get(string key)
+        public long Get(string key)
         {
             return this.details[key];
         }
 
-        public bool has(string key)
+        public bool Has(string key)
         {
             return this.details.ContainsKey(key);
         }
 
-        public bool isEmpty()
+        public bool IsEmpty()
         {
             return this.details.Count == 0;
         }
 
-        public virtual IDictionary<string, long> Details
+        public IDictionary<string, long> Details
         {
             get
             {
@@ -52,7 +52,7 @@ namespace Com.Ctrip.Framework.Apollo.Core.Dto
         }
 
 
-        public void mergeFrom(ApolloNotificationMessages source)
+        public void MergeFrom(ApolloNotificationMessages source)
         {
             if (source == null)
             {
@@ -62,15 +62,15 @@ namespace Com.Ctrip.Framework.Apollo.Core.Dto
             foreach (KeyValuePair<string, long> entry in source.Details)
             {
                 //to make sure the notification id always grows bigger
-                if (this.has(entry.Key) && this.get(entry.Key) >= entry.Value)
+                if (this.Has(entry.Key) && this.Get(entry.Key) >= entry.Value)
                 {
                     continue;
                 }
-                this.put(entry.Key, entry.Value);
+                this.Put(entry.Key, entry.Value);
             }
         }
 
-        public ApolloNotificationMessages clone()
+        public ApolloNotificationMessages Clone()
         {
             return new ApolloNotificationMessages(new Dictionary<string, long>(this.Details));
         }

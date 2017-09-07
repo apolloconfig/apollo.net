@@ -54,7 +54,7 @@
         }
 
 
-        public virtual void addMessage(string key, long notificationId)
+        public void AddMessage(string key, long notificationId)
         {
             if (this.messages == null)
             {
@@ -66,7 +66,7 @@
                     }
                 }
             }
-            this.messages.put(key, notificationId);
+            this.messages.Put(key, notificationId);
         }
 
 

@@ -194,7 +194,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                 m_longPollNamespaces.TryGetValue(namespaceName, out registries);
                 ApolloNotificationMessages originalMessages = null;
                 m_remoteNotificationMessages.TryGetValue(namespaceName, out originalMessages);
-                ApolloNotificationMessages remoteMessages = originalMessages == null ? null : originalMessages.clone();
+                ApolloNotificationMessages remoteMessages = originalMessages == null ? null : originalMessages.Clone();
 
                 if (registries != null && registries.Count > 0)
                 {
@@ -252,7 +252,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                     continue;
                 }
 
-                if (notification.Messages == null || notification.Messages.isEmpty())
+                if (notification.Messages == null || notification.Messages.IsEmpty())
                 {
                     continue;
                 }
@@ -265,7 +265,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                     m_remoteNotificationMessages[notification.NamespaceName] = localRemoteMessages;
                 }
 
-                localRemoteMessages.mergeFrom(notification.Messages);
+                localRemoteMessages.MergeFrom(notification.Messages);
             }
         }
 
