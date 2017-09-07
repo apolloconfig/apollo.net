@@ -1,9 +1,6 @@
-﻿using System;
+﻿using Com.Ctrip.Framework.Apollo.Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
-using Com.Ctrip.Framework.Apollo.Newtonsoft.Json;
 
 namespace Com.Ctrip.Framework.Apollo.Core.Utils
 {

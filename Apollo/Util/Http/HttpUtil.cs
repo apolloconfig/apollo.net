@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Com.Ctrip.Framework.Apollo.Core.Ioc;
+﻿using Com.Ctrip.Framework.Apollo.Core.Ioc;
 using Com.Ctrip.Framework.Apollo.Core.Utils;
-using Com.Ctrip.Framework.Apollo.Newtonsoft.Json;
-using System.Net;
-using System.Threading;
-using System.IO;
 using Com.Ctrip.Framework.Apollo.Exceptions;
+using System;
+using System.IO;
+using System.Net;
+using System.Text;
+using System.Threading;
 
 namespace Com.Ctrip.Framework.Apollo.Util.Http
 {

@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Com.Ctrip.Framework.Apollo.Amib.Threading;
+using Com.Ctrip.Framework.Apollo.Core.Utils;
+using Com.Ctrip.Framework.Apollo.Enums;
+using Com.Ctrip.Framework.Apollo.Exceptions;
 using Com.Ctrip.Framework.Apollo.Logging;
 using Com.Ctrip.Framework.Apollo.Logging.Spi;
 using Com.Ctrip.Framework.Apollo.Model;
-using Com.Ctrip.Framework.Apollo.Core.Utils;
-using Com.Ctrip.Framework.Apollo.Enums;
+using Com.Ctrip.Framework.Apollo.Util;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Com.Ctrip.Framework.Apollo.Amib.Threading;
-using Com.Ctrip.Framework.Apollo.Util;
-using Com.Ctrip.Framework.Apollo.Exceptions;
 
 namespace Com.Ctrip.Framework.Apollo.Internals
 {

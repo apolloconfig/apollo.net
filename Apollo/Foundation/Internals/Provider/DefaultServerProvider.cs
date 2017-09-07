@@ -1,15 +1,9 @@
-﻿using Com.Ctrip.Framework.Foundation.Internals;
+﻿using Com.Ctrip.Framework.Apollo.Logging;
+using Com.Ctrip.Framework.Apollo.Logging.Spi;
 using Com.Ctrip.Framework.Foundation.Spi.Provider;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Xml;
-using System.Xml.Linq;
-using System.Xml.XPath;
-using Com.Ctrip.Framework.Apollo.Logging;
-using Com.Ctrip.Framework.Apollo.Logging.Spi;
 
 namespace Com.Ctrip.Framework.Foundation.Internals.Provider
 {

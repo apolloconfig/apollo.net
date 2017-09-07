@@ -1,5 +1,4 @@
-﻿using System;
-using Com.Ctrip.Framework.Apollo.Enums;
+﻿using Com.Ctrip.Framework.Apollo.Enums;
 
 namespace Com.Ctrip.Framework.Apollo.Model
 {

@@ -34,7 +34,7 @@
 
 namespace Com.Ctrip.Framework.Apollo.Core.Ioc.LightInject
 {
-    using System;    
+    using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;

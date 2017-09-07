@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml;
-using System.IO;
-
-using Com.Ctrip.Framework.Apollo.Core.Ioc.LightInject;
+﻿using Com.Ctrip.Framework.Apollo.Core.Ioc.LightInject;
 using Com.Ctrip.Framework.Apollo.Core.Ioc.Utility;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Xml;
 
 namespace Com.Ctrip.Framework.Apollo.Core.Ioc.Extensions.Annotation
 {
