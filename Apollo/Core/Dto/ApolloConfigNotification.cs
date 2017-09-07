@@ -9,6 +9,7 @@ namespace Com.Ctrip.Framework.Apollo.Core.Dto
     {
         private string namespaceName;
         private long notificationId;
+        private volatile ApolloNotificationMessages messages;
 
         //for json converter
         public ApolloConfigNotification()
@@ -44,6 +45,35 @@ namespace Com.Ctrip.Framework.Apollo.Core.Dto
                 this.notificationId = value;
             }
         }
+
+        public ApolloNotificationMessages Messages
+        {
+            get
+            {
+                return messages;
+            }
+            set
+            {
+                this.messages = value;
+            }
+        }
+
+
+        public virtual void addMessage(string key, long notificationId)
+        {
+            if (this.messages == null)
+            {
+                lock (this)
+                {
+                    if (this.messages == null)
+                    {
+                        this.messages = new ApolloNotificationMessages();
+                    }
+                }
+            }
+            this.messages.put(key, notificationId);
+        }
+
 
         public override string ToString()
         {

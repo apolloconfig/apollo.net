@@ -49,6 +49,7 @@
     <Compile Include="Core\ConfigConsts.cs" />
     <Compile Include="Core\Dto\ApolloConfig.cs" />
     <Compile Include="Core\Dto\ApolloConfigNotification.cs" />
+    <Compile Include="Core\Dto\ApolloNotificationMessages.cs" />
     <Compile Include="Core\Dto\ServiceDTO.cs" />
     <Compile Include="Core\Ioc\Adapters\Lifetime\AdapterLifetime.cs" />
     <Compile Include="Core\Ioc\Adapters\Lifetime\ILifetime.cs" />

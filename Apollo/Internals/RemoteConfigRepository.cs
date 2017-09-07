@@ -29,6 +29,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
         private static SmartThreadPool m_executorService;
         private readonly RemoteConfigLongPollService m_remoteConfigLongPollService;
         private ThreadSafe.AtomicReference<ServiceDTO> m_longPollServiceDto;
+        private ThreadSafe.AtomicReference<ApolloNotificationMessages> m_remoteMessages;
 
         static RemoteConfigRepository()
         {
@@ -44,6 +45,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             m_serviceLocator = ComponentLocator.Lookup<ConfigServiceLocator>();
             m_remoteConfigLongPollService = ComponentLocator.Lookup<RemoteConfigLongPollService>();
             m_longPollServiceDto = new ThreadSafe.AtomicReference<ServiceDTO>(null);
+            m_remoteMessages = new ThreadSafe.AtomicReference<ApolloNotificationMessages>(null);
             this.TrySync();
             this.SchedulePeriodicRefresh();
             this.ScheduleLongPollingRefresh();
@@ -122,6 +124,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             Exception exception = null;
 
             IList<ServiceDTO> configServices = ConfigServices;
+            string url = null;
             for (int i = 0; i < maxRetries; i++)
             {
                 IList<ServiceDTO> randomConfigServices = new List<ServiceDTO>(configServices);
@@ -134,7 +137,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
                 foreach (ServiceDTO configService in randomConfigServices)
                 {
-                    string url = AssembleQueryConfigUrl(configService.HomepageUrl, appId, cluster, m_namespace, dataCenter, m_configCache.ReadFullFence());
+                    url = AssembleQueryConfigUrl(configService.HomepageUrl, appId, cluster, m_namespace, dataCenter, m_remoteMessages.ReadFullFence(), m_configCache.ReadFullFence());
 
                     logger.Debug(string.Format("Loading config from {0}", url));
                     Com.Ctrip.Framework.Apollo.Util.Http.HttpRequest request = new Com.Ctrip.Framework.Apollo.Util.Http.HttpRequest(url);
@@ -162,7 +165,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                         //config not found
                         if (ex.StatusCode == 404)
                         {
-                            string message = string.Format("Could not find config for namespace - appId: {0}, cluster: {1}, namespace: {2}, " + "please check whether the configs are released in Apollo!", appId, cluster, m_namespace);
+                            string message = string.Format("Could not find config for namespace - appId: {0}, cluster: {1}, namespace: {2}, please check whether the configs are released in Apollo!", appId, cluster, m_namespace);
                             statusCodeException = new ApolloConfigStatusCodeException(ex.StatusCode, message);
                         }
                         logger.Warn(statusCodeException);
@@ -178,12 +181,12 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
                 Thread.Sleep(1000); //sleep 1 second
             }
-            string fallbackMessage = string.Format("Load Apollo Config failed - appId: {0}, cluster: {1}, namespace: {2}", appId, cluster, m_namespace);
+            string fallbackMessage = string.Format("Load Apollo Config failed - appId: {0}, cluster: {1}, namespace: {2}, url: {3}", appId, cluster, m_namespace, url);
             throw new ApolloConfigException(fallbackMessage, exception);
         }
 
         private string AssembleQueryConfigUrl(string uri, string appId, string cluster, string namespaceName,
-                                              string dataCenter, ApolloConfig previousConfig)
+                                              string dataCenter, ApolloNotificationMessages remoteMessages, ApolloConfig previousConfig)
         {
             if (!uri.EndsWith("/", StringComparison.Ordinal))
             {
@@ -210,6 +213,11 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                 query["ip"] = localIp;
             }
 
+            if (remoteMessages != null)
+            {
+                query["messages"] = JSON.SerializeObject(remoteMessages);
+            }
+
             uriBuilder.Query = query.ToString();
 
             return uriBuilder.ToString();
@@ -225,9 +233,10 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             m_remoteConfigLongPollService.Submit(m_namespace, this);
         }
 
-        public void OnLongPollNotified(ServiceDTO longPollNotifiedServiceDto)
+        public void OnLongPollNotified(ServiceDTO longPollNotifiedServiceDto, ApolloNotificationMessages remoteMessages)
         {
             m_longPollServiceDto.WriteFullFence(longPollNotifiedServiceDto);
+            m_remoteMessages.WriteFullFence(remoteMessages);
             m_executorService.QueueWorkItem(() =>
             {
                 TrySync();

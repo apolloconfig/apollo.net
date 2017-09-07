@@ -12,16 +12,23 @@ namespace ApolloDemo
     {
         private string DEFAULT_VALUE = "undefined";
         private Config config;
+        private Config anotherConfig;
 
         public ApolloConfigDemo()
         {
             config = ConfigService.GetAppConfig();
+            anotherConfig = ConfigService.GetConfig("FX.apollo");
             config.ConfigChanged += new ConfigChangeEvent(OnChanged);
+            anotherConfig.ConfigChanged += new ConfigChangeEvent(OnChanged);
         }
 
         private string GetConfig(string key)
         {
             string result = config.GetProperty(key, DEFAULT_VALUE);
+            if (result.Equals(DEFAULT_VALUE))
+            {
+                result = anotherConfig.GetProperty(key, DEFAULT_VALUE);
+            }
             Console.WriteLine("Loading key: {0} with value: {1}", key, result);
             return result;
         }

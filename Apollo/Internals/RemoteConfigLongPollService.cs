@@ -37,6 +37,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
         private SchedulePolicy m_longPollSuccessSchedulePolicyInMS;
         private readonly IDictionary<string, ISet<RemoteConfigRepository>> m_longPollNamespaces;
         private readonly IDictionary<string, long?> m_notifications;
+        private readonly IDictionary<string, ApolloNotificationMessages> m_remoteNotificationMessages; //namespaceName -> watchedKey -> notificationId
 
         public RemoteConfigLongPollService()
         {
@@ -46,6 +47,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             m_longPollingStopped = new ThreadSafe.Boolean(false);
             m_longPollNamespaces = new ConcurrentDictionary<string, ISet<RemoteConfigRepository>>();
             m_notifications = new ConcurrentDictionary<string, long?>();
+            m_remoteNotificationMessages = new ConcurrentDictionary<string, ApolloNotificationMessages>();
         }
 
         public bool Submit(string namespaceName, RemoteConfigRepository remoteConfigRepository)
@@ -122,6 +124,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             while (!m_longPollingStopped.ReadFullFence())
             {
                 int sleepTime = 50; //default 50 ms
+                string url = null;
                 try
                 {
                     if (lastServiceDto == null)
@@ -130,7 +133,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                         lastServiceDto = configServices[random.Next(configServices.Count)];
                     }
 
-                    string url = AssembleLongPollRefreshUrl(lastServiceDto.HomepageUrl, appId, cluster, dataCenter);
+                    url = AssembleLongPollRefreshUrl(lastServiceDto.HomepageUrl, appId, cluster, dataCenter);
 
                     logger.Debug(
                         string.Format("Long polling from {0}", url));
@@ -145,6 +148,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                     if (response.StatusCode == 200 && response.Body != null)
                     {
                         UpdateNotifications(response.Body);
+                        UpdateRemoteNotifications(response.Body);
                         Notify(lastServiceDto, response.Body);
                         m_longPollSuccessSchedulePolicyInMS.Success();
                     } else 
@@ -166,8 +170,8 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
                     int sleepTimeInSecond = m_longPollFailSchedulePolicyInSecond.Fail();
                     logger.Warn(
-                        string.Format("Long polling failed, will retry in {0} seconds. appId: {1}, cluster: {2}, namespace: {3}, reason: {4}",
-                        sleepTimeInSecond, appId, cluster, AssembleNamespaces(), ExceptionUtil.GetDetailMessage(ex)));
+                        string.Format("Long polling failed, will retry in {0} seconds. appId: {1}, cluster: {2}, namespace: {3}, long polling url: {4}, reason: {5}",
+                        sleepTimeInSecond, appId, cluster, AssembleNamespaces(), url, ExceptionUtil.GetDetailMessage(ex)));
 
                     sleepTime = sleepTimeInSecond * 1000;
                 }
@@ -191,6 +195,10 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                 ISet<RemoteConfigRepository> registries = null;
                 List<RemoteConfigRepository> toBeNotified = new List<RemoteConfigRepository>();
                 m_longPollNamespaces.TryGetValue(namespaceName, out registries);
+                ApolloNotificationMessages originalMessages = null;
+                m_remoteNotificationMessages.TryGetValue(namespaceName, out originalMessages);
+                ApolloNotificationMessages remoteMessages = originalMessages == null ? null : originalMessages.clone();
+
                 if (registries != null && registries.Count > 0)
                 {
                     toBeNotified.AddRange(registries);
@@ -206,7 +214,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                 {
                     try
                     {
-                        remoteConfigRepository.OnLongPollNotified(lastServiceDto);
+                        remoteConfigRepository.OnLongPollNotified(lastServiceDto, remoteMessages);
                     }
                     catch (Exception ex)
                     {
@@ -237,6 +245,34 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                 }
             }
         }
+
+        private void UpdateRemoteNotifications(IList<ApolloConfigNotification> deltaNotifications)
+        {
+            foreach (ApolloConfigNotification notification in deltaNotifications)
+            {
+                if (String.IsNullOrEmpty(notification.NamespaceName))
+                {
+                    continue;
+                }
+
+                if (notification.Messages == null || notification.Messages.isEmpty())
+                {
+                    continue;
+                }
+
+                ApolloNotificationMessages localRemoteMessages = null;
+                m_remoteNotificationMessages.TryGetValue(notification.NamespaceName, out localRemoteMessages);
+                if (localRemoteMessages == null)
+                {
+                    localRemoteMessages = new ApolloNotificationMessages();
+                    m_remoteNotificationMessages[notification.NamespaceName] = localRemoteMessages;
+                }
+
+                localRemoteMessages.mergeFrom(notification.Messages);
+            }
+        }
+
+
 
         private string AssembleNamespaces()
         {
