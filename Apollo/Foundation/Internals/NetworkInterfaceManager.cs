@@ -1,14 +1,10 @@
-﻿using Com.Ctrip.Framework.Apollo.Logging;
-using Com.Ctrip.Framework.Apollo.Logging.Spi;
-using System;
-using System.Net;
-using System.Web;
+﻿using System.Net;
+using System.Net.Sockets;
 
 namespace Com.Ctrip.Framework.Foundation.Internals
 {
-    public class NetworkInterfaceManager
+    internal class NetworkInterfaceManager
     {
-        private static readonly ILog logger = LogManager.GetLogger(typeof(NetworkInterfaceManager));
         private static string _hostName = string.Empty;
         private static string _hostIp = string.Empty;
         private static byte[] _hostAddressBytes;
@@ -20,17 +16,17 @@ namespace Com.Ctrip.Framework.Foundation.Internals
 
         public static void Refresh()
         {
-            _hostName = System.Net.Dns.GetHostName();
-            IPHostEntry ipHostEntry = Dns.GetHostEntry(_hostName);
-            _hostIp = GetIP(ipHostEntry);
+            _hostName = Dns.GetHostName();
+            var ipHostEntry = Dns.GetHostEntry(_hostName);
+            _hostIp = GetIp(ipHostEntry);
             _hostAddressBytes = GetAddressBytes(ipHostEntry);
         }
 
-        private static string GetIP(IPHostEntry ipHostEntry)
+        private static string GetIp(IPHostEntry ipHostEntry)
         {
-            foreach (IPAddress ip in ipHostEntry.AddressList)
+            foreach (var ip in ipHostEntry.AddressList)
             {
-                if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
                 {
                     return ip.ToString();
                 }
@@ -40,9 +36,9 @@ namespace Com.Ctrip.Framework.Foundation.Internals
 
         private static byte[] GetAddressBytes(IPHostEntry ipHostEntry)
         {
-            foreach (IPAddress ip in ipHostEntry.AddressList)
+            foreach (var ip in ipHostEntry.AddressList)
             {
-                if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
                 {
                     return ip.GetAddressBytes();
                 }
@@ -51,55 +47,10 @@ namespace Com.Ctrip.Framework.Foundation.Internals
         }
 
 
-        public static string HostName
-        {
-            get
-            {
-                return _hostName ?? "";
-            }
-        }
+        public static string HostName => _hostName ?? "";
 
-        public static string HostIP
-        {
-            get
-            {
-                return _hostIp ?? "127.0.0.1";
-            }
-        }
+        public static string HostIp => _hostIp ?? "127.0.0.1";
 
-        public static byte[] AddressBytes
-        {
-            get
-            {
-                return _hostAddressBytes;
-            }
-        }
-
-        /// <summary>
-        /// //获取客户端的地址,获取顺序1.HTTP_X_FORWARDED_FOR;2.REMOTE_ADDR;
-        /// </summary>
-        /// <returns>客户端IP</returns>
-        public static string GetClientIP()
-        {
-            // 穿过代理服务器取远程用户真实IP地址
-            string ip = string.Empty;
-            try
-            {
-                ip = HttpContext.Current.Request.Headers["X-Forwarded-For"];
-                if (string.IsNullOrEmpty(ip))
-                {
-                    ip = HttpContext.Current.Request.ServerVariables["REMOTE_ADDR"];
-                }
-
-                if (!string.IsNullOrEmpty(ip) && ip.Contains(","))
-                {
-                    ip = ip.Split(',')[0];
-                }
-
-            }
-            catch (Exception e) { ip = ""; logger.Error(e); }
-
-            return ip;
-        }
+        public static byte[] AddressBytes => _hostAddressBytes;
     }
 }

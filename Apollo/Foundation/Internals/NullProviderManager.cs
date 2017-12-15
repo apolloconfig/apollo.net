@@ -4,18 +4,18 @@ using System;
 
 namespace Com.Ctrip.Framework.Foundation.Internals
 {
-    class NullProviderManager : IProviderManager
+    internal class NullProviderManager : IProviderManager
     {
-        public static readonly NullProvider provider = new NullProvider();
+        public static readonly NullProvider Provider = new NullProvider();
 
         public string GetProperty(string name, string defaultValue)
         {
             return defaultValue;
         }
 
-        public IProvider Provider(Type clazz)
+        IProvider IProviderManager.Provider(Type clazz)
         {
-            return provider;
+            return Provider;
         }
     }
 }

@@ -44,5 +44,10 @@ namespace Com.Ctrip.Framework.Apollo.Logging.Internals
         {
             Console.WriteLine("[WARN] " + ExceptionUtil.GetDetailMessage(exception));
         }
+
+        public void Warn(string message, Exception exception)
+        {
+            Console.WriteLine("[WARN] " + message + " - " + ExceptionUtil.GetDetailMessage(exception));
+        }
     }
 }

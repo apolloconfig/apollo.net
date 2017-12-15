@@ -1,53 +1,35 @@
 ﻿namespace Com.Ctrip.Framework.Apollo.Core.Dto
 {
-    public class ServiceDTO
+    public class ServiceDto
     {
-        private string appName;
+        private string _appName;
 
-        private string instanceId;
+        private string _instanceId;
 
-        private string homepageUrl;
+        private string _homepageUrl;
 
         public string AppName
         {
-            get
-            {
-                return appName;
-            }
-            set
-            {
-                this.appName = value;
-            }
+            get => _appName;
+            set => _appName = value;
         }
 
         public string HomepageUrl
         {
-            get
-            {
-                return homepageUrl;
-            }
-            set
-            {
-                this.homepageUrl = value;
-            }
+            get => _homepageUrl;
+            set => _homepageUrl = value;
         }
 
         public string InstanceId
         {
-            get
-            {
-                return instanceId;
-            }
-            set
-            {
-                this.instanceId = value;
-            }
+            get => _instanceId;
+            set => _instanceId = value;
         }
 
         public override string ToString()
         {
-            return "ServiceDTO{" + "appName='" + appName + '\'' + ", instanceId='" + instanceId + 
-                '\'' + ", homepageUrl='" + homepageUrl + '\'' + '}';
+            return "ServiceDTO{" + "appName='" + _appName + '\'' + ", instanceId='" + _instanceId + 
+                '\'' + ", homepageUrl='" + _homepageUrl + '\'' + '}';
         }
 
     }

@@ -1,64 +1,66 @@
 ﻿using Com.Ctrip.Framework.Apollo.Core.Utils;
 using Com.Ctrip.Framework.Apollo.Logging;
 using Com.Ctrip.Framework.Apollo.Logging.Spi;
-using Com.Ctrip.Framework.Apollo.Util;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Com.Ctrip.Framework.Apollo.Internals
 {
-    public abstract class AbstractConfigRepository : ConfigRepository
+    public abstract class AbstractConfigRepository : IConfigRepository
     {
-        private static readonly ILog logger = LogManager.GetLogger(typeof(AbstractConfigRepository));
-        private IList<RepositoryChangeListener> m_listeners = new SynchronizedCollection<RepositoryChangeListener>();
+        private static readonly ILog Logger = LogManager.GetLogger(typeof(AbstractConfigRepository));
 
-        protected bool TrySync()
-        {
-            try
-            {
-                Sync();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                logger.Warn(string.Format("Sync config failed, will retry. Repository {0}, reason: {1}", this.GetType(), ExceptionUtil.GetDetailMessage(ex)));
-            }
-            return false;
-        }
+        private readonly List<IRepositoryChangeListener> _listeners = new List<IRepositoryChangeListener>();
+        public string Namespace { get; }
 
-        protected abstract void Sync();
+        protected AbstractConfigRepository(string @namespace) => Namespace = @namespace;
 
         public abstract Properties GetConfig();
 
-        public abstract void SetUpstreamRepository(ConfigRepository upstreamConfigRepository);
-
-        public void AddChangeListener(RepositoryChangeListener listener)
+        public void AddChangeListener(IRepositoryChangeListener listener)
         {
-            if (!m_listeners.Contains(listener))
-            {
-                m_listeners.Add(listener);
-            }
+            lock (_listeners)
+                if (!_listeners.Contains(listener))
+                {
+                    _listeners.Add(listener);
+                }
         }
 
-        public void RemoveChangeListener(RepositoryChangeListener listener)
+        public void RemoveChangeListener(IRepositoryChangeListener listener)
         {
-            m_listeners.Remove(listener);
+            lock (_listeners)
+                _listeners.Remove(listener);
         }
 
         protected void FireRepositoryChange(string namespaceName, Properties newProperties)
         {
-            foreach (RepositoryChangeListener listener in m_listeners)
-            {
-                try
+            lock (_listeners)
+                foreach (var listener in _listeners)
                 {
-                    listener.OnRepositoryChange(namespaceName, newProperties);
+                    try
+                    {
+                        listener.OnRepositoryChange(namespaceName, newProperties);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error($"Failed to invoke repository change listener {listener.GetType()}", ex);
+                    }
                 }
-                catch (Exception ex)
-                {
-                    logger.Error(string.Format("Failed to invoke repository change listener {0}", listener.GetType()), ex);
-                }
-            }
+        }
+        #region Dispose
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
+        protected abstract void Dispose(bool disposing);
+
+        ~AbstractConfigRepository()
+        {
+            Dispose(false);
+        }
+        #endregion
     }
 }

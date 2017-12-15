@@ -5,24 +5,15 @@ using System;
 
 namespace Com.Ctrip.Framework.Foundation.Internals.Provider
 {
-    class DefaultNetworkProvider : INetworkProvider
+    internal class DefaultNetworkProvider : INetworkProvider
     {
-        private static readonly ILog logger = LogManager.GetLogger(typeof(DefaultNetworkProvider));
+        private static readonly ILog Logger = LogManager.GetLogger(typeof(DefaultNetworkProvider));
 
-        public string HostAddress
-        {
-            get { return NetworkInterfaceManager.HostIP; }
-        }
+        public string HostAddress => NetworkInterfaceManager.HostIp;
 
-        public string HostName
-        {
-            get { return NetworkInterfaceManager.HostName; }
-        }
+        public string HostName => NetworkInterfaceManager.HostName;
 
-        public Type Type
-        {
-            get { return typeof(INetworkProvider); }
-        }
+        public Type Type => typeof(INetworkProvider);
 
         public string Property(string name, string defaultValue)
         {
@@ -43,12 +34,13 @@ namespace Com.Ctrip.Framework.Foundation.Internals.Provider
 
         void IProvider.Initialize()
         {
-            try { 
+            try
+            {
                 NetworkInterfaceManager.Refresh();
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                Logger.Error(ex);
             }
         }
     }

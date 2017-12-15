@@ -4,14 +4,14 @@ using System.Net;
 
 namespace Com.Ctrip.Framework.Apollo.Core.Utils
 {
-    public class DNSUtil
+    public class DnsUtil
 	{
-		public static List<string> resolve (String domainName)
+		public static List<string> Resolve (string domainName)
 		{
-			List<string> result = new List<string> ();
+			var result = new List<string> ();
 
-			IPAddress[] addresses = Dns.GetHostAddresses (domainName);
-			foreach (IPAddress a in addresses) {
+			var addresses = Dns.GetHostAddresses (domainName);
+			foreach (var a in addresses) {
 				result.Add (a.ToString ());
 			}
 

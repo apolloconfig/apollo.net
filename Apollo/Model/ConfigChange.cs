@@ -7,11 +7,11 @@ namespace Com.Ctrip.Framework.Apollo.Model
     /// </summary>
     public class ConfigChange
     {
-        private string namespaceName;
-        private string propertyName;
-        private string oldValue;
-        private string newValue;
-        private PropertyChangeType changeType;
+        private readonly string _namespaceName;
+        private readonly string _propertyName;
+        private string _oldValue;
+        private string _newValue;
+        private PropertyChangeType _changeType;
 
         /// <summary>
         /// Constructor. </summary>
@@ -23,73 +23,43 @@ namespace Com.Ctrip.Framework.Apollo.Model
         public ConfigChange(string namespaceName, string propertyName, string oldValue, string newValue,
             PropertyChangeType changeType)
         {
-            this.namespaceName = namespaceName;
-            this.propertyName = propertyName;
-            this.oldValue = oldValue;
-            this.newValue = newValue;
-            this.changeType = changeType;
+            _namespaceName = namespaceName;
+            _propertyName = propertyName;
+            _oldValue = oldValue;
+            _newValue = newValue;
+            _changeType = changeType;
         }
 
-        public string PropertyName
-        {
-            get
-            {
-                return propertyName;
-            }
-        }
+        public string PropertyName => _propertyName;
 
         public string OldValue
         {
-            get
-            {
-                return oldValue;
-            }
-            set
-            {
-                this.oldValue = value;
-            }
+            get => _oldValue;
+            set => _oldValue = value;
         }
 
         public string NewValue
         {
-            get
-            {
-                return newValue;
-            }
-            set
-            {
-                this.newValue = value;
-            }
+            get => _newValue;
+            set => _newValue = value;
         }
 
         public PropertyChangeType ChangeType
         {
-            get
-            {
-                return changeType;
-            }
-            set
-            {
-                this.changeType = value;
-            }
+            get => _changeType;
+            set => _changeType = value;
         }
 
-        public string Namespace
-        {
-            get
-            {
-                return namespaceName;
-            }
-        }
+        public string Namespace => _namespaceName;
 
         public override string ToString()
         {
             return "ConfigChange{" +
-                "namespace='" + namespaceName + '\'' +
-                ", propertyName='" + propertyName + '\'' +
-                ", oldValue='" + oldValue + '\'' +
-                ", newValue='" + newValue + '\'' +
-                ", changeType=" + changeType +
+                "namespace='" + _namespaceName + '\'' +
+                ", propertyName='" + _propertyName + '\'' +
+                ", oldValue='" + _oldValue + '\'' +
+                ", newValue='" + _newValue + '\'' +
+                ", changeType=" + _changeType +
                 '}';
         }
     }

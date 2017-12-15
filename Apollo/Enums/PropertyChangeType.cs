@@ -2,7 +2,9 @@
 {
     public enum PropertyChangeType
     {
-        ADDED, MODIFIED, DELETED
+        Added = 0,
+        Modified = 1,
+        Deleted = 2
     }
 }
 

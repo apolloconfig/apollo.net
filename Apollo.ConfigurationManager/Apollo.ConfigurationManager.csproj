@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net45;net471;netstandard2.0</TargetFrameworks>
+        <RootNamespace>Com.Ctrip.Framework.Apollo</RootNamespace>
+        <AssemblyName>Com.Ctrip.Framework.Apollo.ConfigurationManager</AssemblyName>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Apollo\Apollo.csproj" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net45' OR '$(TargetFramework)' == 'net471'">
+        <Reference Include="System.Configuration" />
+        <Reference Include="System.Net.Http" />
+        <Reference Include="System.Web" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net45' OR '$(TargetFramework)' == 'netstandard2.0'">
+        <Compile Remove="AppSettingsSectionBuilder.cs" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+        <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.4.0" />
+    </ItemGroup>
+
+</Project>

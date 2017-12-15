@@ -1,143 +1,134 @@
 ﻿using Com.Ctrip.Framework.Apollo.Core.Dto;
-using Com.Ctrip.Framework.Apollo.Core.Ioc;
 using Com.Ctrip.Framework.Apollo.Core.Utils;
 using Com.Ctrip.Framework.Apollo.Exceptions;
 using Com.Ctrip.Framework.Apollo.Logging;
 using Com.Ctrip.Framework.Apollo.Logging.Spi;
-using Com.Ctrip.Framework.Apollo.Util;
 using Com.Ctrip.Framework.Apollo.Util.Http;
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using System.Web;
+using System.Threading.Tasks;
+using Com.Ctrip.Framework.Apollo.Util;
 
 namespace Com.Ctrip.Framework.Apollo.Internals
 {
-    [Named(ServiceType = typeof(ConfigServiceLocator))]
-    public class ConfigServiceLocator : IInitializable
+    public class ConfigServiceLocator : IDisposable
     {
-        private static readonly ILog logger = LogManager.GetLogger(typeof(ConfigServiceLocator));
-        [Inject]
-        private HttpUtil m_httpUtil;
-        [Inject]
-        private ConfigUtil m_configUtil;
-        private ThreadSafe.AtomicReference<IList<ServiceDTO>> m_configServices;
+        private static readonly ILog Logger = LogManager.GetLogger(typeof(ConfigServiceLocator));
 
-        public ConfigServiceLocator()
-        {
-            m_configServices = new ThreadSafe.AtomicReference<IList<ServiceDTO>>(new List<ServiceDTO>());
-        }
+        private readonly HttpUtil _httpUtil;
 
-        public void Initialize()
+        private readonly IApolloOptions _options;
+        private readonly ThreadSafe.AtomicReference<IList<ServiceDto>> _configServices;
+        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
+        private readonly Timer _timer;
+
+        public ConfigServiceLocator(HttpUtil httpUtil, IApolloOptions configUtil)
         {
-            this.TryUpdateConfigServices();
-            this.SchedulePeriodicRefresh();
+            _httpUtil = httpUtil;
+            _options = configUtil;
+            _configServices = new ThreadSafe.AtomicReference<IList<ServiceDto>>(new List<ServiceDto>());
+
+            _timer = new Timer(SchedulePeriodicRefresh, null, 0, _options.RefreshInterval);
         }
 
         /// <summary>
         /// Get the config service info from remote meta server.
         /// </summary>
         /// <returns> the services dto </returns>
-        public IList<ServiceDTO> GetConfigServices()
+        public async Task<IList<ServiceDto>> GetConfigServices()
         {
-            if (m_configServices.ReadFullFence().Count == 0)
-            {
-                UpdateConfigServices();
-            }
+            var services = _configServices.ReadFullFence();
+            if (services.Count == 0)
+                await UpdateConfigServices();
 
-            return m_configServices.ReadFullFence();
+            services = _configServices.ReadFullFence();
+            if (services.Count == 0)
+                throw new ApolloConfigException("No available config service");
+
+            return services;
         }
 
-        private bool TryUpdateConfigServices()
+        private async void SchedulePeriodicRefresh(object _)
         {
             try
             {
-                UpdateConfigServices();
-                return true;
+                Logger.Debug("refresh config services");
+
+                await UpdateConfigServices();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                //ignore
+                Logger.Warn(ex);
             }
-            return false;
         }
 
-        private void SchedulePeriodicRefresh()
+        private async Task UpdateConfigServices()
         {
-            Thread t = new Thread(() =>
+            await _semaphore.WaitAsync();
+            try
             {
-                while (true)
-                {
-                    try
-                    {
-                        Thread.Sleep(m_configUtil.RefreshInterval);
-                        logger.Debug("refresh config services");
-                        TryUpdateConfigServices();
-                    }
-                    catch (Exception)
-                    {
-                        //ignore
-                    }
-                }
-            });
-            t.IsBackground = true;
-            t.Start();
-        }
+                var url = AssembleMetaServiceUrl();
 
-        private void UpdateConfigServices()
-        {
-            lock (this)
-            {
-                string url = AssembleMetaServiceUrl();
-
-                Com.Ctrip.Framework.Apollo.Util.Http.HttpRequest request = new Com.Ctrip.Framework.Apollo.Util.Http.HttpRequest(url);
-                int maxRetries = 5;
+                var request = new HttpRequest(url);
+                var maxRetries = 5;
                 Exception exception = null;
 
-                for (int i = 0; i < maxRetries; i++)
+                for (var i = 0; i < maxRetries; i++)
                 {
                     try
                     {
-                        HttpResponse<IList<ServiceDTO>> response = m_httpUtil.DoGet<IList<ServiceDTO>>(request);
-                        IList<ServiceDTO> services = response.Body;
+                        var response = await _httpUtil.DoGetAsync<IList<ServiceDto>>(request);
+                        var services = response.Body;
                         if (services == null || services.Count == 0)
                         {
                             continue;
                         }
-                        m_configServices.WriteFullFence(services);
+
+                        _configServices.WriteFullFence(services);
                         return;
                     }
                     catch (Exception ex)
                     {
-                        logger.Warn(ex);
+                        Logger.Warn(ex);
                         exception = ex;
                     }
 
-                    Thread.Sleep(1000); //sleep 1 second
+                    await Task.Delay(1000); //sleep 1 second
                 }
 
-                throw new ApolloConfigException(string.Format("Get config services failed from {0}", url), exception);
+                throw new ApolloConfigException($"Get config services failed from {url}", exception);
+            }
+            finally
+            {
+                _semaphore.Release();
             }
         }
 
         private string AssembleMetaServiceUrl()
         {
-            string domainName = m_configUtil.MetaServerDomainName;
-            string appId = m_configUtil.AppId;
-            string localIp = m_configUtil.LocalIp;
+            var domainName = _options.MetaServer;
+            var appId = _options.AppId;
+            var localIp = _options.LocalIp;
 
-            UriBuilder uriBuilder = new UriBuilder(domainName + "/services/config");
-            var query = HttpUtility.ParseQueryString(string.Empty);
+            var uriBuilder = new UriBuilder(domainName + "/services/config");
+            var query = new Dictionary<string, string>();
 
             query["appId"] = appId;
             if (!string.IsNullOrEmpty(localIp))
             {
                 query["ip"] = localIp;
             }
-            uriBuilder.Query = query.ToString();
+
+            uriBuilder.Query = QueryUtils.Build(query);
 
             return uriBuilder.ToString();
         }
 
+        public void Dispose()
+        {
+            _semaphore?.Dispose();
+            _timer?.Dispose();
+        }
     }
 }
