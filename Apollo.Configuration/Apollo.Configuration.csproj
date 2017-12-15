@@ -24,12 +24,16 @@
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     </PropertyGroup>
 
-    <ItemGroup Condition="'$(Configuration)'=='Debug'">
+    <!--<ItemGroup Condition="'$(Configuration)'=='Debug'">
         <ProjectReference Include="..\Apollo\Apollo.csproj" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(Configuration)'!='Debug'">
         <PackageReference Include="Com.Ctrip.Framework.Apollo" Version="1.0.0" />
+    </ItemGroup>-->
+
+    <ItemGroup>
+        <ProjectReference Include="..\Apollo\Apollo.csproj" />
     </ItemGroup>
 
     <ItemGroup>
