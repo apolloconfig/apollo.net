@@ -20,7 +20,6 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
         private readonly IApolloOptions _options;
         private readonly IConfigRepository _upstream;
-        private readonly ManualResetEventSlim _resetEvent = new ManualResetEventSlim(false);
 
         public LocalFileConfigRepository(string @namespace,
             IApolloOptions configUtil,
@@ -58,7 +57,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
         public override Properties GetConfig()
         {
             if (_fileProperties == null)
-                _resetEvent.Wait();
+                Sync();
 
             return new Properties(_fileProperties);
         }
@@ -71,7 +70,6 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
             if (disposing)
             {
-                _resetEvent.Dispose();
                 _upstream?.Dispose();
             }
 
@@ -90,9 +88,6 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                 var properties = _upstream.GetConfig();
 
                 UpdateFileProperties(properties);
-
-                if (!_resetEvent.IsSet)
-                    _resetEvent.Set();
 
                 return true;
             }
@@ -138,8 +133,6 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             try
             {
                 properties.Load(file);
-                if (!_resetEvent.IsSet)
-                    _resetEvent.Set();
 
                 Logger.Debug($"Loading local config file {file} successfully!");
             }

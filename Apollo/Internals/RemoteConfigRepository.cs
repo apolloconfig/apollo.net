@@ -44,7 +44,8 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             _remoteConfigLongPollService = remoteConfigLongPollService;
 
             _timer = new Timer(SchedulePeriodicRefresh);
-            var unused = BeginSync();
+
+            AsyncHelper.RunSync(BeginSync);
         }
 
         private async Task BeginSync()
@@ -59,7 +60,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
         public override Properties GetConfig()
         {
             if (_configCache.ReadFullFence() == null)
-                _resetEvent.Wait();
+                AsyncHelper.RunSync(SchedulePeriodicRefresh);
 
             return TransformApolloConfigToProperties(_configCache.ReadFullFence());
         }

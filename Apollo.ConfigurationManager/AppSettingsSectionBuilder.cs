@@ -55,7 +55,7 @@ namespace Com.Ctrip.Framework.Apollo
                 ConfigUtil.AppSettings = coll;
             }
 
-            var config = _namespace == null ? ConfigManager.GetAppConfig() : ConfigManager.GetConfig(_namespace);
+            var config = _namespace == null ? ApolloConfigManager.GetAppConfig() : ApolloConfigManager.GetConfig(_namespace);
 
             config.ConfigChanged += Config_ConfigChanged;
 
