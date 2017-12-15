@@ -4,6 +4,25 @@
         <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
         <AssemblyName>Com.Ctrip.Framework.Apollo</AssemblyName>
         <RootNamespace>Com.Ctrip.Framework.Apollo</RootNamespace>
+
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Description>携程Apollo客户端
+
+与Microsoft.Extensions.Configuration集成请使用Com.Ctrip.Framework.Apollo.Configuration包
+非集成(ApolloConfigManager)或与System.Configuration.ConfigurationManager集成(.net 4.7.1及以后版本)请使用Com.Ctrip.Framework.Apollo.ConfigurationManager包</Description>
+        <RepositoryType>git</RepositoryType>
+        <PackageProjectUrl>https://github.com/ctripcorp/apollo.net</PackageProjectUrl>
+        <IncludeSymbols>True</IncludeSymbols>
+        <Version>1.0.0</Version>
+        <AssemblyVersion>1.0.0.0</AssemblyVersion>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>..\Apollo.snk</AssemblyOriginatorKeyFile>
+        <PackageTags>apollo configcenter ctrip</PackageTags>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+        <DebugType>full</DebugType>
+        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     </PropertyGroup>
 
     <ItemGroup>
