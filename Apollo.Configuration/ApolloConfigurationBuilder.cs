@@ -18,6 +18,7 @@ namespace Com.Ctrip.Framework.Apollo
         public ApolloConfigurationBuilder(IConfigurationBuilder builder, ConfigRepositoryFactory configRepositoryFactory)
         {
             _builder = builder;
+
             ConfigRepositoryFactory = configRepositoryFactory;
         }
 
@@ -27,6 +28,5 @@ namespace Com.Ctrip.Framework.Apollo
 
         public IDictionary<string, object> Properties => _builder.Properties;
         public IList<IConfigurationSource> Sources => _builder.Sources;
-
     }
 }
