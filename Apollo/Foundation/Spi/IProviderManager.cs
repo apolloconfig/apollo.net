@@ -2,7 +2,7 @@
 
 namespace Com.Ctrip.Framework.Foundation.Spi.Provider
 {
-    public interface IProviderManager
+    internal interface IProviderManager
     {
         string GetProperty(string name, string defaultValue);
 

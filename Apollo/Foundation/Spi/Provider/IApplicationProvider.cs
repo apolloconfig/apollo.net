@@ -1,6 +1,6 @@
 ﻿namespace Com.Ctrip.Framework.Foundation.Spi.Provider
 {
-    public interface IApplicationProvider : IProvider
+    internal interface IApplicationProvider : IProvider
     {
         string AppId { get; }
 

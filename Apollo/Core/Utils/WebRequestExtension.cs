@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Threading.Tasks;
 
 namespace Com.Ctrip.Framework.Apollo.Core.Utils
 {
@@ -14,7 +15,22 @@ namespace Com.Ctrip.Framework.Apollo.Core.Utils
             {
                 if (wex.Response == null || wex.Status != WebExceptionStatus.ProtocolError)
                     throw;
-                
+
+                return wex.Response;
+            }
+        }
+
+        public static async Task<WebResponse> BetterGetResponseAsync(this WebRequest request)
+        {
+            try
+            {
+                return await request.GetResponseAsync();
+            }
+            catch (WebException wex)
+            {
+                if (wex.Response == null || wex.Status != WebExceptionStatus.ProtocolError)
+                    throw;
+
                 return wex.Response;
             }
         }

@@ -1,4 +1,5 @@
-﻿using Com.Ctrip.Framework.Apollo.Logging;
+﻿using Com.Ctrip.Framework.Apollo.Core;
+using Com.Ctrip.Framework.Apollo.Logging;
 using Com.Ctrip.Framework.Apollo.Logging.Spi;
 using Com.Ctrip.Framework.Foundation.Spi.Provider;
 using System;
@@ -7,34 +8,21 @@ using System.IO;
 
 namespace Com.Ctrip.Framework.Foundation.Internals.Provider
 {
-    class DefaultServerProvider : IServerProvider
+    internal class DefaultServerProvider : IServerProvider
     {
-        private static readonly ILog logger = LogManager.GetLogger(typeof(DefaultServerProvider));
-        private const string SERVER_PROPERTIES_FILE = @"C:\opt\settings\server.properties";
-        private string env;
-        private string subEnv;
-        private string dc;
-        private IDictionary<string, string> serverProperties = new Dictionary<string, string>();
+        private static readonly ILog Logger = LogManager.GetLogger(typeof(DefaultServerProvider));
+        private string _env;
+        private string _subEnv;
+        private string _dc;
+        private readonly IDictionary<string, string> _serverProperties = new Dictionary<string, string>();
 
-        public string EnvType
-        {
-            get { return env; }
-        }
+        public string EnvType => _env;
 
-        public string SubEnvType
-        {
-            get { return subEnv;  }
-        }
+        public string SubEnvType => _subEnv;
 
-        public string DataCenter
-        {
-            get { return dc; }
-        }
+        public string DataCenter => _dc;
 
-        public Type Type
-        {
-            get { return typeof(IServerProvider); }
-        }
+        public Type Type => typeof(IServerProvider);
 
         public string Property(string name, string defaultValue)
         {
@@ -49,8 +37,7 @@ namespace Com.Ctrip.Framework.Foundation.Internals.Provider
             }
             else
             {
-                string val;
-                serverProperties.TryGetValue(name, out val);
+                _serverProperties.TryGetValue(name, out var val);
                 return val ?? defaultValue;
             }
         }
@@ -59,33 +46,33 @@ namespace Com.Ctrip.Framework.Foundation.Internals.Provider
         {
             try
             {
-                if (System.IO.File.Exists(SERVER_PROPERTIES_FILE))
+                if (File.Exists(ConfigConsts.ServerPropertiesFile))
                 {
-                    using (Stream stream = System.IO.File.OpenRead(SERVER_PROPERTIES_FILE)) {
-                        logger.Info("Loading server properties from " + SERVER_PROPERTIES_FILE);
+                    using (Stream stream = File.OpenRead(ConfigConsts.ServerPropertiesFile)) {
+                        Logger.Info("Loading server properties from " + ConfigConsts.ServerPropertiesFile);
                         Initialize(stream);
                     }
                 }
                 else
                 {
-                    logger.Info("File " + SERVER_PROPERTIES_FILE + " does not exist.");
+                    Logger.Info("File " + ConfigConsts.ServerPropertiesFile + " does not exist.");
                     Initialize(null);
                 }
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                Logger.Error(ex);
             }
         }
 
-        public void Initialize(System.IO.Stream stream)
+        public void Initialize(Stream stream)
         {
             try
             {
                 if (null != stream)
                 {
                     string line;
-                    using (System.IO.StreamReader file = new System.IO.StreamReader(stream))
+                    using (var file = new StreamReader(stream))
                     {
                         while ((line = file.ReadLine()) != null)
                         {
@@ -95,12 +82,12 @@ namespace Com.Ctrip.Framework.Foundation.Internals.Provider
                             {
                                 continue;
                             }
-                            int delimiter = line.IndexOf('=');
+                            var delimiter = line.IndexOf('=');
                             if (delimiter >= 0)
                             {
-                                string key = line.Substring(0, delimiter).Trim();
-                                string value = (delimiter < line.Length - 1) ? line.Substring(delimiter + 1).Trim() : string.Empty;
-                                serverProperties[key] = value;
+                                var key = line.Substring(0, delimiter).Trim();
+                                var value = (delimiter < line.Length - 1) ? line.Substring(delimiter + 1).Trim() : string.Empty;
+                                _serverProperties[key] = value;
                             }
                         }
                     }
@@ -112,68 +99,68 @@ namespace Com.Ctrip.Framework.Foundation.Internals.Provider
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                Logger.Error(ex);
             }
         }
 
         private void InitEnvType()
         {
             // 1. Read from environment variable ENV
-            env = Environment.GetEnvironmentVariable("ENV");
-            if (!String.IsNullOrWhiteSpace(env))
+            _env = Environment.GetEnvironmentVariable("ENV");
+            if (!string.IsNullOrWhiteSpace(_env))
             {
-                env = env.Trim();
-                logger.Info("EnvType is set to [" + env + "] by ENV environment variable. ");
+                _env = _env.Trim();
+                Logger.Info("EnvType is set to [" + _env + "] by ENV environment variable. ");
                 return;
             }
             else
             {
-                logger.Info("EnvType is not available from ENV environment variable.");
+                Logger.Info("EnvType is not available from ENV environment variable.");
             }
 
             // 2. Read from server.properties
-            serverProperties.TryGetValue("env", out env);
-            if (!String.IsNullOrWhiteSpace(env))
+            _serverProperties.TryGetValue("env", out _env);
+            if (!string.IsNullOrWhiteSpace(_env))
             {
-                env = env.Trim();
-                logger.Info("EnvType is set to [" + env + "] by 'env' property from server.properties");
+                _env = _env.Trim();
+                Logger.Info("EnvType is set to [" + _env + "] by 'env' property from server.properties");
                 return;
             }
             else
             {
-                logger.Info("EnvType is not available from 'env' property of server.properties.");
+                Logger.Info("EnvType is not available from 'env' property of server.properties.");
             }
         }
 
         private void InitSubEnv()
         {
             // 1. Read from server.properties
-            serverProperties.TryGetValue("subenv", out subEnv);
-            if (!String.IsNullOrWhiteSpace(subEnv))
+            _serverProperties.TryGetValue("subenv", out _subEnv);
+            if (!string.IsNullOrWhiteSpace(_subEnv))
             {
-                subEnv = subEnv.Trim();
-                logger.Info("SubEnvType is set to [" + subEnv + "] by 'subenv' property from server.properties. ");
+                _subEnv = _subEnv.Trim();
+                Logger.Info("SubEnvType is set to [" + _subEnv + "] by 'subenv' property from server.properties. ");
                 return;
             }
             else
             {
-                logger.Info("SubEnvType is not available from 'subenv' property of server.properties. ");
+                Logger.Info("SubEnvType is not available from 'subenv' property of server.properties. ");
             }
         }
 
         private void InitDataCenter()
         {
             // 1. Read from server.properties
-            serverProperties.TryGetValue("idc", out dc);
-            if (!String.IsNullOrWhiteSpace(dc))
+            _serverProperties.TryGetValue("idc", out _dc);
+            if (!string.IsNullOrWhiteSpace(_dc))
             {
-                dc = dc.Trim();
-                logger.Info("Data Center is set to [" + dc + "] by 'idc' property from server.properties. ");
+                _dc = _dc.Trim();
+                Logger.Info("Data Center is set to [" + _dc + "] by 'idc' property from server.properties. ");
                 return;
             }
             else
             {
-                logger.Info("Data Center is not available from 'idc' property of server.properties. ");
+                Logger.Info("Data Center is not available from 'idc' property of server.properties. ");
             }
         }
     }

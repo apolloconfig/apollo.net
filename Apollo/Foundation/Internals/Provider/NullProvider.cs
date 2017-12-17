@@ -3,23 +3,17 @@ using System;
 
 namespace Com.Ctrip.Framework.Foundation.Internals.Provider
 {
-    class NullProvider : IApplicationProvider, INetworkProvider, IServerProvider
+    internal class NullProvider : IApplicationProvider, INetworkProvider, IServerProvider
     {
 
-        public string AppId
-        {
-            get { return null; }
-        }
+        public string AppId => null;
 
         public void Initialize(System.IO.Stream stream)
         {
-            
+
         }
 
-        public Type Type
-        {
-            get { return null; }
-        }
+        public Type Type => null;
 
         public string Property(string name, string defaultValue)
         {
@@ -28,37 +22,19 @@ namespace Com.Ctrip.Framework.Foundation.Internals.Provider
 
         public void Initialize()
         {
-            
+
         }
 
-        public string HostAddress
-        {
-            get { return null; }
-        }
+        public string HostAddress => null;
 
-        public string HostName
-        {
-            get { return null; }
-        }
+        public string HostName => null;
 
-        public string EnvType
-        {
-            get { return null; }
-        }
+        public string EnvType => null;
 
-        public string SubEnvType
-        {
-            get { return null; }
-        }
+        public string SubEnvType => null;
 
-        public string DataCenter
-        {
-            get { return null; }
-        }
+        public string DataCenter => null;
 
-        public bool AppIdSet
-        {
-            get { return false; }
-        }
+        public bool AppIdSet => false;
     }
 }

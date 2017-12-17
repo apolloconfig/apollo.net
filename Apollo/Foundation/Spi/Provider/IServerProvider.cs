@@ -2,7 +2,7 @@
 
 namespace Com.Ctrip.Framework.Foundation.Spi.Provider
 {
-    public interface IServerProvider : IProvider
+    internal interface IServerProvider : IProvider
     {
         string EnvType { get; }
         string SubEnvType { get;  }

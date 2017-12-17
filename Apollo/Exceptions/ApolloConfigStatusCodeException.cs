@@ -4,21 +4,15 @@ namespace Com.Ctrip.Framework.Apollo.Exceptions
 {
     public class ApolloConfigStatusCodeException : Exception
     {
-        private readonly int m_statusCode;
+        private readonly int _statusCode;
 
         public ApolloConfigStatusCodeException(int statusCode, string message)
-            : base(string.Format("[status code: {0:D}] {1}", statusCode, message))
+            : base($"[status code: {statusCode:D}] {message}")
         {
-            this.m_statusCode = statusCode;
+            _statusCode = statusCode;
         }
 
-        public virtual int StatusCode
-        {
-            get
-            {
-                return m_statusCode;
-            }
-        }
+        public virtual int StatusCode => _statusCode;
     }
 
 }

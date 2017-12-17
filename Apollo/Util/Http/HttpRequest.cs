@@ -2,51 +2,33 @@
 {
     public class HttpRequest
     {
-        private string m_url;
-        private int m_timeout;
-        private int m_readTimeout;
+        private readonly string _url;
+        private int _timeout;
+        private int _readTimeout;
 
         /// <summary>
         /// Create the request for the url. </summary>
         /// <param name="url"> the url </param>
         public HttpRequest(string url)
         {
-            m_url = url;
-            m_timeout = 0;
-            m_readTimeout = 0;
+            _url = url;
+            _timeout = 0;
+            _readTimeout = 0;
         }
 
-        public string Url
-        {
-            get
-            {
-                return m_url;
-            }
-        }
+        public string Url => _url;
 
         public int Timeout
         {
-            get
-            {
-                return m_timeout;
-            }
-            set
-            {
-                this.m_timeout = value;
-            }
+            get => _timeout;
+            set => _timeout = value;
         }
 
 
         public int ReadTimeout
         {
-            get
-            {
-                return m_readTimeout;
-            }
-            set
-            {
-                this.m_readTimeout = value;
-            }
+            get => _readTimeout;
+            set => _readTimeout = value;
         }
 
     }

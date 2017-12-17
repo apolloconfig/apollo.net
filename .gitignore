@@ -5,6 +5,7 @@
 *.suo
 *.user
 *.sln.docstates
+.vs
 
 #Auto Generate files
 __ConfigTemp/

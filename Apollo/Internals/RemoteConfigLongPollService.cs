@@ -1,6 +1,5 @@
 ﻿using Com.Ctrip.Framework.Apollo.Core;
 using Com.Ctrip.Framework.Apollo.Core.Dto;
-using Com.Ctrip.Framework.Apollo.Core.Ioc;
 using Com.Ctrip.Framework.Apollo.Core.Schedule;
 using Com.Ctrip.Framework.Apollo.Core.Utils;
 using Com.Ctrip.Framework.Apollo.Enums;
@@ -9,148 +8,118 @@ using Com.Ctrip.Framework.Apollo.Logging;
 using Com.Ctrip.Framework.Apollo.Logging.Spi;
 using Com.Ctrip.Framework.Apollo.Util;
 using Com.Ctrip.Framework.Apollo.Util.Http;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Threading;
-using System.Web;
+using System.Linq;
+using System.Threading.Tasks;
+using Newtonsoft.Json.Serialization;
 
 namespace Com.Ctrip.Framework.Apollo.Internals
 {
-    [Named(ServiceType = typeof(RemoteConfigLongPollService))]
     public class RemoteConfigLongPollService
     {
-        private static readonly ILog logger = LogManager.GetLogger(typeof(RemoteConfigLongPollService));
-        private static readonly long INIT_NOTIFICATION_ID = -1;
-        [Inject]
-        private ConfigServiceLocator m_serviceLocator;
-        [Inject]
-        private HttpUtil m_httpUtil;
-        [Inject]
-        private ConfigUtil m_configUtil;
-        private ThreadSafe.Boolean m_longPollingStarted;
-        private ThreadSafe.Boolean m_longPollingStopped;
-        private SchedulePolicy m_longPollFailSchedulePolicyInSecond;
-        private SchedulePolicy m_longPollSuccessSchedulePolicyInMS;
-        private readonly IDictionary<string, ISet<RemoteConfigRepository>> m_longPollNamespaces;
-        private readonly IDictionary<string, long?> m_notifications;
-        private readonly IDictionary<string, ApolloNotificationMessages> m_remoteNotificationMessages; //namespaceName -> watchedKey -> notificationId
+        private static readonly ILog Logger = LogManager.GetLogger(typeof(RemoteConfigLongPollService));
+        private static readonly long InitNotificationId = -1;
+        private readonly ConfigServiceLocator _serviceLocator;
+        private readonly HttpUtil _httpUtil;
+        private readonly IApolloOptions _options;
+        private readonly ThreadSafe.Boolean _longPollingStarted;
+        private readonly ThreadSafe.Boolean _longPollingStopped;
+        private readonly ISchedulePolicy _longPollFailSchedulePolicyInSecond;
+        private readonly ISchedulePolicy _longPollSuccessSchedulePolicyInMs;
+        private readonly ConcurrentDictionary<string, ISet<RemoteConfigRepository>> _longPollNamespaces;
+        private readonly ConcurrentDictionary<string, long?> _notifications;
+        private readonly ConcurrentDictionary<string, ApolloNotificationMessages> _remoteNotificationMessages; //namespaceName -> watchedKey -> notificationId
 
-        public RemoteConfigLongPollService()
+        public RemoteConfigLongPollService(ConfigServiceLocator serviceLocator, HttpUtil httpUtil, IApolloOptions configUtil)
         {
-            m_longPollFailSchedulePolicyInSecond = new ExponentialSchedulePolicy(1, 120); //in second
-            m_longPollSuccessSchedulePolicyInMS = new ExponentialSchedulePolicy(100, 1000); //in millisecond
-            m_longPollingStarted = new ThreadSafe.Boolean(false);
-            m_longPollingStopped = new ThreadSafe.Boolean(false);
-            m_longPollNamespaces = new ConcurrentDictionary<string, ISet<RemoteConfigRepository>>();
-            m_notifications = new ConcurrentDictionary<string, long?>();
-            m_remoteNotificationMessages = new ConcurrentDictionary<string, ApolloNotificationMessages>();
+            _serviceLocator = serviceLocator;
+            _httpUtil = httpUtil;
+            _options = configUtil;
+            _longPollFailSchedulePolicyInSecond = new ExponentialSchedulePolicy(1, 120); //in second
+            _longPollSuccessSchedulePolicyInMs = new ExponentialSchedulePolicy(100, 1000); //in millisecond
+            _longPollingStarted = new ThreadSafe.Boolean(false);
+            _longPollingStopped = new ThreadSafe.Boolean(false);
+            _longPollNamespaces = new ConcurrentDictionary<string, ISet<RemoteConfigRepository>>();
+            _notifications = new ConcurrentDictionary<string, long?>();
+            _remoteNotificationMessages = new ConcurrentDictionary<string, ApolloNotificationMessages>();
         }
 
-        public bool Submit(string namespaceName, RemoteConfigRepository remoteConfigRepository)
+        public void Submit(string namespaceName, RemoteConfigRepository remoteConfigRepository)
         {
-            ISet<RemoteConfigRepository> remoteConfigRepositories = null;
-            m_longPollNamespaces.TryGetValue(namespaceName, out remoteConfigRepositories);
-            if (remoteConfigRepositories == null)
-            {
-                lock (this)
-                {
-                    m_longPollNamespaces.TryGetValue(namespaceName, out remoteConfigRepositories);
-                    if (remoteConfigRepositories == null)
-                    {
-                        remoteConfigRepositories = new HashSet<RemoteConfigRepository>();
-                        m_longPollNamespaces[namespaceName] = remoteConfigRepositories;
-                    }
-                }
-            }
-            bool added = remoteConfigRepositories.Add(remoteConfigRepository);
-            if(!m_notifications.ContainsKey(namespaceName))
-            {
-                lock (this)
-                {
-                    if (!m_notifications.ContainsKey(namespaceName))
-                    {
-                        m_notifications[namespaceName] = INIT_NOTIFICATION_ID;
-                    }
-                }
-            }
-            if (!m_longPollingStarted.ReadFullFence())
-            {
+            var remoteConfigRepositories = _longPollNamespaces.GetOrAdd(namespaceName, _ => new HashSet<RemoteConfigRepository>());
+
+            remoteConfigRepositories.Add(remoteConfigRepository);
+
+            _notifications.TryAdd(namespaceName, InitNotificationId);
+
+            if (!_longPollingStarted.ReadFullFence())
                 StartLongPolling();
-            }
-            return added;
         }
 
 
         private void StartLongPolling()
         {
-            if (!m_longPollingStarted.CompareAndSet(false, true)) {
+            if (!_longPollingStarted.CompareAndSet(false, true))
+            {
                 //already started
                 return;
             }
             try
             {
-                string appId = m_configUtil.AppId;
-                string cluster = m_configUtil.Cluster;
-                string dataCenter = m_configUtil.DataCenter;
+                var appId = _options.AppId;
+                var cluster = _options.Cluster;
+                var dataCenter = _options.DataCenter;
 
-                Thread t = new Thread(() =>
-                {
-                    DoLongPollingRefresh(appId, cluster, dataCenter);
-                });
-                t.IsBackground = true;
-                t.Start();
+                var unused = DoLongPollingRefresh(appId, cluster, dataCenter);
             }
             catch (Exception ex)
             {
-                ApolloConfigException exception = new ApolloConfigException("Schedule long polling refresh failed", ex);
-                logger.Warn(ExceptionUtil.GetDetailMessage(exception));
+                var exception = new ApolloConfigException("Schedule long polling refresh failed", ex);
+                Logger.Warn(ExceptionUtil.GetDetailMessage(exception));
             }
         }
 
-        private void StopLongPollingRefresh()
+        private async Task DoLongPollingRefresh(string appId, string cluster, string dataCenter)
         {
-            this.m_longPollingStopped.CompareAndSet(false, true);
-        }
+            var random = new Random();
+            ServiceDto lastServiceDto = null;
 
-        private void DoLongPollingRefresh(string appId, string cluster, string dataCenter)
-        {
-            Random random = new Random();
-            ServiceDTO lastServiceDto = null;
-
-            while (!m_longPollingStopped.ReadFullFence())
+            while (!_longPollingStopped.ReadFullFence())
             {
-                int sleepTime = 50; //default 50 ms
+                var sleepTime = 50; //default 50 ms
                 string url = null;
                 try
                 {
                     if (lastServiceDto == null)
                     {
-                        IList<ServiceDTO> configServices = ConfigServices;
+                        var configServices = await _serviceLocator.GetConfigServices();
                         lastServiceDto = configServices[random.Next(configServices.Count)];
                     }
 
                     url = AssembleLongPollRefreshUrl(lastServiceDto.HomepageUrl, appId, cluster, dataCenter);
 
-                    logger.Debug(
-                        string.Format("Long polling from {0}", url));
-                    Com.Ctrip.Framework.Apollo.Util.Http.HttpRequest request = new Com.Ctrip.Framework.Apollo.Util.Http.HttpRequest(url);
+                    Logger.Debug($"Long polling from {url}");
+                    var request = new HttpRequest(url);
                     //longer timeout - 10 minutes
                     request.Timeout = 600000;
 
-                    HttpResponse<IList<ApolloConfigNotification>> response = m_httpUtil.DoGet<IList<ApolloConfigNotification>>(request);
+                    var response = await _httpUtil.DoGetAsync<IList<ApolloConfigNotification>>(request);
 
-                    logger.Debug(
-                        string.Format("Long polling response: {0}, url: {1}", response.StatusCode, url));
+                    Logger.Debug(
+                        $"Long polling response: {response.StatusCode}, url: {url}");
                     if (response.StatusCode == 200 && response.Body != null)
                     {
                         UpdateNotifications(response.Body);
                         UpdateRemoteNotifications(response.Body);
                         Notify(lastServiceDto, response.Body);
-                        m_longPollSuccessSchedulePolicyInMS.Success();
-                    } else 
+                        _longPollSuccessSchedulePolicyInMs.Success();
+                    }
+                    else
                     {
-                        sleepTime = m_longPollSuccessSchedulePolicyInMS.Fail();
+                        sleepTime = _longPollSuccessSchedulePolicyInMs.Fail();
                     }
 
                     //try to load balance
@@ -159,55 +128,47 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                         lastServiceDto = null;
                     }
 
-                    m_longPollFailSchedulePolicyInSecond.Success();
+                    _longPollFailSchedulePolicyInSecond.Success();
                 }
                 catch (Exception ex)
                 {
                     lastServiceDto = null;
 
-                    int sleepTimeInSecond = m_longPollFailSchedulePolicyInSecond.Fail();
-                    logger.Warn(
-                        string.Format("Long polling failed, will retry in {0} seconds. appId: {1}, cluster: {2}, namespace: {3}, long polling url: {4}, reason: {5}",
-                        sleepTimeInSecond, appId, cluster, AssembleNamespaces(), url, ExceptionUtil.GetDetailMessage(ex)));
+                    var sleepTimeInSecond = _longPollFailSchedulePolicyInSecond.Fail();
+                    Logger.Warn(
+                        $"Long polling failed, will retry in {sleepTimeInSecond} seconds. appId: {appId}, cluster: {cluster}, namespace: {AssembleNamespaces()}, long polling url: {url}, reason: {ExceptionUtil.GetDetailMessage(ex)}");
 
                     sleepTime = sleepTimeInSecond * 1000;
                 }
                 finally
                 {
-                    Thread.Sleep(sleepTime);
+                    await Task.Delay(sleepTime);
                 }
             }
         }
 
-        private void Notify(ServiceDTO lastServiceDto, IList<ApolloConfigNotification> notifications)
+        private void Notify(ServiceDto lastServiceDto, IList<ApolloConfigNotification> notifications)
         {
             if (notifications == null || notifications.Count == 0)
             {
                 return;
             }
-            foreach (ApolloConfigNotification notification in notifications)
+            foreach (var notification in notifications)
             {
-                string namespaceName = notification.NamespaceName;
-                //create a new list to avoid ConcurrentModificationException
-                ISet<RemoteConfigRepository> registries = null;
-                List<RemoteConfigRepository> toBeNotified = new List<RemoteConfigRepository>();
-                m_longPollNamespaces.TryGetValue(namespaceName, out registries);
-                ApolloNotificationMessages originalMessages = null;
-                m_remoteNotificationMessages.TryGetValue(namespaceName, out originalMessages);
-                ApolloNotificationMessages remoteMessages = originalMessages == null ? null : originalMessages.Clone();
+                var namespaceName = notification.NamespaceName;
 
-                if (registries != null && registries.Count > 0)
-                {
+                //create a new list to avoid ConcurrentModificationException
+                var toBeNotified = new List<RemoteConfigRepository>();
+                if (_longPollNamespaces.TryGetValue(namespaceName, out var registries) && registries != null)
                     toBeNotified.AddRange(registries);
-                }
+
                 //since .properties are filtered out by default, so we need to check if there is any listener for it
-                ISet<RemoteConfigRepository> extraRegistries = null;
-                m_longPollNamespaces.TryGetValue(string.Format("{0}.{1}", namespaceName, ConfigFileFormat.Properties.GetString()), out extraRegistries);
-                if (extraRegistries != null && extraRegistries.Count > 0)
-                {
-                    toBeNotified.AddRange(extraRegistries);
-                }
-                foreach (RemoteConfigRepository remoteConfigRepository in toBeNotified)
+                if (_longPollNamespaces.TryGetValue($"{namespaceName}.{ConfigFileFormat.Properties.GetString()}", out registries) && registries != null)
+                    toBeNotified.AddRange(registries);
+
+                _remoteNotificationMessages.TryGetValue(namespaceName, out var originalMessages);
+                var remoteMessages = originalMessages?.Clone();
+                foreach (var remoteConfigRepository in toBeNotified)
                 {
                     try
                     {
@@ -215,7 +176,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                     }
                     catch (Exception ex)
                     {
-                        logger.Warn(ex);
+                        Logger.Warn(ex);
                     }
                 }
             }
@@ -223,31 +184,31 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
         private void UpdateNotifications(IList<ApolloConfigNotification> deltaNotifications)
         {
-            foreach (ApolloConfigNotification notification in deltaNotifications)
+            foreach (var notification in deltaNotifications)
             {
                 if (string.IsNullOrEmpty(notification.NamespaceName))
                 {
                     continue;
                 }
-                string namespaceName = notification.NamespaceName;
-                if (m_notifications.ContainsKey(namespaceName))
+                var namespaceName = notification.NamespaceName;
+                if (_notifications.ContainsKey(namespaceName))
                 {
-                    m_notifications[namespaceName] = notification.NotificationId;
+                    _notifications[namespaceName] = notification.NotificationId;
                 }
                 //since .properties are filtered out by default, so we need to check if there is notification with .properties suffix
-                string namespaceNameWithPropertiesSuffix = string.Format("{0}.{1}", namespaceName, ConfigFileFormat.Properties.GetString());
-                if (m_notifications.ContainsKey(namespaceNameWithPropertiesSuffix))
+                var namespaceNameWithPropertiesSuffix = $"{namespaceName}.{ConfigFileFormat.Properties.GetString()}";
+                if (_notifications.ContainsKey(namespaceNameWithPropertiesSuffix))
                 {
-                    m_notifications[namespaceNameWithPropertiesSuffix] = notification.NotificationId;
+                    _notifications[namespaceNameWithPropertiesSuffix] = notification.NotificationId;
                 }
             }
         }
 
         private void UpdateRemoteNotifications(IList<ApolloConfigNotification> deltaNotifications)
         {
-            foreach (ApolloConfigNotification notification in deltaNotifications)
+            foreach (var notification in deltaNotifications)
             {
-                if (String.IsNullOrEmpty(notification.NamespaceName))
+                if (string.IsNullOrEmpty(notification.NamespaceName))
                 {
                     continue;
                 }
@@ -257,13 +218,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                     continue;
                 }
 
-                ApolloNotificationMessages localRemoteMessages = null;
-                m_remoteNotificationMessages.TryGetValue(notification.NamespaceName, out localRemoteMessages);
-                if (localRemoteMessages == null)
-                {
-                    localRemoteMessages = new ApolloNotificationMessages();
-                    m_remoteNotificationMessages[notification.NamespaceName] = localRemoteMessages;
-                }
+                var localRemoteMessages = _remoteNotificationMessages.GetOrAdd(notification.NamespaceName, _ => new ApolloNotificationMessages());
 
                 localRemoteMessages.MergeFrom(notification.Messages);
             }
@@ -273,7 +228,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
         private string AssembleNamespaces()
         {
-            return string.Join(ConfigConsts.CLUSTER_NAMESPACE_SEPARATOR, m_longPollNamespaces.Keys);
+            return string.Join(ConfigConsts.ClusterNamespaceSeparator, _longPollNamespaces.Keys);
         }
 
         private string AssembleLongPollRefreshUrl(string uri, string appId, string cluster, string dataCenter)
@@ -282,54 +237,41 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             {
                 uri += "/";
             }
-            UriBuilder uriBuilder = new UriBuilder(uri + "notifications/v2");
-            var query = HttpUtility.ParseQueryString(string.Empty);
+            var uriBuilder = new UriBuilder(uri + "notifications/v2");
+            var query = new Dictionary<string, string>();
 
             query["appId"] = appId;
             query["cluster"] = cluster;
-            query["notifications"] = AssembleNotifications(m_notifications);
+            query["notifications"] = AssembleNotifications(_notifications);
 
             if (!string.IsNullOrEmpty(dataCenter))
             {
                 query["dataCenter"] = dataCenter;
             }
-            string localIp = m_configUtil.LocalIp;
+            var localIp = _options.LocalIp;
             if (!string.IsNullOrEmpty(localIp))
             {
                 query["ip"] = localIp;
             }
 
-            uriBuilder.Query = query.ToString();
+            uriBuilder.Query = QueryUtils.Build(query);
 
             return uriBuilder.ToString();
         }
 
-        private String AssembleNotifications(IDictionary<string, long?> notificationsMap)
+        private static readonly JsonSerializerSettings JsonSettings = new JsonSerializerSettings
         {
-            IList<ApolloConfigNotification> notifications = new List<ApolloConfigNotification>();
-            foreach (KeyValuePair<string, long?> kvp in notificationsMap)
-            {
-                ApolloConfigNotification notification = new ApolloConfigNotification();
-                notification.NamespaceName = kvp.Key;
-                notification.NotificationId = kvp.Value.GetValueOrDefault(INIT_NOTIFICATION_ID);
-                notifications.Add(notification);
-            }
-            return JSON.SerializeObject(notifications);
-        }
-
-        private IList<ServiceDTO> ConfigServices
+            NullValueHandling = NullValueHandling.Ignore,
+            ContractResolver = new CamelCasePropertyNamesContractResolver()
+        };
+        private string AssembleNotifications(IDictionary<string, long?> notificationsMap)
         {
-            get
-            {
-                IList<ServiceDTO> services = m_serviceLocator.GetConfigServices();
-                if (services.Count == 0)
+            return JsonConvert.SerializeObject(notificationsMap
+                .Select(kvp => new ApolloConfigNotification
                 {
-                    throw new ApolloConfigException("No available config service");
-                }
-
-                return services;
-            }
+                    NamespaceName = kvp.Key,
+                    NotificationId = kvp.Value.GetValueOrDefault(InitNotificationId)
+                }), JsonSettings);
         }
-        
     }
 }

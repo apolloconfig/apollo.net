@@ -2,13 +2,13 @@
 {
     public enum Env
     {
-        LOCAL,
-        DEV,
-        FWS,
-        FAT,
-        UAT,
-        LPT,
-        PRO,
-        TOOLS
+        Local,
+        Dev,
+        Fws,
+        Fat,
+        Uat,
+        Lpt,
+        Pro,
+        Tools
     }
 }

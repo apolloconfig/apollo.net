@@ -2,7 +2,7 @@
 {
     public class Apollo
     {
-        public static readonly string VERSION = "net-0.2.0";
+        public static readonly string Version = "net-0.2.0";
     }
 }
 

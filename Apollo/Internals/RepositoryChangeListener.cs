@@ -2,7 +2,7 @@
 
 namespace Com.Ctrip.Framework.Apollo.Internals
 {
-    public interface RepositoryChangeListener
+    public interface IRepositoryChangeListener
     {
         /// <summary>
         /// Invoked when config repository changes. </summary>

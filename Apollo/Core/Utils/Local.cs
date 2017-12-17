@@ -5,78 +5,54 @@ namespace Com.Ctrip.Framework.Apollo.Core.Utils
 {
     public class Local
     {
-        private static string hostName;
-        private static string ipv4;
-        private static string ipv6;
-        private static int processorCount;
+        private static string _hostName;
+        private static string _ipv4;
+        private static string _ipv6;
+        private static int _processorCount;
 
         static Local()
         {
             try
             {
                 ReadHostName();
-                ReadIP();
+                ReadIp();
                 ReadProcessorCount();
             }
             catch (Exception) { }
         }
 
-        public static string HostName
-        {
-            get
-            {
-                return hostName;
-            }
-        }
+        public static string HostName => _hostName;
 
-        public static string IPV4
-        {
-            get
-            {
-                return ipv4;
-            }
-        }
+        public static string Ipv4 => _ipv4;
 
-        public static string IPV6
-        {
-            get
-            {
-                return ipv6;
-            }
-        }
+        public static string Ipv6 => _ipv6;
 
-        public static int ProcessorCount
-        {
-            get
-            {
-                return processorCount;
-            }
-        }
+        public static int ProcessorCount => _processorCount;
 
         private static void ReadProcessorCount()
         {
-            processorCount = Environment.ProcessorCount;
+            _processorCount = Environment.ProcessorCount;
         }
 
         private static void ReadHostName()
         {
-            hostName = Dns.GetHostName();
+            _hostName = Dns.GetHostName();
         }
 
-        private static void ReadIP()
+        private static void ReadIp()
         {
             var ips = Dns.GetHostAddresses(HostName);
             foreach (var ip in ips)
             {
                 if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
                 {
-                    ipv4 = ip.ToString();
+                    _ipv4 = ip.ToString();
                 }
                 else
                 {
                     if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetworkV6)
                     {
-                        ipv6 = ip.ToString();
+                        _ipv6 = ip.ToString();
                     }
                 }
             }

@@ -2,39 +2,39 @@
 
 namespace Com.Ctrip.Framework.Apollo.Core.Schedule
 {
-    public class ExponentialSchedulePolicy : SchedulePolicy
+    public class ExponentialSchedulePolicy : ISchedulePolicy
     {
-        private readonly int delayTimeLowerBound;
-        private readonly int delayTimeUpperBound;
-        private int lastDelayTime;
+        private readonly int _delayTimeLowerBound;
+        private readonly int _delayTimeUpperBound;
+        private int _lastDelayTime;
 
         public ExponentialSchedulePolicy(int delayTimeLowerBound, int delayTimeUpperBound)
         {
-            this.delayTimeLowerBound = delayTimeLowerBound;
-            this.delayTimeUpperBound = delayTimeUpperBound;
+            _delayTimeLowerBound = delayTimeLowerBound;
+            _delayTimeUpperBound = delayTimeUpperBound;
         }
 
         public int Fail()
         {
-            int delayTime = lastDelayTime;
+            var delayTime = _lastDelayTime;
 
             if (delayTime == 0)
             {
-                delayTime = delayTimeLowerBound;
+                delayTime = _delayTimeLowerBound;
             }
             else
             {
-                delayTime = Math.Min(lastDelayTime << 1, delayTimeUpperBound);
+                delayTime = Math.Min(_lastDelayTime << 1, _delayTimeUpperBound);
             }
 
-            lastDelayTime = delayTime;
+            _lastDelayTime = delayTime;
 
             return delayTime;
         }
 
         public void Success()
         {
-            lastDelayTime = 0;
+            _lastDelayTime = 0;
         }
 
     }

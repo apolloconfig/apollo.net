@@ -1,47 +1,48 @@
-﻿using Com.Ctrip.Framework.Apollo.Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace Com.Ctrip.Framework.Apollo.Core.Utils
 {
     public class Properties
     {
-        private Dictionary<string, string> dict;
+        private Dictionary<string, string> _dict;
 
         public Properties()
         {
-            dict = new Dictionary<string, string>();
+            _dict = new Dictionary<string, string>();
         }
 
         public Properties(IDictionary<string, string> dictionary)
         {
             if (dictionary == null)
             {
-                dict = new Dictionary<string, string>();
+                _dict = new Dictionary<string, string>();
                 return;
             }
-            dict = new Dictionary<string, string>(dictionary);
+            _dict = new Dictionary<string, string>(dictionary);
         }
 
         public Properties(Properties source)
         {
-            if (source == null || source.dict == null)
+            if (source == null || source._dict == null)
             {
-                dict = new Dictionary<string, string>();
+                _dict = new Dictionary<string, string>();
                 return;
             }
-            dict = new Dictionary<string, string>(source.dict);
+            _dict = new Dictionary<string, string>(source._dict);
         }
+
+        public IDictionary<string, string> Source => _dict;
 
         public bool ContainsKey(string key)
         {
-            return dict.ContainsKey(key);
+            return _dict.ContainsKey(key);
         }
 
         public string GetProperty(string key)
         {
-            string result = null;
-            dict.TryGetValue(key, out result);
+            _dict.TryGetValue(key, out var result);
             return result;
         }
 
@@ -61,31 +62,31 @@ namespace Com.Ctrip.Framework.Apollo.Core.Utils
         {
             if (!string.IsNullOrEmpty(key))
             {
-                dict[key] = value;
+                _dict[key] = value;
             }
         }
 
         public ISet<string> GetPropertyNames()
         {
-            return new HashSet<string>(dict.Keys);
+            return new HashSet<string>(_dict.Keys);
         }
 
         public void Load(string filePath)
         {
-            using (StreamReader file = new StreamReader(filePath, System.Text.Encoding.UTF8))
+            using (var file = new StreamReader(filePath, System.Text.Encoding.UTF8))
             {
-                JsonSerializer serializer = new JsonSerializer();
-                dict = (Dictionary<string, string>)serializer.Deserialize(file, typeof(Dictionary<string, string>));
+                var serializer = new JsonSerializer();
+                _dict = (Dictionary<string, string>)serializer.Deserialize(file, typeof(Dictionary<string, string>));
             }
         }
 
 
         public void Store(string filePath)
         {
-            using (StreamWriter file = new StreamWriter(filePath, false, System.Text.Encoding.UTF8))
+            using (var file = new StreamWriter(filePath, false, System.Text.Encoding.UTF8))
             {
-                JsonSerializer serializer = new JsonSerializer();
-                serializer.Serialize(file, dict);
+                var serializer = new JsonSerializer();
+                serializer.Serialize(file, _dict);
             }
         }
 
@@ -96,20 +97,20 @@ namespace Com.Ctrip.Framework.Apollo.Core.Utils
                 return false;
             }
 
-            IDictionary<string,string> source = this.dict;
-            IDictionary<string,string> target = ((Properties)o).dict;
+            IDictionary<string,string> source = _dict;
+            IDictionary<string,string> target = ((Properties)o)._dict;
 
             // early-exit checks
             if (null == target)
                 return null == source;
             if (null == source)
                 return false;
-            if (object.ReferenceEquals(source, target))
+            if (ReferenceEquals(source, target))
                 return true;
             if (source.Count != target.Count)
                 return false;
 
-            foreach (string k in source.Keys)
+            foreach (var k in source.Keys)
             {
                 // check keys are the same
                 if (!target.ContainsKey(k))
@@ -124,7 +125,7 @@ namespace Com.Ctrip.Framework.Apollo.Core.Utils
 
         public override int GetHashCode()
         {
-            return dict.GetHashCode();
+            return _dict.GetHashCode();
         }
 
     }

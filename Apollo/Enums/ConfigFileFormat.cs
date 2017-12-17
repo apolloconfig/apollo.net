@@ -2,7 +2,7 @@
 {
     public enum ConfigFileFormat
     {
-        Properties, XML
+        Properties, Xml
     }
 
     static class ConfigFileFormatMethods
@@ -13,7 +13,7 @@
             {
                 case ConfigFileFormat.Properties:
                     return "properties";
-                case ConfigFileFormat.XML:
+                case ConfigFileFormat.Xml:
                     return "xml";
                 default:
                     return "unknown";

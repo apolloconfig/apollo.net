@@ -1,11 +1,18 @@
-﻿namespace Com.Ctrip.Framework.Apollo.Core
+﻿using System;
+
+namespace Com.Ctrip.Framework.Apollo.Core
 {
     public class ConfigConsts
     {
-        public const string NAMESPACE_APPLICATION = "application";
-        public const string CLUSTER_NAME_DEFAULT = "default";
-        public const string CLUSTER_NAMESPACE_SEPARATOR = "+";
-        public const string NO_APPID_PLACEHOLDER = "ApolloNoAppIdPlaceHolder";
+        public const string NamespaceApplication = "application";
+        public const string ClusterNameDefault = "default";
+        public const string ClusterNamespaceSeparator = "+";
+        public const string NoAppidPlaceholder = "ApolloNoAppIdPlaceHolder";
+        public const string DefaultMetaServerUrl = "http://localhost:8080";
+
+        public static bool IsUnix { get; } = Environment.CurrentDirectory[0] == '/';
+        public static string ServerPropertiesFile { get; } = IsUnix ? @"/opt/settings/server.properties" : @"C:\opt\settings\server.properties";
+        public static string DefaultLocalCacheDir { get; } = IsUnix ? "/opt/data" : @"C:\opt\data";
     }
 }
 

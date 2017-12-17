@@ -11,9 +11,9 @@ namespace Com.Ctrip.Framework.Apollo.Core.Utils
             return list == null || list.Count == 0;
         }
 
-        public static V TryGet<K, V>(IDictionary<K, V> d, K key)
+        public static TV TryGet<TK, TV>(IDictionary<TK, TV> d, TK key)
         {
-            V result = default(V);
+            var result = default(TV);
 
             if (d == null || key == null)
             {
@@ -28,14 +28,14 @@ namespace Com.Ctrip.Framework.Apollo.Core.Utils
 
         public static void Shuffle<T>(this IList<T> list)
         {
-            Random rnd = new Random();
+            var rnd = new Random();
 
-            int n = list.Count;
+            var n = list.Count;
             while (n > 1)
             {
                 n--;
-                int k = rnd.Next(n + 1);
-                T value = list[k];
+                var k = rnd.Next(n + 1);
+                var value = list[k];
                 list[k] = list[n];
                 list[n] = value;
             }

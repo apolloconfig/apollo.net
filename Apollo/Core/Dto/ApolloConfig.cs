@@ -4,15 +4,15 @@ namespace Com.Ctrip.Framework.Apollo.Core.Dto
 {
     public class ApolloConfig
     {
-        private string appId;
+        private string _appId;
 
-        private string cluster;
+        private string _cluster;
 
-        private string namespaceName;
+        private string _namespaceName;
 
-        private IDictionary<string, string> configurations;
+        private IDictionary<string, string> _configurations;
 
-        private string releaseKey;
+        private string _releaseKey;
 
         public ApolloConfig()
         {
@@ -20,77 +20,47 @@ namespace Com.Ctrip.Framework.Apollo.Core.Dto
 
         public ApolloConfig(string appId, string cluster, string namespaceName, string releaseKey)
         {
-            this.appId = appId;
-            this.cluster = cluster;
-            this.namespaceName = namespaceName;
-            this.releaseKey = releaseKey;
+            _appId = appId;
+            _cluster = cluster;
+            _namespaceName = namespaceName;
+            _releaseKey = releaseKey;
         }
 
         public string AppId
         {
-            get
-            {
-                return appId;
-            }
-            set
-            {
-                this.appId = value;
-            }
+            get => _appId;
+            set => _appId = value;
         }
 
         public string Cluster
         {
-            get
-            {
-                return cluster;
-            }
-            set
-            {
-                this.cluster = value;
-            }
+            get => _cluster;
+            set => _cluster = value;
         }
 
         public string NamespaceName
         {
-            get
-            {
-                return namespaceName;
-            }
-            set
-            {
-                this.namespaceName = value;
-            }
+            get => _namespaceName;
+            set => _namespaceName = value;
         }
 
         public string ReleaseKey
         {
-            get
-            {
-                return releaseKey;
-            }
-            set
-            {
-                this.releaseKey = value;
-            }
+            get => _releaseKey;
+            set => _releaseKey = value;
         }
 
         public IDictionary<string, string> Configurations
         {
-            get
-            {
-                return configurations;
-            }
-            set
-            {
-                this.configurations = value;
-            }
+            get => _configurations;
+            set => _configurations = value;
         }
 
         public override string ToString()
         {
-            return "ApolloConfig{" + "appId='" + appId + '\'' + ", cluster='" + cluster + '\'' + 
-                ", namespaceName='" + namespaceName + '\'' + ", configurations=" + configurations + 
-                ", releaseKey='" + releaseKey + '\'' + '}';
+            return "ApolloConfig{" + "appId='" + _appId + '\'' + ", cluster='" + _cluster + '\'' + 
+                ", namespaceName='" + _namespaceName + '\'' + ", configurations=" + _configurations + 
+                ", releaseKey='" + _releaseKey + '\'' + '}';
         }
 
     }

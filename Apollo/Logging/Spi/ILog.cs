@@ -34,7 +34,7 @@ namespace Com.Ctrip.Framework.Apollo.Logging.Spi
         /// <summary>
         /// 记录一条ERROR级别的日志。
         /// </summary>
-        /// <param name="title">log message</param>
+        /// <param name="message">log message</param>
         /// <param name="exception">exception to be logged</param>
         void Error(string message, Exception exception);
 
@@ -49,5 +49,12 @@ namespace Com.Ctrip.Framework.Apollo.Logging.Spi
         /// </summary>
         /// <param name="exception">The execption to log.</param>
         void Warn(Exception exception);
+
+        /// <summary>
+        /// 记录一条ERROR级别的日志。
+        /// </summary>
+        /// <param name="message">log message</param>
+        /// <param name="exception">exception to be logged</param>
+        void Warn(string message, Exception exception);
     }
 }

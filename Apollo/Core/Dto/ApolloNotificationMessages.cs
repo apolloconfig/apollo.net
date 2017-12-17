@@ -7,7 +7,7 @@ namespace Com.Ctrip.Framework.Apollo.Core.Dto
 {
     public class ApolloNotificationMessages
     {
-        private IDictionary<string, long> details;
+        private IDictionary<string, long> _details;
 
         public ApolloNotificationMessages()
             :this(new Dictionary<string, long>())
@@ -16,39 +16,33 @@ namespace Com.Ctrip.Framework.Apollo.Core.Dto
 
         private ApolloNotificationMessages(IDictionary<string, long> details)
         {
-            this.details = details;
+            _details = details;
         }
 
         public void Put(string key, long notificationId)
         {
-            details[key] = notificationId;
+            _details[key] = notificationId;
         }
 
         public long Get(string key)
         {
-            return this.details[key];
+            return _details[key];
         }
 
         public bool Has(string key)
         {
-            return this.details.ContainsKey(key);
+            return _details.ContainsKey(key);
         }
 
         public bool IsEmpty()
         {
-            return this.details.Count == 0;
+            return _details.Count == 0;
         }
 
         public IDictionary<string, long> Details
         {
-            get
-            {
-                return details;
-            }
-            set
-            {
-                this.details = value;
-            }
+            get => _details;
+            set => _details = value;
         }
 
 
@@ -59,20 +53,20 @@ namespace Com.Ctrip.Framework.Apollo.Core.Dto
                 return;
             }
 
-            foreach (KeyValuePair<string, long> entry in source.Details)
+            foreach (var entry in source.Details)
             {
                 //to make sure the notification id always grows bigger
-                if (this.Has(entry.Key) && this.Get(entry.Key) >= entry.Value)
+                if (Has(entry.Key) && Get(entry.Key) >= entry.Value)
                 {
                     continue;
                 }
-                this.Put(entry.Key, entry.Value);
+                Put(entry.Key, entry.Value);
             }
         }
 
         public ApolloNotificationMessages Clone()
         {
-            return new ApolloNotificationMessages(new Dictionary<string, long>(this.Details));
+            return new ApolloNotificationMessages(new Dictionary<string, long>(Details));
         }
 
     }

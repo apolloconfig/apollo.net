@@ -1,0 +1,54 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net45;net471;netstandard2.0</TargetFrameworks>
+        <RootNamespace>Com.Ctrip.Framework.Apollo</RootNamespace>
+        <AssemblyName>Com.Ctrip.Framework.Apollo.ConfigurationManager</AssemblyName>
+
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Description>携程Apollo客户端
+
+与Microsoft.Extensions.Configuration集成请使用Com.Ctrip.Framework.Apollo.Configuration包
+非集成(ApolloConfigManager)或与System.Configuration.ConfigurationManager集成(.net 4.7.1及以后版本)请使用Com.Ctrip.Framework.Apollo.ConfigurationManager包
+</Description>
+        <RepositoryType>git</RepositoryType>
+        <PackageProjectUrl>https://github.com/ctripcorp/apollo.net</PackageProjectUrl>
+        <Version>1.0.0</Version>
+        <AssemblyVersion>1.0.0.0</AssemblyVersion>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>..\Apollo.snk</AssemblyOriginatorKeyFile>
+        <PackageTags>apollo configcenter ctrip</PackageTags>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+        <DebugType>full</DebugType>
+        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    </PropertyGroup>
+
+    <!--<ItemGroup Condition="'$(Configuration)'=='Debug'">
+        <ProjectReference Include="..\Apollo\Apollo.csproj" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(Configuration)'!='Debug'">
+        <PackageReference Include="Com.Ctrip.Framework.Apollo" Version="1.0.0" />
+    </ItemGroup>-->
+
+    <ItemGroup>
+        <ProjectReference Include="..\Apollo\Apollo.csproj" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net45' OR '$(TargetFramework)' == 'net471'">
+        <Reference Include="System.Configuration" />
+        <Reference Include="System.Net.Http" />
+        <Reference Include="System.Web" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net45' OR '$(TargetFramework)' == 'netstandard2.0'">
+        <Compile Remove="AppSettingsSectionBuilder.cs" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+        <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.4.0" />
+    </ItemGroup>
+
+</Project>
