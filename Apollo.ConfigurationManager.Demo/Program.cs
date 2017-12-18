@@ -23,7 +23,7 @@ namespace Apollo.NetCoreApp.Demo
                     Environment.Exit(0);
                 }
 
-                var value = ConfigurationManager.AppSettings[input] ?? DEFAULT_VALUE;
+                var value = ConfigurationManager.AppSettings[input] ?? ConfigurationManager.ConnectionStrings[input]?.ConnectionString ?? DEFAULT_VALUE;
                 var color = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Loading key: {0} with value: {1}", input, value);

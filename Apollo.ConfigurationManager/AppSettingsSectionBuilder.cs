@@ -1,20 +1,18 @@
-﻿using Com.Ctrip.Framework.Apollo.Model;
+﻿#if CONFIGURATIONBUILDER
 using Com.Ctrip.Framework.Apollo.Util;
 using System.Collections.Specialized;
 using System.Configuration;
 
 namespace Com.Ctrip.Framework.Apollo
 {
-    public class AppSettingsSectionBuilder : ConfigurationBuilder
+    public class AppSettingsSectionBuilder : ApolloConfigurationBuilder
     {
-        private IConfig _config;
-
-        private string _namespace;
+        private string _keyPrefix;
         public override void Initialize(string name, NameValueCollection config)
         {
-            _namespace = config["namespace"];
-
             base.Initialize(name, config);
+
+            _keyPrefix = config["keyPrefix"] ?? Namespace;
         }
 
         public override ConfigurationSection ProcessConfigurationSection(ConfigurationSection configSection)
@@ -23,25 +21,29 @@ namespace Com.Ctrip.Framework.Apollo
             {
                 var appSettings = section.Settings;
 
-                if (_config == null)
-                    _config = GetConfig(appSettings);
+                TrySetConfigUtil(appSettings);
 
                 lock (this)
-                    foreach (var name in _config.GetPropertyNames())
+                {
+                    var config = GetConfig();
+                    foreach (var name in config.GetPropertyNames())
                     {
-                        var value = _config.GetProperty(name, null);
+                        var value = config.GetProperty(name, null);
+
+                        var key = string.IsNullOrEmpty(_keyPrefix) ? name : $"{_keyPrefix}:{name}";
 
                         if (!string.IsNullOrEmpty(value))
-                            appSettings.Remove(name);
+                            appSettings.Remove(key);
 
-                        appSettings.Add(name, value);
+                        appSettings.Add(key, value);
                     }
+                }
             }
 
             return base.ProcessConfigurationSection(configSection);
         }
 
-        private IConfig GetConfig(KeyValueConfigurationCollection appSettings)
+        private static bool TrySetConfigUtil(KeyValueConfigurationCollection appSettings)
         {
             if (ConfigUtil.AppSettings == null)
             {
@@ -53,15 +55,12 @@ namespace Com.Ctrip.Framework.Apollo
                 }
 
                 ConfigUtil.AppSettings = coll;
+
+                return true;
             }
 
-            var config = _namespace == null ? ApolloConfigManager.GetAppConfig() : ApolloConfigManager.GetConfig(_namespace);
-
-            config.ConfigChanged += Config_ConfigChanged;
-
-            return config;
+            return false;
         }
-
-        private void Config_ConfigChanged(object sender, ConfigChangeEventArgs args) => ConfigurationManager.RefreshSection("appSettings");
     }
 }
+#endif
