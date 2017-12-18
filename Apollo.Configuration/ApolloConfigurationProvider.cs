@@ -25,7 +25,7 @@ namespace Com.Ctrip.Framework.Apollo
 
         private void SetData(Properties properties)
         {
-            Data = string.IsNullOrWhiteSpace(_sectionKey) ? properties.Source : properties.Source.ToDictionary(kv => $"{_sectionKey}{ConfigurationPath.KeyDelimiter}{kv.Key}", kv => kv.Value);
+            Data = string.IsNullOrEmpty(_sectionKey) ? properties.Source : properties.Source.ToDictionary(kv => $"{_sectionKey}{ConfigurationPath.KeyDelimiter}{kv.Key}", kv => kv.Value);
         }
 
         public void OnRepositoryChange(string namespaceName, Properties newProperties)
