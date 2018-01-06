@@ -5,22 +5,21 @@ using Com.Ctrip.Framework.Apollo.Core.Utils;
 using Com.Ctrip.Framework.Apollo.Enums;
 using Com.Ctrip.Framework.Apollo.Exceptions;
 using Com.Ctrip.Framework.Apollo.Logging;
-using Com.Ctrip.Framework.Apollo.Logging.Spi;
 using Com.Ctrip.Framework.Apollo.Util;
 using Com.Ctrip.Framework.Apollo.Util.Http;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Newtonsoft.Json.Serialization;
 
 namespace Com.Ctrip.Framework.Apollo.Internals
 {
     public class RemoteConfigLongPollService
     {
-        private static readonly ILog Logger = LogManager.GetLogger(typeof(RemoteConfigLongPollService));
+        private static readonly ILogger Logger = LogManager.CreateLogger(typeof(RemoteConfigLongPollService));
         private static readonly long InitNotificationId = -1;
         private readonly ConfigServiceLocator _serviceLocator;
         private readonly HttpUtil _httpUtil;

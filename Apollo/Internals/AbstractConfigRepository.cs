@@ -1,15 +1,13 @@
 ﻿using Com.Ctrip.Framework.Apollo.Core.Utils;
 using Com.Ctrip.Framework.Apollo.Logging;
-using Com.Ctrip.Framework.Apollo.Logging.Spi;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Com.Ctrip.Framework.Apollo.Internals
 {
     public abstract class AbstractConfigRepository : IConfigRepository
     {
-        private static readonly ILog Logger = LogManager.GetLogger(typeof(AbstractConfigRepository));
+        private static readonly ILogger Logger = LogManager.CreateLogger(typeof(AbstractConfigRepository));
 
         private readonly List<IRepositoryChangeListener> _listeners = new List<IRepositoryChangeListener>();
         public string Namespace { get; }

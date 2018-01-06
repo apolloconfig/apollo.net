@@ -2,7 +2,6 @@
 using Com.Ctrip.Framework.Apollo.Enums;
 using Com.Ctrip.Framework.Apollo.Exceptions;
 using Com.Ctrip.Framework.Apollo.Logging;
-using Com.Ctrip.Framework.Apollo.Logging.Spi;
 using System;
 using System.Collections.Specialized;
 using System.Configuration;
@@ -14,7 +13,7 @@ namespace Com.Ctrip.Framework.Apollo.Util
     {
         internal static NameValueCollection AppSettings { get; set; }
 
-        private static readonly ILog Logger = LogManager.GetLogger(typeof(ConfigUtil));
+        private static readonly ILogger Logger = LogManager.CreateLogger(typeof(ConfigUtil));
         private int _refreshInterval = 5 * 60 * 1000; //5 minutes
         private int _timeout = 5000; //5 seconds, c# has no connectTimeout but response timeout
         private int _readTimeout = 5000; //5 seconds

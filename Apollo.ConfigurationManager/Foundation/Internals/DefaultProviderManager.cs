@@ -1,15 +1,16 @@
-﻿using Com.Ctrip.Framework.Apollo.Logging;
-using Com.Ctrip.Framework.Apollo.Logging.Spi;
+﻿using System;
+using System.Collections.Generic;
+using Com.Ctrip.Framework.Apollo.Foundation.Internals.Provider;
+using Com.Ctrip.Framework.Apollo.Logging;
+using Com.Ctrip.Framework.Foundation.Internals;
 using Com.Ctrip.Framework.Foundation.Internals.Provider;
 using Com.Ctrip.Framework.Foundation.Spi.Provider;
-using System;
-using System.Collections.Generic;
 
-namespace Com.Ctrip.Framework.Foundation.Internals
+namespace Com.Ctrip.Framework.Apollo.Foundation.Internals
 {
     class DefaultProviderManager : IProviderManager
     {
-        private static readonly ILog logger = LogManager.GetLogger(typeof(DefaultProviderManager));
+        private static readonly ILogger logger = LogManager.CreateLogger(typeof(DefaultProviderManager));
         private readonly object syncLock = new object();
         private IDictionary<Type, IProvider> providers = new Dictionary<Type, IProvider>();
 

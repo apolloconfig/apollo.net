@@ -1,13 +1,13 @@
-﻿using Com.Ctrip.Framework.Apollo.Logging;
-using Com.Ctrip.Framework.Apollo.Logging.Spi;
+﻿using System;
+using Com.Ctrip.Framework.Apollo.Logging;
+using Com.Ctrip.Framework.Foundation.Internals;
 using Com.Ctrip.Framework.Foundation.Spi.Provider;
-using System;
 
-namespace Com.Ctrip.Framework.Foundation.Internals.Provider
+namespace Com.Ctrip.Framework.Apollo.Foundation.Internals.Provider
 {
     internal class DefaultNetworkProvider : INetworkProvider
     {
-        private static readonly ILog Logger = LogManager.GetLogger(typeof(DefaultNetworkProvider));
+        private static readonly ILogger Logger = LogManager.CreateLogger(typeof(DefaultNetworkProvider));
 
         public string HostAddress => NetworkInterfaceManager.HostIp;
 

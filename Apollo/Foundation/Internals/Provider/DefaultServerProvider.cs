@@ -1,16 +1,15 @@
-﻿using Com.Ctrip.Framework.Apollo.Core;
-using Com.Ctrip.Framework.Apollo.Logging;
-using Com.Ctrip.Framework.Apollo.Logging.Spi;
-using Com.Ctrip.Framework.Foundation.Spi.Provider;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Com.Ctrip.Framework.Apollo.Core;
+using Com.Ctrip.Framework.Apollo.Logging;
+using Com.Ctrip.Framework.Foundation.Spi.Provider;
 
-namespace Com.Ctrip.Framework.Foundation.Internals.Provider
+namespace Com.Ctrip.Framework.Apollo.Foundation.Internals.Provider
 {
     internal class DefaultServerProvider : IServerProvider
     {
-        private static readonly ILog Logger = LogManager.GetLogger(typeof(DefaultServerProvider));
+        private static readonly ILogger Logger = LogManager.CreateLogger(typeof(DefaultServerProvider));
         private string _env;
         private string _subEnv;
         private string _dc;

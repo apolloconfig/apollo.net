@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Configuration;
+using Com.Ctrip.Framework.Apollo.Logging;
 
-namespace Apollo.NetCoreApp.Demo
+namespace Apollo.NetFramework.Demo
 {
     class Program
     {
         private static readonly string DEFAULT_VALUE = "undefined";
         private static void Main()
         {
+            LogManager.Provider = new ConsoleLoggerProvider(LogLevel.Trace);
+
             Console.WriteLine("Apollo Config Demo. Please input key to get the value. Input quit to exit.");
             while (true)
             {

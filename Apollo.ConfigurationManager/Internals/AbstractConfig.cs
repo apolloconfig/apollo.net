@@ -3,7 +3,6 @@ using Com.Ctrip.Framework.Apollo.Core.Utils;
 using Com.Ctrip.Framework.Apollo.Enums;
 using Com.Ctrip.Framework.Apollo.Exceptions;
 using Com.Ctrip.Framework.Apollo.Logging;
-using Com.Ctrip.Framework.Apollo.Logging.Spi;
 using Com.Ctrip.Framework.Apollo.Model;
 using System;
 using System.Collections.Generic;
@@ -15,7 +14,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 {
     public abstract class AbstractConfig : IConfig
     {
-        private static readonly ILog Logger = LogManager.GetLogger(typeof(AbstractConfig));
+        private static readonly ILogger Logger = LogManager.CreateLogger(typeof(AbstractConfig));
         public event ConfigChangeEvent ConfigChanged;
         private static readonly TaskFactory ExecutorService;
 

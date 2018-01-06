@@ -1,14 +1,14 @@
-﻿using Com.Ctrip.Framework.Apollo.Logging;
-using Com.Ctrip.Framework.Apollo.Logging.Spi;
+﻿using Com.Ctrip.Framework.Apollo.Foundation.Internals;
+using Com.Ctrip.Framework.Apollo.Logging;
 using Com.Ctrip.Framework.Foundation.Internals;
 using Com.Ctrip.Framework.Foundation.Spi.Provider;
 using System;
 
-namespace Com.Ctrip.Framework.Foundation
+namespace Com.Ctrip.Framework.Apollo.Foundation
 {
     internal class Foundation
     {
-        private static readonly ILog Logger = LogManager.GetLogger(typeof(Foundation));
+        private static readonly ILogger Logger = LogManager.CreateLogger(typeof(Foundation));
         private static readonly object LockObject = new object();
         private static IProviderManager _manager;
 
