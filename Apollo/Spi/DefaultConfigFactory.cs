@@ -10,7 +10,7 @@ namespace Com.Ctrip.Framework.Apollo.Spi
 
         public IConfig Create(string namespaceName)
         {
-            var configRepository = _repositoryFactory.ConfigRepository(namespaceName);
+            var configRepository = _repositoryFactory.GetConfigRepository(namespaceName);
 
             return new DefaultConfig(namespaceName, configRepository);
         }

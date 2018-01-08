@@ -6,7 +6,6 @@ namespace Apollo.Configuration.Demo
 {
     class ConfigurationManagerDemo
     {
-        private string DEFAULT_VALUE = "undefined";
         private IConfig config;
         private IConfig anotherConfig;
 

@@ -3,7 +3,7 @@ using System.Net.Sockets;
 
 namespace Com.Ctrip.Framework.Apollo.Foundation
 {
-    internal class NetworkInterfaceManager
+    public class NetworkInterfaceManager
     {
         private static string _hostName = string.Empty;
         private static string _hostIp = string.Empty;

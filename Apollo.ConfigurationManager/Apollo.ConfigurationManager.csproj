@@ -17,6 +17,7 @@
         <AssemblyVersion>1.1.0.0</AssemblyVersion>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>..\Apollo.snk</AssemblyOriginatorKeyFile>
+        <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
         <PackageTags>apollo configcenter ctrip</PackageTags>
     </PropertyGroup>
 

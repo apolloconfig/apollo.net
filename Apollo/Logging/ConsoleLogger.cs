@@ -21,7 +21,7 @@ namespace Com.Ctrip.Framework.Apollo.Logging
             if (!IsEnabled(level))
                 return;
 
-            Console.WriteLine($"[{level}] {message}");
+            Console.WriteLine($"{DateTime.Now:HH:mm:ss} [{level}] {message}");
         }
 
         public void Log(LogLevel level, string message, Exception exception)
@@ -29,7 +29,7 @@ namespace Com.Ctrip.Framework.Apollo.Logging
             if (!IsEnabled(level))
                 return;
 
-            Console.WriteLine($"[{level}] {message} - {exception.GetDetailMessage()}");
+            Console.WriteLine($"{DateTime.Now:HH:mm:ss} [{level}] {message} - {exception.GetDetailMessage()}");
         }
     }
 }
