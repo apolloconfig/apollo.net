@@ -78,7 +78,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             catch (Exception ex)
             {
                 var exception = new ApolloConfigException("Schedule long polling refresh failed", ex);
-                Logger.Warn(ExceptionUtil.GetDetailMessage(exception));
+                Logger.Warn(exception.GetDetailMessage());
             }
         }
 
@@ -133,7 +133,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
                     var sleepTimeInSecond = _longPollFailSchedulePolicyInSecond.Fail();
                     Logger.Warn(
-                        $"Long polling failed, will retry in {sleepTimeInSecond} seconds. appId: {appId}, cluster: {cluster}, namespace: {AssembleNamespaces()}, long polling url: {url}, reason: {ExceptionUtil.GetDetailMessage(ex)}");
+                        $"Long polling failed, will retry in {sleepTimeInSecond} seconds. appId: {appId}, cluster: {cluster}, namespace: {AssembleNamespaces()}, long polling url: {url}, reason: {ex.GetDetailMessage()}");
 
                     sleepTime = sleepTimeInSecond * 1000;
                 }

@@ -29,7 +29,7 @@ namespace Com.Ctrip.Framework.Apollo.Logging
             if (!IsEnabled(level))
                 return;
 
-            Console.WriteLine($"[{level}] {message} - {ExceptionUtil.GetDetailMessage(exception)}");
+            Console.WriteLine($"[{level}] {message} - {exception.GetDetailMessage()}");
         }
     }
 }

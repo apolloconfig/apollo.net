@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net45;net471;netstandard2.0</TargetFrameworks>
+        <TargetFrameworks>net471;net45;netstandard2.0</TargetFrameworks>
         <RootNamespace>Com.Ctrip.Framework.Apollo</RootNamespace>
         <AssemblyName>Com.Ctrip.Framework.Apollo.ConfigurationManager</AssemblyName>
 

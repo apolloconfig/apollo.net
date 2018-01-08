@@ -255,7 +255,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                 }
                 catch (Exception ex)
                 {
-                    Logger.Warn($"Sync config failed, will retry. Repository {GetType()}, reason: {ExceptionUtil.GetDetailMessage(ex)}");
+                    Logger.Warn($"Sync config failed, will retry. Repository {GetType()}, reason: {ex.GetDetailMessage()}");
                 }
             });
         }

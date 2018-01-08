@@ -1,9 +1,9 @@
 ﻿using Com.Ctrip.Framework.Apollo.Core;
 using Com.Ctrip.Framework.Apollo.Enums;
-using Com.Ctrip.Framework.Apollo.Foundation.Internals;
 using System;
 using System.IO;
 using System.Text;
+using Com.Ctrip.Framework.Apollo.Foundation;
 
 namespace Com.Ctrip.Framework.Apollo
 {

@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using System.Net.Sockets;
 
-namespace Com.Ctrip.Framework.Apollo.Foundation.Internals
+namespace Com.Ctrip.Framework.Apollo.Foundation
 {
     internal class NetworkInterfaceManager
     {
@@ -9,10 +9,7 @@ namespace Com.Ctrip.Framework.Apollo.Foundation.Internals
         private static string _hostIp = string.Empty;
         private static byte[] _hostAddressBytes;
 
-        static NetworkInterfaceManager()
-        {
-            Refresh();
-        }
+        static NetworkInterfaceManager() => Refresh();
 
         public static void Refresh()
         {

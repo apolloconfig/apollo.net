@@ -1,6 +1,6 @@
 ﻿using Com.Ctrip.Framework.Apollo.Core;
 using Com.Ctrip.Framework.Apollo.Enums;
-using Com.Ctrip.Framework.Apollo.Exceptions;
+using Com.Ctrip.Framework.Apollo.Foundation;
 using Com.Ctrip.Framework.Apollo.Logging;
 using System;
 using System.Collections.Specialized;
@@ -30,6 +30,17 @@ namespace Com.Ctrip.Framework.Apollo.Util
         }
 
         /// <summary>
+        /// Get the config from app config via key
+        /// </summary>
+        /// <returns> the value or null if not found </returns>
+        public static string GetAppConfig(string key)
+        {
+            var value = AppSettings["Apollo." + key];
+
+            return string.IsNullOrEmpty(value) ? null : value;
+        }
+
+        /// <summary>
         /// Get the app id for the current application.
         /// </summary>
         /// <returns> the app id or ConfigConsts.NO_APPID_PLACEHOLDER if app id is not available</returns>
@@ -37,7 +48,7 @@ namespace Com.Ctrip.Framework.Apollo.Util
         {
             get
             {
-                var appId = Foundation.Foundation.App.AppId;
+                var appId = GetAppConfig("AppId");
                 if (string.IsNullOrWhiteSpace(appId))
                 {
                     appId = ConfigConsts.NoAppidPlaceholder;
@@ -52,23 +63,19 @@ namespace Com.Ctrip.Framework.Apollo.Util
         /// Get the data center info for the current application.
         /// </summary>
         /// <returns> the current data center, null if there is no such info. </returns>
-        public string DataCenter => Foundation.Foundation.Server.DataCenter;
+        public string DataCenter => GetAppConfig("DataCenter");
 
-        public string SubEnv => Foundation.Foundation.Server.SubEnvType;
+        public string SubEnv => GetAppConfig("SubEnv");
 
         private void InitCluster()
         {
             //Load data center from app.config
-            _cluster = GetAppConfig("Apollo.Cluster");
+            _cluster = GetAppConfig("Cluster");
 
-            var env = Foundation.Foundation.Server.EnvType;
             //LPT and DEV will be treated as a cluster(lower case)
-            if (string.IsNullOrWhiteSpace(_cluster) &&
-                (Env.Dev.ToString().Equals(env, StringComparison.CurrentCultureIgnoreCase) ||
-                 Env.Lpt.ToString().Equals(env, StringComparison.CurrentCultureIgnoreCase))
-                )
+            if (string.IsNullOrWhiteSpace(_cluster) && (ApolloEnv == Env.Dev || ApolloEnv == Env.Lpt))
             {
-                _cluster = env.ToLower();
+                _cluster = ApolloEnv.ToString().ToLower();
             }
 
             //Use data center as cluster
@@ -101,45 +108,15 @@ namespace Com.Ctrip.Framework.Apollo.Util
         /// </summary>
         /// <returns> the env </returns>
         /// <exception cref="ApolloConfigException"> if env is not set </exception>
-        public Env ApolloEnv
-        {
-            get
-            {
-                var env = EnvUtils.TransformEnv(Foundation.Foundation.Server.EnvType);
-                if (env == null)
-                {
-                    string message = null;
-                    if (string.IsNullOrWhiteSpace(Foundation.Foundation.Server.EnvType))
-                    {
-                        message = $"env is not set, please make sure it is set in {ConfigConsts.ServerPropertiesFile}!";
-                    }
-                    else
-                    {
-                        message = $"Env {Foundation.Foundation.Server.EnvType} is unknown to Apollo, please correct it in {ConfigConsts.ServerPropertiesFile}!";
-                    }
-                    Logger.Error(message);
-                    throw new ApolloConfigException(message);
-                }
-                return (Env)env;
-            }
-        }
+        public Env ApolloEnv => Enum.TryParse(GetAppConfig("Env"), out Env env) ? env : Env.Dev;
 
-        /// <summary>
-        /// Get the config from app config via key
-        /// </summary>
-        /// <returns> the value or null if not found </returns>
-        public string GetAppConfig(string key)
-        {
-            return AppSettings[key];
-        }
+        public string LocalIp { get; set; } = NetworkInterfaceManager.HostIp;
 
-        public string LocalIp => Foundation.Foundation.Net.HostAddress;
-
-        public string MetaServer => MetaDomainConsts.GetDomain(ApolloEnv);
+        public string MetaServer => GetAppConfig("MetaServer") ?? MetaDomainConsts.GetDomain(ApolloEnv);
 
         private void InitTimeout()
         {
-            var customizedTimeout = GetAppConfig("Apollo.Timeout");
+            var customizedTimeout = GetAppConfig("Timeout");
             if (customizedTimeout != null)
             {
                 try
@@ -156,11 +133,13 @@ namespace Com.Ctrip.Framework.Apollo.Util
 
         public int Timeout => _timeout;
 
-        public string Authorization { get; } = "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes("user:"));
+        private static readonly string DefaultAuthorization = "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes("user:"));
+        public string Authorization => GetAppConfig("Authorization") ?? DefaultAuthorization;
 
         private void InitRefreshInterval()
         {
-            var customizedRefreshInterval = GetAppConfig("Apollo.RefreshInterval");
+            var customizedRefreshInterval = GetAppConfig("RefreshInterval");
+
             if (customizedRefreshInterval != null)
             {
                 try
@@ -177,24 +156,6 @@ namespace Com.Ctrip.Framework.Apollo.Util
 
         public int RefreshInterval => _refreshInterval;
 
-        public string LocalCacheDir => Path.Combine(ConfigConsts.DefaultLocalCacheDir, AppId);
-
-        public bool InLocalMode
-        {
-            get
-            {
-                try
-                {
-                    var env = ApolloEnv;
-                    return Env.Local.Equals(env);
-                }
-                catch (Exception)
-                {
-                    //ignore
-                }
-                return false;
-            }
-        }
-
+        public string LocalCacheDir => GetAppConfig("LocalCacheDir") ?? Path.Combine(ConfigConsts.DefaultLocalCacheDir, AppId);
     }
 }

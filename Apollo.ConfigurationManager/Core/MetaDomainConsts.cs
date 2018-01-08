@@ -11,13 +11,13 @@ namespace Com.Ctrip.Framework.Apollo.Core
             switch(env)
             {
                 case Env.Dev:
-                    return GetAppSetting("Apollo.DEV.Meta", ConfigConsts.DefaultLocalCacheDir);
+                    return GetAppSetting("DEV.Meta", ConfigConsts.DefaultLocalCacheDir);
                 case Env.Fat:
-                    return GetAppSetting("Apollo.FAT.Meta", ConfigConsts.DefaultLocalCacheDir);
+                    return GetAppSetting("FAT.Meta", ConfigConsts.DefaultLocalCacheDir);
                 case Env.Uat:
-                    return GetAppSetting("Apollo.UAT.Meta", ConfigConsts.DefaultLocalCacheDir);
+                    return GetAppSetting("UAT.Meta", ConfigConsts.DefaultLocalCacheDir);
                 case Env.Pro:
-                    return GetAppSetting("Apollo.PRO.Meta", ConfigConsts.DefaultLocalCacheDir);
+                    return GetAppSetting("PRO.Meta", ConfigConsts.DefaultLocalCacheDir);
                 default:
                     return ConfigConsts.DefaultLocalCacheDir;
             }
@@ -25,7 +25,7 @@ namespace Com.Ctrip.Framework.Apollo.Core
 
         private static string GetAppSetting(string key, string defaultValue)
         {
-            var value = ConfigUtil.AppSettings[key];
+            var value = ConfigUtil.GetAppConfig(key);
 
             return !string.IsNullOrWhiteSpace(value) ? value : defaultValue;
         }
