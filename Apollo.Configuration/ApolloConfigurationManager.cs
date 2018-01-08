@@ -1,28 +1,30 @@
 ﻿using Com.Ctrip.Framework.Apollo.Core;
 using Com.Ctrip.Framework.Apollo.Internals;
 using Com.Ctrip.Framework.Apollo.Spi;
-using Com.Ctrip.Framework.Apollo.Util;
+using System.Threading;
 
 namespace Com.Ctrip.Framework.Apollo
 {
     /// <summary>
     /// Entry point for client config use
     /// </summary>
-    public static class ApolloConfigurationManager
+    public class ApolloConfigurationManager
     {
-        private static readonly IConfigManager Manager = new DefaultConfigManager(
-            new DefaultConfigFactoryManager(new DefaultConfigRegistry(), new ConfigRepositoryFactory(new ConfigUtil())));
+        private static IConfigManager _manager;
+
+        internal static void SetApolloOptions(ConfigRepositoryFactory factory) =>
+            Interlocked.CompareExchange(ref _manager, new DefaultConfigManager(new DefaultConfigFactoryManager(new DefaultConfigRegistry(), factory)), null);
 
         /// <summary>
         /// Get Application's config instance. </summary>
         /// <returns> config instance </returns>
-        public static IConfig GetAppConfig() => GetConfig(ConfigConsts.NamespaceApplication);
+        public IConfig GetAppConfig() => GetConfig(ConfigConsts.NamespaceApplication);
 
         /// <summary>
         /// Get the config instance for the namespace. </summary>
         /// <param name="namespaceName"> the namespace of the config </param>
         /// <returns> config instance </returns>
-        public static IConfig GetConfig(string namespaceName) => Manager.GetConfig(namespaceName);
+        public IConfig GetConfig(string namespaceName) => _manager.GetConfig(namespaceName);
     }
 }
 

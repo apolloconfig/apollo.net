@@ -20,8 +20,14 @@ namespace Microsoft.Extensions.Configuration
         public static IApolloConfigurationBuilder AddApollo(this IConfigurationBuilder builder, string appId, string metaServer, Env env) =>
             builder.AddApollo(new ApolloOptions { AppId = appId, MetaServer = metaServer, ApolloEnv = env });
 
-        public static IApolloConfigurationBuilder AddApollo(this IConfigurationBuilder builder, IApolloOptions options) =>
-            new ApolloConfigurationBuilder(builder, new ConfigRepositoryFactory(options ?? throw new ArgumentNullException(nameof(options))));
+        public static IApolloConfigurationBuilder AddApollo(this IConfigurationBuilder builder, IApolloOptions options)
+        {
+            var repositoryFactory = new ConfigRepositoryFactory(options ?? throw new ArgumentNullException(nameof(options)));
+
+            ApolloConfigurationManager.SetApolloOptions(repositoryFactory);
+
+            return new ApolloConfigurationBuilder(builder, repositoryFactory);
+        }
     }
 }
 

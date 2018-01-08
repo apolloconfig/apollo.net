@@ -1,25 +1,15 @@
-﻿using ApolloDemo;
-using System;
-using System.Net;
+﻿using System;
+using System.Configuration;
 using Com.Ctrip.Framework.Apollo.Logging;
 
-namespace Apollo.NetCoreApp.Demo
+namespace Apollo.ConfigurationBuilder.Demo
 {
     class Program
     {
+        private static readonly string DEFAULT_VALUE = "undefined";
         private static void Main()
         {
-            Console.WriteLine(typeof(WebRequest).Assembly.Location);
-
             LogManager.Provider = new ConsoleLoggerProvider(LogLevel.Trace);
-
-            Console.WriteLine($"请输入 0：测试Configuration；其他：测试ConfigurationManagerDemo");
-
-            Func<string, string> func;
-            if (Console.ReadLine() == "0")
-                func = new ConfigurationDemo().GetConfig;
-            else
-                func = new ConfigurationManagerDemo().GetConfig;
 
             Console.WriteLine("Apollo Config Demo. Please input key to get the value. Input quit to exit.");
             while (true)
@@ -35,7 +25,12 @@ namespace Apollo.NetCoreApp.Demo
                 {
                     Environment.Exit(0);
                 }
-                func(input);
+
+                var value = ConfigurationManager.AppSettings[input] ?? ConfigurationManager.ConnectionStrings[input]?.ConnectionString ?? DEFAULT_VALUE;
+                var color = Console.ForegroundColor;
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Loading key: {0} with value: {1}", input, value);
+                Console.ForegroundColor = color;
             }
         }
     }

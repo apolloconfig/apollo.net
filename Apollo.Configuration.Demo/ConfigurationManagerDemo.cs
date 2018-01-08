@@ -2,7 +2,7 @@
 using Com.Ctrip.Framework.Apollo.Model;
 using System;
 
-namespace ApolloDemo
+namespace Apollo.Configuration.Demo
 {
     class ConfigurationManagerDemo
     {
@@ -10,27 +10,12 @@ namespace ApolloDemo
         private IConfig config;
         private IConfig anotherConfig;
 
-        public ConfigurationManagerDemo()
+        public ConfigurationManagerDemo(ApolloConfigurationManager configurationManager)
         {
-            config = ApolloConfigurationManager.GetAppConfig();
-            anotherConfig = ApolloConfigurationManager.GetConfig("TEST1.test");
+            config = configurationManager.GetAppConfig();
+            anotherConfig = configurationManager.GetConfig("TEST1.test");
             config.ConfigChanged += OnChanged;
             anotherConfig.ConfigChanged += OnChanged;
-        }
-
-        public string GetConfig(string key)
-        {
-            string result = config.GetProperty(key, DEFAULT_VALUE);
-            if (result.Equals(DEFAULT_VALUE))
-            {
-                result = anotherConfig.GetProperty(key, DEFAULT_VALUE);
-            }
-            var color = Console.ForegroundColor;
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Loading key: {0} with value: {1}", key, result);
-            Console.ForegroundColor = color;
-
-            return result;
         }
 
         private void OnChanged(object sender, ConfigChangeEventArgs changeEvent)

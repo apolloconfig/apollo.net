@@ -3,9 +3,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using System;
+using Com.Ctrip.Framework.Apollo.Model;
 using Newtonsoft.Json;
 
-namespace ApolloDemo
+namespace Apollo.Configuration.Demo
 {
     class ConfigurationDemo
     {
@@ -37,11 +38,15 @@ namespace ApolloDemo
                 .Configure<Value>(config)
                 .Configure<Value>("other", anotherConfig);
 
+            services.AddSingleton<ApolloConfigurationManager>();
+
             var serviceProvider = services.BuildServiceProvider();
 
             var optionsMonitor = serviceProvider.GetService<IOptionsMonitor<Value>>();
 
             optionsMonitor.OnChange(OnChanged);
+
+            new ConfigurationManagerDemo(serviceProvider.GetService<ApolloConfigurationManager>());
         }
 
         public string GetConfig(string key)
