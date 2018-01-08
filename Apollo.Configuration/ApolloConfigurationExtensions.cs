@@ -1,8 +1,8 @@
-﻿using System;
-using Com.Ctrip.Framework.Apollo;
+﻿using Com.Ctrip.Framework.Apollo;
 using Com.Ctrip.Framework.Apollo.Core;
 using Com.Ctrip.Framework.Apollo.Enums;
 using Com.Ctrip.Framework.Apollo.Internals;
+using System;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.Configuration
@@ -10,8 +10,12 @@ namespace Microsoft.Extensions.Configuration
     public static class ApolloConfigurationExtensions
     {
         /// <summary>通过已有的配置中读取apollo配置，比如appsettings.json。</summary>
+        [Obsolete("请使用builder.Build().GetSection(\"apollo\")或其他方式转入apollo配置", true)]
         public static IApolloConfigurationBuilder AddApollo(this IConfigurationBuilder builder) =>
             builder.AddApollo(builder.Build().GetSection("apollo").Get<ApolloOptions>());
+
+        public static IApolloConfigurationBuilder AddApollo(this IConfigurationBuilder builder, IConfiguration apolloConfiguration) =>
+            builder.AddApollo(apolloConfiguration.Get<ApolloOptions>());
 
         public static IApolloConfigurationBuilder AddApollo(this IConfigurationBuilder builder, string appId, string metaServer, Env env) =>
             builder.AddApollo(new ApolloOptions { AppId = appId, MetaServer = metaServer, ApolloEnv = env });

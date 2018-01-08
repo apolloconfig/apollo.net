@@ -1,7 +1,6 @@
-﻿using System;
-using Com.Ctrip.Framework.Apollo.Logging;
-using Com.Ctrip.Framework.Foundation.Internals;
+﻿using Com.Ctrip.Framework.Apollo.Logging;
 using Com.Ctrip.Framework.Foundation.Spi.Provider;
+using System;
 
 namespace Com.Ctrip.Framework.Apollo.Foundation.Internals.Provider
 {

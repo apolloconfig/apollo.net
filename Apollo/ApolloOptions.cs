@@ -32,8 +32,8 @@ namespace Com.Ctrip.Framework.Apollo
         /// <summary>ms</summary>
         int Timeout { get; }
 
-        /// <summary>ms</summary>
-        int ReadTimeout { get; }
+        /// <summary>Http Authorization header value</summary>
+        string Authorization { get; }
 
         /// <summary>ms</summary>
         int RefreshInterval { get; }

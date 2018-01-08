@@ -1,5 +1,6 @@
 ﻿using ApolloDemo;
 using System;
+using System.Net;
 using Com.Ctrip.Framework.Apollo.Logging;
 
 namespace Apollo.NetCoreApp.Demo
@@ -8,10 +9,12 @@ namespace Apollo.NetCoreApp.Demo
     {
         private static void Main()
         {
+            Console.WriteLine(typeof(WebRequest).Assembly.Location);
+
             LogManager.Provider = new ConsoleLoggerProvider(LogLevel.Trace);
 
             Console.WriteLine($"请输入 0：测试Configuration；其他：测试ConfigurationManagerDemo");
-            
+
             Func<string, string> func;
             if (Console.ReadLine() == "0")
                 func = new ConfigurationDemo().GetConfig;

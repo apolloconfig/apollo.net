@@ -13,6 +13,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace Com.Ctrip.Framework.Apollo.Internals
@@ -101,15 +102,12 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                     url = AssembleLongPollRefreshUrl(lastServiceDto.HomepageUrl, appId, cluster, dataCenter);
 
                     Logger.Debug($"Long polling from {url}");
-                    var request = new HttpRequest(url);
-                    //longer timeout - 10 minutes
-                    request.Timeout = 600000;
 
-                    var response = await _httpUtil.DoGetAsync<IList<ApolloConfigNotification>>(request);
+                    var response = await _httpUtil.DoGetAsync<IList<ApolloConfigNotification>>(url, 600000);
 
                     Logger.Debug(
                         $"Long polling response: {response.StatusCode}, url: {url}");
-                    if (response.StatusCode == 200 && response.Body != null)
+                    if (response.StatusCode == HttpStatusCode.OK && response.Body != null)
                     {
                         UpdateNotifications(response.Body);
                         UpdateRemoteNotifications(response.Body);
@@ -122,7 +120,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                     }
 
                     //try to load balance
-                    if (response.StatusCode == 304 && random.NextDouble() >= 0.5)
+                    if (response.StatusCode == HttpStatusCode.NotModified && random.NextDouble() >= 0.5)
                     {
                         lastServiceDto = null;
                     }

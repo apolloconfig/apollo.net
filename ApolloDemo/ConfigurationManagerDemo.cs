@@ -12,8 +12,8 @@ namespace ApolloDemo
 
         public ConfigurationManagerDemo()
         {
-            config = ApolloConfigManager.GetAppConfig();
-            anotherConfig = ApolloConfigManager.GetConfig("TEST1.test");
+            config = ApolloConfigurationManager.GetAppConfig();
+            anotherConfig = ApolloConfigurationManager.GetConfig("TEST1.test");
             config.ConfigChanged += OnChanged;
             anotherConfig.ConfigChanged += OnChanged;
         }

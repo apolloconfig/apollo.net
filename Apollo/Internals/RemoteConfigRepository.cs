@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -131,13 +132,12 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                     url = AssembleQueryConfigUrl(configService.HomepageUrl, appId, cluster, Namespace, dataCenter, _remoteMessages.ReadFullFence(), _configCache.ReadFullFence());
 
                     Logger.Debug($"Loading config from {url}");
-                    var request = new HttpRequest(url);
 
                     try
                     {
-                        var response = await _httpUtil.DoGetAsync<ApolloConfig>(request);
+                        var response = await _httpUtil.DoGetAsync<ApolloConfig>(url);
 
-                        if (response.StatusCode == 304)
+                        if (response.StatusCode == HttpStatusCode.NotModified)
                         {
                             Logger.Debug("Config server responds with 304 HTTP status code.");
                             return _configCache.ReadFullFence();
@@ -154,7 +154,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                     {
                         var statusCodeException = ex;
                         //config not found
-                        if (ex.StatusCode == 404)
+                        if (ex.StatusCode == HttpStatusCode.NotFound)
                         {
                             notFound = true;
 

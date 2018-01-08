@@ -1,6 +1,9 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Com.Ctrip.Framework.Apollo;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using System;
-using Com.Ctrip.Framework.Apollo;
+using Newtonsoft.Json;
 
 namespace ApolloDemo
 {
@@ -11,9 +14,9 @@ namespace ApolloDemo
         {
             var builder = new ConfigurationBuilder();
 
-            builder
-                .AddJsonFile("appsettings.json")
-                .AddApollo()
+            builder.AddJsonFile("appsettings.json");
+                builder
+                .AddApollo(builder.Build().GetSection("apollo"))
                 .AddDefault()
                 .AddtNamespace("TEST1.test");
 
@@ -28,6 +31,17 @@ namespace ApolloDemo
         {
             config = Configuration;
             anotherConfig = Configuration.GetSection("TEST1.test");
+
+            var services = new ServiceCollection();
+            services.AddOptions()
+                .Configure<Value>(config)
+                .Configure<Value>("other", anotherConfig);
+
+            var serviceProvider = services.BuildServiceProvider();
+
+            var optionsMonitor = serviceProvider.GetService<IOptionsMonitor<Value>>();
+
+            optionsMonitor.OnChange(OnChanged);
         }
 
         public string GetConfig(string key)
@@ -43,6 +57,16 @@ namespace ApolloDemo
             Console.ForegroundColor = color;
 
             return result;
+        }
+
+        private void OnChanged(Value value, string name)
+        {
+            Console.WriteLine(name + " has changed: " + JsonConvert.SerializeObject(value));
+        }
+
+        private class Value
+        {
+            public string timeout { get; set; }
         }
     }
 }

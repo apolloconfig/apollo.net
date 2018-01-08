@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using System.Net.Sockets;
 
-namespace Com.Ctrip.Framework.Foundation.Internals
+namespace Com.Ctrip.Framework.Apollo.Foundation.Internals
 {
     internal class NetworkInterfaceManager
     {

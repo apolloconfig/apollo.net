@@ -69,7 +69,6 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             {
                 var url = AssembleMetaServiceUrl();
 
-                var request = new HttpRequest(url);
                 var maxRetries = 5;
                 Exception exception = null;
 
@@ -77,7 +76,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                 {
                     try
                     {
-                        var response = await _httpUtil.DoGetAsync<IList<ServiceDto>>(request);
+                        var response = await _httpUtil.DoGetAsync<IList<ServiceDto>>(url);
                         var services = response.Body;
                         if (services == null || services.Count == 0)
                         {

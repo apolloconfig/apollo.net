@@ -6,6 +6,7 @@ using System;
 using System.Collections.Specialized;
 using System.Configuration;
 using System.IO;
+using System.Text;
 
 namespace Com.Ctrip.Framework.Apollo.Util
 {
@@ -16,7 +17,6 @@ namespace Com.Ctrip.Framework.Apollo.Util
         private static readonly ILogger Logger = LogManager.CreateLogger(typeof(ConfigUtil));
         private int _refreshInterval = 5 * 60 * 1000; //5 minutes
         private int _timeout = 5000; //5 seconds, c# has no connectTimeout but response timeout
-        private int _readTimeout = 5000; //5 seconds
         private string _cluster;
 
         public ConfigUtil()
@@ -26,7 +26,6 @@ namespace Com.Ctrip.Framework.Apollo.Util
 
             InitRefreshInterval();
             InitTimeout();
-            InitReadTimeout();
             InitCluster();
         }
 
@@ -157,24 +156,7 @@ namespace Com.Ctrip.Framework.Apollo.Util
 
         public int Timeout => _timeout;
 
-        private void InitReadTimeout()
-        {
-            var customizedReadTimeout = GetAppConfig("Apollo.ReadTimeout");
-            if (customizedReadTimeout != null)
-            {
-                try
-                {
-                    _readTimeout = int.Parse(customizedReadTimeout);
-                }
-                catch (Exception)
-                {
-                    Logger.Error(
-                        $"Config for Apollo.ReadTimeout is invalid: {customizedReadTimeout}");
-                }
-            }
-        }
-
-        public int ReadTimeout => _readTimeout;
+        public string Authorization { get; } = "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes("user:"));
 
         private void InitRefreshInterval()
         {

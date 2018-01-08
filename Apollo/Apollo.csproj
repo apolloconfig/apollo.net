@@ -30,6 +30,7 @@
         <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
         <PackageReference Include="Microsoft.DotNet.Analyzers.Compatibility" Version="0.1.2-alpha" Condition="'$(TargetFramework)' == 'netstandard2.0'" PrivateAssets="All" />
 
+        <Reference Include="System.Net.Http" Condition="'$(TargetFramework)' == 'net45'" />
         <Reference Include="System.Web" Condition="'$(TargetFramework)' == 'net45'" />
     </ItemGroup>
 

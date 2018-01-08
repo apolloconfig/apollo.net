@@ -7,7 +7,7 @@ namespace Com.Ctrip.Framework.Apollo
     /// <summary>
     /// Entry point for client config use
     /// </summary>
-    public static class ApolloConfigManager
+    public static class ApolloConfigurationManager
     {
         private static readonly IConfigManager Manager = new DefaultConfigManager(
             new DefaultConfigFactoryManager(new DefaultConfigRegistry()));

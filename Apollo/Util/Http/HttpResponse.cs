@@ -1,31 +1,23 @@
-﻿namespace Com.Ctrip.Framework.Apollo.Util.Http
+﻿using System.Net;
+
+namespace Com.Ctrip.Framework.Apollo.Util.Http
 {
     public class HttpResponse<T>
     {
-        public HttpResponse(int statusCode, T body)
+        public HttpResponse(HttpStatusCode statusCode, T body)
         {
             StatusCode = statusCode;
             Body = body;
         }
 
-        public HttpResponse(int statusCode)
+        public HttpResponse(HttpStatusCode statusCode)
         {
             StatusCode = statusCode;
             Body = default(T);
         }
 
-        public int StatusCode
-        {
-            get;
-            private set;
-          
-        }
+        public HttpStatusCode StatusCode { get; }
 
-        public T Body
-        {
-            get;
-            private set;
-        }
+        public T Body { get; }
     }
-
 }

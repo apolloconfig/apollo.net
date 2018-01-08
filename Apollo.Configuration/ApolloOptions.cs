@@ -1,8 +1,9 @@
 ﻿using Com.Ctrip.Framework.Apollo.Core;
 using Com.Ctrip.Framework.Apollo.Enums;
+using Com.Ctrip.Framework.Apollo.Foundation.Internals;
 using System;
 using System.IO;
-using Com.Ctrip.Framework.Foundation.Internals;
+using System.Text;
 
 namespace Com.Ctrip.Framework.Apollo
 {
@@ -81,8 +82,7 @@ namespace Com.Ctrip.Framework.Apollo
         /// <summary>ms</summary>
         public virtual int Timeout { get; set; } = 5000; //5 secondss
 
-        /// <summary>ms</summary>
-        public virtual int ReadTimeout { get; set; } = 5000; //5 seconds
+        public string Authorization { get; } = "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes("user:"));
 
         /// <summary>ms</summary>
         public virtual int RefreshInterval { get; set; } = 5 * 60 * 1000; //5 minutes
