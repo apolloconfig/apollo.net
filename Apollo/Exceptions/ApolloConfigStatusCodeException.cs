@@ -13,5 +13,4 @@ namespace Com.Ctrip.Framework.Apollo.Exceptions
 
         public virtual HttpStatusCode StatusCode { get; }
     }
-
 }

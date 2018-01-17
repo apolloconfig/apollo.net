@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 
@@ -10,29 +11,30 @@ namespace Com.Ctrip.Framework.Apollo.Core.Utils
 
         public Properties()
         {
-            _dict = new Dictionary<string, string>();
+            _dict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         }
 
         public Properties(IDictionary<string, string> dictionary)
         {
             if (dictionary == null)
             {
-                _dict = new Dictionary<string, string>();
+                _dict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
                 return;
             }
-            _dict = new Dictionary<string, string>(dictionary);
+            _dict = new Dictionary<string, string>(dictionary, StringComparer.OrdinalIgnoreCase);
         }
 
         public Properties(Properties source)
         {
-            if (source == null || source._dict == null)
+            if (source?._dict == null)
             {
-                _dict = new Dictionary<string, string>();
+                _dict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
                 return;
             }
-            _dict = new Dictionary<string, string>(source._dict);
+            _dict = new Dictionary<string, string>(source._dict, StringComparer.OrdinalIgnoreCase);
         }
 
+        /// <summary>Key忽略大小写。StringComparer.OrdinalIgnoreCase</summary>
         public IDictionary<string, string> Source => _dict;
 
         public bool ContainsKey(string key)
@@ -74,9 +76,10 @@ namespace Com.Ctrip.Framework.Apollo.Core.Utils
         public void Load(string filePath)
         {
             using (var file = new StreamReader(filePath, System.Text.Encoding.UTF8))
+            using (var reader = new JsonTextReader(file))
             {
                 var serializer = new JsonSerializer();
-                _dict = (Dictionary<string, string>)serializer.Deserialize(file, typeof(Dictionary<string, string>));
+                _dict = new Dictionary<string, string>(serializer.Deserialize<IDictionary<string, string>>(reader), StringComparer.OrdinalIgnoreCase);
             }
         }
 
@@ -97,8 +100,8 @@ namespace Com.Ctrip.Framework.Apollo.Core.Utils
                 return false;
             }
 
-            IDictionary<string,string> source = _dict;
-            IDictionary<string,string> target = ((Properties)o)._dict;
+            IDictionary<string, string> source = _dict;
+            IDictionary<string, string> target = ((Properties)o)._dict;
 
             // early-exit checks
             if (null == target)

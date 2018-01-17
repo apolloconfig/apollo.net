@@ -1,4 +1,6 @@
-﻿using Com.Ctrip.Framework.Apollo.Core.Utils;
+﻿using System;
+using System.Collections.Generic;
+using Com.Ctrip.Framework.Apollo.Core.Utils;
 using Com.Ctrip.Framework.Apollo.Internals;
 using Microsoft.Extensions.Configuration;
 using System.Linq;
@@ -25,7 +27,7 @@ namespace Com.Ctrip.Framework.Apollo
 
         private void SetData(Properties properties)
         {
-            Data = string.IsNullOrEmpty(_sectionKey) ? properties.Source : properties.Source.ToDictionary(kv => $"{_sectionKey}{ConfigurationPath.KeyDelimiter}{kv.Key}", kv => kv.Value);
+            Data = string.IsNullOrEmpty(_sectionKey) || properties.Source == null ? properties.Source : new Dictionary<string, string>(properties.Source.ToDictionary(kv => $"{_sectionKey}{ConfigurationPath.KeyDelimiter}{kv.Key}", kv => kv.Value), StringComparer.OrdinalIgnoreCase);
         }
 
         public void OnRepositoryChange(string namespaceName, Properties newProperties)
