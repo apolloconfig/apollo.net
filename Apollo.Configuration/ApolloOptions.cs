@@ -46,8 +46,8 @@ namespace Com.Ctrip.Framework.Apollo
                 if (_cluster == null)
                 {
                     //LPT and DEV will be treated as a cluster(lower case)
-                    if (string.IsNullOrWhiteSpace(_cluster) && (Env.Dev == ApolloEnv || Env.Lpt == ApolloEnv))
-                        _cluster = ApolloEnv.ToString().ToLower();
+                    if (string.IsNullOrWhiteSpace(_cluster) && (Env.Dev == Env || Env.Lpt == Env))
+                        _cluster = Env.ToString().ToLower();
 
                     //Use data center as cluster
                     if (string.IsNullOrWhiteSpace(_cluster))
@@ -71,7 +71,7 @@ namespace Com.Ctrip.Framework.Apollo
         /// Get the current environment.
         /// </summary>
         /// <returns> the env </returns>
-        public virtual Env ApolloEnv { get; set; } = Env.Dev;
+        public virtual Env Env { get; set; } = Env.Dev;
 
         public string SubEnv { get; set; }
 

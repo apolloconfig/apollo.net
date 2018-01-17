@@ -21,7 +21,7 @@ namespace Com.Ctrip.Framework.Apollo
         /// Get the current environment.
         /// </summary>
         /// <returns> the env </returns>
-        Env ApolloEnv { get; }
+        Env Env { get; }
 
         string SubEnv { get; }
 

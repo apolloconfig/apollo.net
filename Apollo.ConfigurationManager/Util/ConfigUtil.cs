@@ -73,9 +73,9 @@ namespace Com.Ctrip.Framework.Apollo.Util
             _cluster = GetAppConfig("Cluster");
 
             //LPT and DEV will be treated as a cluster(lower case)
-            if (string.IsNullOrWhiteSpace(_cluster) && (ApolloEnv == Env.Dev || ApolloEnv == Env.Lpt))
+            if (string.IsNullOrWhiteSpace(_cluster) && (Env == Env.Dev || Env == Env.Lpt))
             {
-                _cluster = ApolloEnv.ToString().ToLower();
+                _cluster = Env.ToString().ToLower();
             }
 
             //Use data center as cluster
@@ -108,11 +108,11 @@ namespace Com.Ctrip.Framework.Apollo.Util
         /// </summary>
         /// <returns> the env </returns>
         /// <exception cref="ApolloConfigException"> if env is not set </exception>
-        public Env ApolloEnv => Enum.TryParse(GetAppConfig("Env"), out Env env) ? env : Env.Dev;
+        public Env Env => Enum.TryParse(GetAppConfig("Env"), out Env env) ? env : Env.Dev;
 
         public string LocalIp { get; set; } = NetworkInterfaceManager.HostIp;
 
-        public string MetaServer => GetAppConfig("MetaServer") ?? MetaDomainConsts.GetDomain(ApolloEnv);
+        public string MetaServer => GetAppConfig("MetaServer") ?? MetaDomainConsts.GetDomain(Env);
 
         private void InitTimeout()
         {

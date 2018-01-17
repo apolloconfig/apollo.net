@@ -18,7 +18,7 @@ namespace Microsoft.Extensions.Configuration
             builder.AddApollo(apolloConfiguration.Get<ApolloOptions>());
 
         public static IApolloConfigurationBuilder AddApollo(this IConfigurationBuilder builder, string appId, string metaServer, Env env) =>
-            builder.AddApollo(new ApolloOptions { AppId = appId, MetaServer = metaServer, ApolloEnv = env });
+            builder.AddApollo(new ApolloOptions { AppId = appId, MetaServer = metaServer, Env = env });
 
         public static IApolloConfigurationBuilder AddApollo(this IConfigurationBuilder builder, IApolloOptions options)
         {

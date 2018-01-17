@@ -18,7 +18,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
         private IConfigRepository CreateConfigRepository(string @namespace)
         {
-            if (Env.Local.Equals(Options.ApolloEnv))
+            if (Env.Local.Equals(Options.Env))
             {
                 Console.WriteLine("==== Apollo is in local mode! Won\'t pull configs from remote server! ====");
                 return new LocalFileConfigRepository(@namespace, Options);
