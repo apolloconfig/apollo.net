@@ -4,64 +4,33 @@ namespace Com.Ctrip.Framework.Apollo.Core.Dto
 {
     public class ApolloConfig
     {
-        private string _appId;
-
-        private string _cluster;
-
-        private string _namespaceName;
-
-        private IDictionary<string, string> _configurations;
-
-        private string _releaseKey;
-
         public ApolloConfig()
         {
         }
 
         public ApolloConfig(string appId, string cluster, string namespaceName, string releaseKey)
         {
-            _appId = appId;
-            _cluster = cluster;
-            _namespaceName = namespaceName;
-            _releaseKey = releaseKey;
+            AppId = appId;
+            Cluster = cluster;
+            NamespaceName = namespaceName;
+            ReleaseKey = releaseKey;
         }
 
-        public string AppId
-        {
-            get => _appId;
-            set => _appId = value;
-        }
+        public string AppId { get; set; }
 
-        public string Cluster
-        {
-            get => _cluster;
-            set => _cluster = value;
-        }
+        public string Cluster { get; set; }
 
-        public string NamespaceName
-        {
-            get => _namespaceName;
-            set => _namespaceName = value;
-        }
+        public string NamespaceName { get; set; }
 
-        public string ReleaseKey
-        {
-            get => _releaseKey;
-            set => _releaseKey = value;
-        }
+        public string ReleaseKey { get; set; }
 
-        public IDictionary<string, string> Configurations
-        {
-            get => _configurations;
-            set => _configurations = value;
-        }
+        public IDictionary<string, string> Configurations { get; set; }
 
         public override string ToString()
         {
-            return "ApolloConfig{" + "appId='" + _appId + '\'' + ", cluster='" + _cluster + '\'' + 
-                ", namespaceName='" + _namespaceName + '\'' + ", configurations=" + _configurations + 
-                ", releaseKey='" + _releaseKey + '\'' + '}';
+            return "ApolloConfig{" + "appId='" + AppId + '\'' + ", cluster='" + Cluster + '\'' +
+                ", namespaceName='" + NamespaceName + '\'' + ", configurations=" + Configurations +
+                ", releaseKey='" + ReleaseKey + '\'' + '}';
         }
-
     }
 }

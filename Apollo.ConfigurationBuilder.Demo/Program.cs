@@ -1,15 +1,15 @@
-﻿using Com.Ctrip.Framework.Apollo.Logging;
-using System;
+﻿using System;
+using System.Configuration;
+using Com.Ctrip.Framework.Apollo.Logging;
 
-namespace Apollo.ConfigurationManager.Demo
+namespace Apollo.ConfigurationBuilder.Demo
 {
     class Program
     {
+        private static readonly string DEFAULT_VALUE = "undefined";
         private static void Main()
         {
             LogManager.Provider = new ConsoleLoggerProvider(LogLevel.Trace);
-
-            var demo = new ConfigurationManagerDemo();
 
             Console.WriteLine("Apollo Config Demo. Please input key to get the value. Input quit to exit.");
             while (true)
@@ -25,7 +25,12 @@ namespace Apollo.ConfigurationManager.Demo
                 {
                     Environment.Exit(0);
                 }
-                demo.GetConfig(input);
+
+                var value = ConfigurationManager.AppSettings[input] ?? ConfigurationManager.ConnectionStrings[input]?.ConnectionString ?? DEFAULT_VALUE;
+                var color = Console.ForegroundColor;
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Loading key: {0} with value: {1}", input, value);
+                Console.ForegroundColor = color;
             }
         }
     }

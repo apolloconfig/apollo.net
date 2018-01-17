@@ -5,22 +5,22 @@ using Com.Ctrip.Framework.Apollo.Core.Utils;
 using Com.Ctrip.Framework.Apollo.Enums;
 using Com.Ctrip.Framework.Apollo.Exceptions;
 using Com.Ctrip.Framework.Apollo.Logging;
-using Com.Ctrip.Framework.Apollo.Logging.Spi;
 using Com.Ctrip.Framework.Apollo.Util;
 using Com.Ctrip.Framework.Apollo.Util.Http;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
-using Newtonsoft.Json.Serialization;
 
 namespace Com.Ctrip.Framework.Apollo.Internals
 {
     public class RemoteConfigLongPollService
     {
-        private static readonly ILog Logger = LogManager.GetLogger(typeof(RemoteConfigLongPollService));
+        private static readonly ILogger Logger = LogManager.CreateLogger(typeof(RemoteConfigLongPollService));
         private static readonly long InitNotificationId = -1;
         private readonly ConfigServiceLocator _serviceLocator;
         private readonly HttpUtil _httpUtil;
@@ -78,7 +78,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             catch (Exception ex)
             {
                 var exception = new ApolloConfigException("Schedule long polling refresh failed", ex);
-                Logger.Warn(ExceptionUtil.GetDetailMessage(exception));
+                Logger.Warn(exception.GetDetailMessage());
             }
         }
 
@@ -102,15 +102,12 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                     url = AssembleLongPollRefreshUrl(lastServiceDto.HomepageUrl, appId, cluster, dataCenter);
 
                     Logger.Debug($"Long polling from {url}");
-                    var request = new HttpRequest(url);
-                    //longer timeout - 10 minutes
-                    request.Timeout = 600000;
 
-                    var response = await _httpUtil.DoGetAsync<IList<ApolloConfigNotification>>(request);
+                    var response = await _httpUtil.DoGetAsync<IList<ApolloConfigNotification>>(url, 600000);
 
                     Logger.Debug(
                         $"Long polling response: {response.StatusCode}, url: {url}");
-                    if (response.StatusCode == 200 && response.Body != null)
+                    if (response.StatusCode == HttpStatusCode.OK && response.Body != null)
                     {
                         UpdateNotifications(response.Body);
                         UpdateRemoteNotifications(response.Body);
@@ -123,7 +120,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                     }
 
                     //try to load balance
-                    if (response.StatusCode == 304 && random.NextDouble() >= 0.5)
+                    if (response.StatusCode == HttpStatusCode.NotModified && random.NextDouble() >= 0.5)
                     {
                         lastServiceDto = null;
                     }
@@ -136,7 +133,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
                     var sleepTimeInSecond = _longPollFailSchedulePolicyInSecond.Fail();
                     Logger.Warn(
-                        $"Long polling failed, will retry in {sleepTimeInSecond} seconds. appId: {appId}, cluster: {cluster}, namespace: {AssembleNamespaces()}, long polling url: {url}, reason: {ExceptionUtil.GetDetailMessage(ex)}");
+                        $"Long polling failed, will retry in {sleepTimeInSecond} seconds. appId: {appId}, cluster: {cluster}, namespace: {AssembleNamespaces()}, long polling url: {url}, reason: {ex.GetDetailMessage()}");
 
                     sleepTime = sleepTimeInSecond * 1000;
                 }

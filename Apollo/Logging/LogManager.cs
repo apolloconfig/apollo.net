@@ -1,70 +1,34 @@
-﻿using Com.Ctrip.Framework.Apollo.Logging.Internals;
-using Com.Ctrip.Framework.Apollo.Logging.Spi;
-using System;
-using System.Collections.Generic;
+﻿using System;
 
 namespace Com.Ctrip.Framework.Apollo.Logging
 {
-    /// <summary>
-    /// 用于创建 <see cref="ILog" /> 实例，主要用于应用程序日志.
-    /// </summary>
-    public sealed class LogManager
+    public static class LogManager
     {
-        private static readonly Dictionary<string, ILog> Logs = new Dictionary<string, ILog>();
-        private static readonly object LockObject = new object();
-
         /// <summary>
-        /// Initializes a new instance of the <see cref="LogManager" /> class. 
+        /// Allows the <see cref="ILoggerProvider"/> to be set for this library. <see cref="Provider"/> can
+        /// be set once, and must be set before any other library methods are used.
         /// </summary>
-        /// <remarks>
-        /// Uses a private access modifier to prevent instantiation of this class.
-        /// </remarks>
-        private LogManager()
-        { }
-
-        /// <summary>
-        /// 通过类型名获取ILog实例。
-        /// </summary>
-        /// <param name="type">The type.</param>
-        /// <returns>ILog instance</returns>
-        public static ILog GetLogger(Type type)
+        public static ILoggerProvider Provider
         {
-            if (type == null)
+            internal get
             {
-                return GetLogger("NoName");
+                _providerRetrieved = true;
+                return _provider;
             }
-            else
+            set
             {
-                return GetLogger(type.FullName);
+                if (_providerRetrieved)
+                    throw new InvalidOperationException("The logging provider must be set before any Apollo methods are called.");
+
+                _provider = value;
             }
         }
 
+        internal static ILogger CreateLogger(string name) => Provider.CreateLogger(name);
+        internal static ILogger CreateLogger(Type type) => Provider.CreateLogger(type.FullName);
+        internal static ILogger CreateLogger<T>() => Provider.CreateLogger(typeof(T).FullName);
 
-        /// <summary>
-        /// 通过字符串名获取ILog实例。
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <returns>ILog instance</returns>
-        public static ILog GetLogger(string name)
-        {
-            var loggerName = name;
-            if (string.IsNullOrEmpty(name) || name.Trim().Length == 0)
-                loggerName = "defaultLogger";
-
-            if (!Logs.TryGetValue(loggerName, out var log))
-            {
-                lock (LockObject)
-                {
-                    if (!Logs.TryGetValue(loggerName, out log))
-                    {
-                        log = new DefaultLogger(loggerName);
-
-                        Logs.Add(loggerName, log);
-                    }
-                }
-            }
-
-            return log;
-        }
+        static ILoggerProvider _provider = new NoOpLoggerProvider();
+        static bool _providerRetrieved;
     }
 }

@@ -3,13 +3,13 @@ using Com.Ctrip.Framework.Apollo.Core.Dto;
 using Com.Ctrip.Framework.Apollo.Core.Utils;
 using Com.Ctrip.Framework.Apollo.Exceptions;
 using Com.Ctrip.Framework.Apollo.Logging;
-using Com.Ctrip.Framework.Apollo.Logging.Spi;
 using Com.Ctrip.Framework.Apollo.Util;
 using Com.Ctrip.Framework.Apollo.Util.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,7 +17,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 {
     public class RemoteConfigRepository : AbstractConfigRepository
     {
-        private static readonly ILog Logger = LogManager.GetLogger(typeof(RemoteConfigRepository));
+        private static readonly ILogger Logger = LogManager.CreateLogger(typeof(RemoteConfigRepository));
         private static readonly TaskFactory ExecutorService = new TaskFactory(new LimitedConcurrencyLevelTaskScheduler(5));
 
         private readonly ConfigServiceLocator _serviceLocator;
@@ -132,13 +132,12 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                     url = AssembleQueryConfigUrl(configService.HomepageUrl, appId, cluster, Namespace, dataCenter, _remoteMessages.ReadFullFence(), _configCache.ReadFullFence());
 
                     Logger.Debug($"Loading config from {url}");
-                    var request = new HttpRequest(url);
 
                     try
                     {
-                        var response = await _httpUtil.DoGetAsync<ApolloConfig>(request);
+                        var response = await _httpUtil.DoGetAsync<ApolloConfig>(url);
 
-                        if (response.StatusCode == 304)
+                        if (response.StatusCode == HttpStatusCode.NotModified)
                         {
                             Logger.Debug("Config server responds with 304 HTTP status code.");
                             return _configCache.ReadFullFence();
@@ -155,7 +154,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                     {
                         var statusCodeException = ex;
                         //config not found
-                        if (ex.StatusCode == 404)
+                        if (ex.StatusCode == HttpStatusCode.NotFound)
                         {
                             notFound = true;
 
@@ -256,7 +255,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                 }
                 catch (Exception ex)
                 {
-                    Logger.Warn($"Sync config failed, will retry. Repository {GetType()}, reason: {ExceptionUtil.GetDetailMessage(ex)}");
+                    Logger.Warn($"Sync config failed, will retry. Repository {GetType()}, reason: {ex.GetDetailMessage()}");
                 }
             });
         }

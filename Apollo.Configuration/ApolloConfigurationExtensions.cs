@@ -1,8 +1,8 @@
-﻿using System;
-using Com.Ctrip.Framework.Apollo;
+﻿using Com.Ctrip.Framework.Apollo;
 using Com.Ctrip.Framework.Apollo.Core;
 using Com.Ctrip.Framework.Apollo.Enums;
 using Com.Ctrip.Framework.Apollo.Internals;
+using System;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.Configuration
@@ -10,14 +10,24 @@ namespace Microsoft.Extensions.Configuration
     public static class ApolloConfigurationExtensions
     {
         /// <summary>通过已有的配置中读取apollo配置，比如appsettings.json。</summary>
+        [Obsolete("请使用builder.Build().GetSection(\"apollo\")或其他方式转入apollo配置", true)]
         public static IApolloConfigurationBuilder AddApollo(this IConfigurationBuilder builder) =>
             builder.AddApollo(builder.Build().GetSection("apollo").Get<ApolloOptions>());
 
-        public static IApolloConfigurationBuilder AddApollo(this IConfigurationBuilder builder, string appId, string metaServer, Env env) =>
-            builder.AddApollo(new ApolloOptions { AppId = appId, MetaServer = metaServer, ApolloEnv = env });
+        public static IApolloConfigurationBuilder AddApollo(this IConfigurationBuilder builder, IConfiguration apolloConfiguration) =>
+            builder.AddApollo(apolloConfiguration.Get<ApolloOptions>());
 
-        public static IApolloConfigurationBuilder AddApollo(this IConfigurationBuilder builder, IApolloOptions options) =>
-            new ApolloConfigurationBuilder(builder, new ConfigRepositoryFactory(options ?? throw new ArgumentNullException(nameof(options))));
+        public static IApolloConfigurationBuilder AddApollo(this IConfigurationBuilder builder, string appId, string metaServer, Env env) =>
+            builder.AddApollo(new ApolloOptions { AppId = appId, MetaServer = metaServer, Env = env });
+
+        public static IApolloConfigurationBuilder AddApollo(this IConfigurationBuilder builder, IApolloOptions options)
+        {
+            var repositoryFactory = new ConfigRepositoryFactory(options ?? throw new ArgumentNullException(nameof(options)));
+
+            ApolloConfigurationManager.SetApolloOptions(repositoryFactory);
+
+            return new ApolloConfigurationBuilder(builder, repositoryFactory);
+        }
     }
 }
 
@@ -36,7 +46,7 @@ namespace Com.Ctrip.Framework.Apollo
         /// <summary>添加其他namespace。如果sectionKey为null则添加到root中，可以直接读取，否则使用Configuration.GetSection(sectionKey)读取</summary>
         public static IApolloConfigurationBuilder AddtNamespace(this IApolloConfigurationBuilder builder, string @namespace, string sectionKey)
         {
-            builder.Add(new ApolloConfigurationProvider(sectionKey, builder.ConfigRepositoryFactory.ConfigRepository(@namespace ?? throw new ArgumentNullException(nameof(@namespace)))));
+            builder.Add(new ApolloConfigurationProvider(sectionKey, builder.ConfigRepositoryFactory.GetConfigRepository(@namespace ?? throw new ArgumentNullException(nameof(@namespace)))));
 
             return builder;
         }

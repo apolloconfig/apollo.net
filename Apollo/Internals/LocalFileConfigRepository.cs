@@ -2,17 +2,15 @@
 using Com.Ctrip.Framework.Apollo.Core.Utils;
 using Com.Ctrip.Framework.Apollo.Exceptions;
 using Com.Ctrip.Framework.Apollo.Logging;
-using Com.Ctrip.Framework.Apollo.Logging.Spi;
 using Com.Ctrip.Framework.Apollo.Util;
 using System;
 using System.IO;
-using System.Threading;
 
 namespace Com.Ctrip.Framework.Apollo.Internals
 {
     public class LocalFileConfigRepository : AbstractConfigRepository, IRepositoryChangeListener
     {
-        private static readonly ILog Logger = LogManager.GetLogger(typeof(LocalFileConfigRepository));
+        private static readonly ILogger Logger = LogManager.CreateLogger(typeof(LocalFileConfigRepository));
         private const string ConfigDir = "config-cache";
 
         private string _baseDir;
@@ -94,7 +92,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             catch (Exception ex)
             {
                 Logger.Warn(
-                    $"Sync config from upstream repository {_upstream.GetType()} failed, reason: {ExceptionUtil.GetDetailMessage(ex)}");
+                    $"Sync config from upstream repository {_upstream.GetType()} failed, reason: {ex.GetDetailMessage()}");
             }
 
             return false;
@@ -159,7 +157,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             catch (Exception ex)
             {
                 Logger.Warn(
-                    $"Persist local cache file {file} failed, reason: {ExceptionUtil.GetDetailMessage(ex)}.", ex);
+                    $"Persist local cache file {file} failed, reason: {ex.GetDetailMessage()}.", ex);
             }
         }
 
@@ -189,7 +187,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             catch (Exception ex)
             {
                 Logger.Warn(
-                    $"Unable to create local config cache directory {baseDir}, reason: {ExceptionUtil.GetDetailMessage(ex)}. Will not able to cache config file.", ex);
+                    $"Unable to create local config cache directory {baseDir}, reason: {ex.GetDetailMessage()}. Will not able to cache config file.", ex);
             }
         }
 

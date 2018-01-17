@@ -11,7 +11,6 @@ namespace Com.Ctrip.Framework.Apollo.Core
         public const string DefaultMetaServerUrl = "http://localhost:8080";
 
         public static bool IsUnix { get; } = Environment.CurrentDirectory[0] == '/';
-        public static string ServerPropertiesFile { get; } = IsUnix ? @"/opt/settings/server.properties" : @"C:\opt\settings\server.properties";
         public static string DefaultLocalCacheDir { get; } = IsUnix ? "/opt/data" : @"C:\opt\data";
     }
 }

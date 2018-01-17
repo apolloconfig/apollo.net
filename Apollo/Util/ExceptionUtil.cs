@@ -4,9 +4,9 @@ using System.Text;
 
 namespace Com.Ctrip.Framework.Apollo.Util
 {
-    class ExceptionUtil
+    static class ExceptionUtil
     {
-        public static string GetDetailMessage(Exception ex)
+        public static string GetDetailMessage(this Exception ex)
         {
             if (ex == null || string.IsNullOrEmpty(ex.Message))
             {
@@ -41,5 +41,18 @@ namespace Com.Ctrip.Framework.Apollo.Util
             return builder.ToString();
         }
 
+        /// <summary></summary>
+        public static Exception UnwrapException(this Exception ex)
+        {
+            var counter = 100;
+            while (counter-- > 0)
+            {
+                if (ex is AggregateException && ex.InnerException != null)
+                    ex = ex.InnerException;
+                else
+                    counter = 0;
+            }
+            return ex;
+        }
     }
 }

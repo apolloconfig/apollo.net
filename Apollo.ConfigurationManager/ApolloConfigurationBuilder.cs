@@ -40,7 +40,7 @@ namespace Com.Ctrip.Framework.Apollo
                 {
                     if (_config == null)
                     {
-                        _config = Namespace == null ? ApolloConfigManager.GetAppConfig() : ApolloConfigManager.GetConfig(Namespace);
+                        _config = Namespace == null ? ApolloConfigurationManager.GetAppConfig() : ApolloConfigurationManager.GetConfig(Namespace);
 
                         _config.ConfigChanged += Config_ConfigChanged;
                     }

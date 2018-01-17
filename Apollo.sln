@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2003
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Apollo.NetCoreApp.Demo", "ApolloDemo\Apollo.NetCoreApp.Demo.csproj", "{D78C920D-C96B-4973-BBC8-35E5DB54DF2A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Apollo.Configuration.Demo", "Apollo.Configuration.Demo\Apollo.Configuration.Demo.csproj", "{D78C920D-C96B-4973-BBC8-35E5DB54DF2A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Apollo", "Apollo\Apollo.csproj", "{B231A39E-9D8A-4F63-9DFF-4FB7B5A900AB}"
 EndProject
@@ -11,12 +11,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Apollo.Configuration", "Apo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Apollo.ConfigurationManager", "Apollo.ConfigurationManager\Apollo.ConfigurationManager.csproj", "{CE700879-20DD-4FAE-B431-884802B99A2D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Apollo.NetFramework.Demo", "Apollo.ConfigurationManager.Demo\Apollo.NetFramework.Demo.csproj", "{9BB8FFC6-7E8D-4449-BEFB-BAD8E035564A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Apollo.ConfigurationBuilder.Demo", "Apollo.ConfigurationBuilder.Demo\Apollo.ConfigurationBuilder.Demo.csproj", "{9BB8FFC6-7E8D-4449-BEFB-BAD8E035564A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{52301167-7BBA-48C2-BA36-08270D57D2C4}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Apollo.ConfigurationManager.Demo", "Apollo.ConfigurationManager.Demo\Apollo.ConfigurationManager.Demo.csproj", "{51A78BF1-4708-45EC-9F2E-59A24D64DB05}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demo", "Demo", "{12417079-E62C-4F29-ADDE-5EABD77331E2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -86,9 +90,26 @@ Global
 		{9BB8FFC6-7E8D-4449-BEFB-BAD8E035564A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{9BB8FFC6-7E8D-4449-BEFB-BAD8E035564A}.Release|x86.ActiveCfg = Release|Any CPU
 		{9BB8FFC6-7E8D-4449-BEFB-BAD8E035564A}.Release|x86.Build.0 = Release|Any CPU
+		{51A78BF1-4708-45EC-9F2E-59A24D64DB05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51A78BF1-4708-45EC-9F2E-59A24D64DB05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51A78BF1-4708-45EC-9F2E-59A24D64DB05}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{51A78BF1-4708-45EC-9F2E-59A24D64DB05}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{51A78BF1-4708-45EC-9F2E-59A24D64DB05}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{51A78BF1-4708-45EC-9F2E-59A24D64DB05}.Debug|x86.Build.0 = Debug|Any CPU
+		{51A78BF1-4708-45EC-9F2E-59A24D64DB05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51A78BF1-4708-45EC-9F2E-59A24D64DB05}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51A78BF1-4708-45EC-9F2E-59A24D64DB05}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{51A78BF1-4708-45EC-9F2E-59A24D64DB05}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{51A78BF1-4708-45EC-9F2E-59A24D64DB05}.Release|x86.ActiveCfg = Release|Any CPU
+		{51A78BF1-4708-45EC-9F2E-59A24D64DB05}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D78C920D-C96B-4973-BBC8-35E5DB54DF2A} = {12417079-E62C-4F29-ADDE-5EABD77331E2}
+		{9BB8FFC6-7E8D-4449-BEFB-BAD8E035564A} = {12417079-E62C-4F29-ADDE-5EABD77331E2}
+		{51A78BF1-4708-45EC-9F2E-59A24D64DB05} = {12417079-E62C-4F29-ADDE-5EABD77331E2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F567DF02-5944-4752-8996-BF7B12DC4DF3}

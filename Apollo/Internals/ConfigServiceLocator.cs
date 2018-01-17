@@ -2,19 +2,18 @@
 using Com.Ctrip.Framework.Apollo.Core.Utils;
 using Com.Ctrip.Framework.Apollo.Exceptions;
 using Com.Ctrip.Framework.Apollo.Logging;
-using Com.Ctrip.Framework.Apollo.Logging.Spi;
+using Com.Ctrip.Framework.Apollo.Util;
 using Com.Ctrip.Framework.Apollo.Util.Http;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Com.Ctrip.Framework.Apollo.Util;
 
 namespace Com.Ctrip.Framework.Apollo.Internals
 {
     public class ConfigServiceLocator : IDisposable
     {
-        private static readonly ILog Logger = LogManager.GetLogger(typeof(ConfigServiceLocator));
+        private static readonly ILogger Logger = LogManager.CreateLogger(typeof(ConfigServiceLocator));
 
         private readonly HttpUtil _httpUtil;
 
@@ -70,7 +69,6 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             {
                 var url = AssembleMetaServiceUrl();
 
-                var request = new HttpRequest(url);
                 var maxRetries = 5;
                 Exception exception = null;
 
@@ -78,7 +76,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                 {
                     try
                     {
-                        var response = await _httpUtil.DoGetAsync<IList<ServiceDto>>(request);
+                        var response = await _httpUtil.DoGetAsync<IList<ServiceDto>>(url);
                         var services = response.Body;
                         if (services == null || services.Count == 0)
                         {
