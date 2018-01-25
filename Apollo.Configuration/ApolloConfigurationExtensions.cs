@@ -10,7 +10,7 @@ namespace Microsoft.Extensions.Configuration
     public static class ApolloConfigurationExtensions
     {
         /// <summary>通过已有的配置中读取apollo配置，比如appsettings.json。</summary>
-        [Obsolete("请使用builder.Build().GetSection(\"apollo\")或其他方式转入apollo配置", true)]
+        [Obsolete("请使用builder.Build().GetSection(\"apollo\")或其他方式传入apollo配置", true)]
         public static IApolloConfigurationBuilder AddApollo(this IConfigurationBuilder builder) =>
             builder.AddApollo(builder.Build().GetSection("apollo").Get<ApolloOptions>());
 
@@ -22,6 +22,9 @@ namespace Microsoft.Extensions.Configuration
 
         public static IApolloConfigurationBuilder AddApollo(this IConfigurationBuilder builder, IApolloOptions options)
         {
+            if (options is ApolloOptions ao)
+                ao.InitCluster();
+
             var repositoryFactory = new ConfigRepositoryFactory(options ?? throw new ArgumentNullException(nameof(options)));
 
             ApolloConfigurationManager.SetApolloOptions(repositoryFactory);
