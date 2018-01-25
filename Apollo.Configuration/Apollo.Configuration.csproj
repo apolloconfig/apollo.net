@@ -21,7 +21,7 @@
         <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
         <PackageTags>apollo configcenter ctrip</PackageTags>
         <PackageReleaseNotes>1.2.0: 添加ApolloConfigurationManager、key与apollo服务端一致，忽略大小写
-1.2.0: 修复ApolloOptions未设置的情况下值错误的bug</PackageReleaseNotes>
+1.2.0: 修复ApolloOptions的Cluster未设置的情况下值错误的bug</PackageReleaseNotes>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)'=='Debug'">
