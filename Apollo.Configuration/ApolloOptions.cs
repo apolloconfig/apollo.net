@@ -7,15 +7,13 @@ using Com.Ctrip.Framework.Apollo.Foundation;
 
 namespace Com.Ctrip.Framework.Apollo
 {
-    public class ApolloOptions: IApolloOptions
+    public class ApolloOptions : IApolloOptions
     {
         /// <summary>
         /// Get the app id for the current application.
         /// </summary>
         /// <returns> the app id or ConfigConsts.NO_APPID_PLACEHOLDER if app id is not available</returns>
         private string _appId;
-
-        private string _cluster;
 
         public string AppId
         {
@@ -39,54 +37,46 @@ namespace Com.Ctrip.Framework.Apollo
         /// Get the cluster name for the current application.
         /// </summary>
         /// <returns> the cluster name, or "default" if not specified </returns>
-        public virtual string Cluster
-        {
-            get
-            {
-                if (_cluster == null)
-                {
-                    //LPT and DEV will be treated as a cluster(lower case)
-                    if (string.IsNullOrWhiteSpace(_cluster) && (Env.Dev == Env || Env.Lpt == Env))
-                        _cluster = Env.ToString().ToLower();
+        public virtual string Cluster { get; set; }
 
-                    //Use data center as cluster
-                    if (string.IsNullOrWhiteSpace(_cluster))
-                        _cluster = DataCenter;
-
-                    //Use sub env as cluster
-                    if (string.IsNullOrWhiteSpace(_cluster))
-                        _cluster = SubEnv;
-
-                    //Use default cluster
-                    if (string.IsNullOrWhiteSpace(_cluster))
-                        _cluster = ConfigConsts.ClusterNameDefault;
-                }
-
-                return _cluster;
-            }
-            set => _cluster = value;
-        }
-
-        /// <summary>
-        /// Get the current environment.
-        /// </summary>
-        /// <returns> the env </returns>
+        /// <summary>Default Dev</summary>
         public virtual Env Env { get; set; } = Env.Dev;
 
         public string SubEnv { get; set; }
 
         public virtual string LocalIp { get; set; } = NetworkInterfaceManager.HostIp;
 
+        /// <summary>Default http://localhost:8080</summary>
         public virtual string MetaServer { get; set; } = ConfigConsts.DefaultMetaServerUrl;
 
-        /// <summary>ms</summary>
+        /// <summary>ms. Default 5000ms</summary>
         public virtual int Timeout { get; set; } = 5000; //5 secondss
 
+        /// <summary>Default "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes("user:")</summary>
         public string Authorization { get; } = "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes("user:"));
 
-        /// <summary>ms</summary>
+        /// <summary>ms. Default 300,000ms</summary>
         public virtual int RefreshInterval { get; set; } = 5 * 60 * 1000; //5 minutes
 
         public string LocalCacheDir { get; set; }
+
+        protected internal void InitCluster()
+        {
+            //LPT and DEV will be treated as a cluster(lower case)
+            if (string.IsNullOrWhiteSpace(Cluster) && (Env.Dev == Env || Env.Lpt == Env))
+                Cluster = Env.ToString().ToLower();
+
+            //Use data center as cluster
+            if (string.IsNullOrWhiteSpace(Cluster))
+                Cluster = DataCenter;
+
+            //Use sub env as cluster
+            if (string.IsNullOrWhiteSpace(Cluster))
+                Cluster = SubEnv;
+
+            //Use default cluster
+            if (string.IsNullOrWhiteSpace(Cluster))
+                Cluster = ConfigConsts.ClusterNameDefault;
+        }
     }
 }

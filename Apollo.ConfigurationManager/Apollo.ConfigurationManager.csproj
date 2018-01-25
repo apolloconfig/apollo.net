@@ -10,7 +10,7 @@
 
 　　与Microsoft.Extensions.Configuration集成请使用Com.Ctrip.Framework.Apollo.Configuration包
 　　与System.Configuration.ConfigurationManager集成(.net 4.7.1及以后版本)请使用Com.Ctrip.Framework.Apollo.ConfigurationManager包
-　　直接使用ApolloConfigManager请使用Com.Ctrip.Framework.Apollo.Configuration或者Com.Ctrip.Framework.Apollo.ConfigurationManager</Description>
+　　直接使用ApolloConfigurationManager请使用Com.Ctrip.Framework.Apollo.Configuration或者Com.Ctrip.Framework.Apollo.ConfigurationManager</Description>
         <RepositoryType>git</RepositoryType>
         <PackageProjectUrl>https://github.com/ctripcorp/apollo.net/tree/dotnet-core</PackageProjectUrl>
         <IncludeSymbols>True</IncludeSymbols>
@@ -20,6 +20,7 @@
         <AssemblyOriginatorKeyFile>..\Apollo.snk</AssemblyOriginatorKeyFile>
         <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
         <PackageTags>apollo configcenter ctrip</PackageTags>
+        <PackageReleaseNotes>1.2.0: 更灵活的配置</PackageReleaseNotes>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(TargetFramework)' == 'net471'">
@@ -31,12 +32,8 @@
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     </PropertyGroup>
 
-    <ItemGroup Condition="'$(Configuration)'=='Debug'">
+    <ItemGroup>
         <ProjectReference Include="..\Apollo\Apollo.csproj" />
-    </ItemGroup>
-
-    <ItemGroup Condition="'$(Configuration)'!='Debug'">
-        <PackageReference Include="Com.Ctrip.Framework.Apollo" Version="1.0.0" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net45' OR '$(TargetFramework)' == 'net471'">
