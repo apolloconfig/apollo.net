@@ -2,9 +2,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using System;
-using Com.Ctrip.Framework.Apollo.Model;
 using Newtonsoft.Json;
+using System;
 
 namespace Apollo.Configuration.Demo
 {
@@ -19,7 +18,7 @@ namespace Apollo.Configuration.Demo
                 builder
                 .AddApollo(builder.Build().GetSection("apollo"))
                 .AddDefault()
-                .AddtNamespace("TEST1.test");
+                .AddNamespace("TEST1.test");
 
             Configuration = builder.Build();
         }
