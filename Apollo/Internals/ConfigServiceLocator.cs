@@ -64,24 +64,20 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
         private void SchedulePeriodicRefresh()
         {
-            Thread t = new Thread(() =>
+            var timer = new System.Timers.Timer(m_configUtil.RefreshInterval);
+            timer.Elapsed += (s, e) =>
             {
-                while (true)
+                try
                 {
-                    try
-                    {
-                        Thread.Sleep(m_configUtil.RefreshInterval);
-                        logger.Debug("refresh config services");
-                        TryUpdateConfigServices();
-                    }
-                    catch (Exception)
-                    {
-                        //ignore
-                    }
+                    logger.Debug("refresh config services");
+                    TryUpdateConfigServices();
                 }
-            });
-            t.IsBackground = true;
-            t.Start();
+                catch (Exception)
+                {
+                    //ignore
+                }
+            };
+            timer.Start();
         }
 
         private void UpdateConfigServices()

@@ -66,24 +66,20 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                 string.Format("Schedule periodic refresh with interval: {0} ms",
                 m_configUtil.RefreshInterval));
 
-            Thread t = new Thread(() =>
+            var timer = new System.Timers.Timer(m_configUtil.RefreshInterval);
+            timer.Elapsed += (s, e) =>
             {
-                while (true)
+                try
                 {
-                    try
-                    {
-                        Thread.Sleep(m_configUtil.RefreshInterval);
-                        logger.Debug(string.Format("refresh config for namespace: {0}", m_namespace));
-                        TrySync();
-                    }
-                    catch (Exception)
-                    {
-                        //ignore
-                    }
+                    logger.Debug(string.Format("refresh config for namespace: {0}", m_namespace));
+                    TrySync();
                 }
-            });
-            t.IsBackground = true;
-            t.Start();
+                catch (Exception)
+                {
+                    //ignore
+                }
+            };
+            timer.Start();
         }
 
         protected override void Sync()
