@@ -12,7 +12,7 @@ namespace Com.Ctrip.Framework.Apollo
         {
             base.Initialize(name, config);
 
-            _keyPrefix = config["keyPrefix"] ?? Namespace;
+            _keyPrefix = config["keyPrefix"];
         }
 
         public override ConfigurationSection ProcessConfigurationSection(ConfigurationSection configSection)

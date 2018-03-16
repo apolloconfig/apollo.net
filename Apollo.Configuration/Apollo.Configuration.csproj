@@ -14,15 +14,16 @@
         <RepositoryType>git</RepositoryType>
         <PackageProjectUrl>https://github.com/ctripcorp/apollo.net/tree/dotnet-core</PackageProjectUrl>
         <IncludeSymbols>True</IncludeSymbols>
-        <Version>1.2.2.0</Version>
-        <AssemblyVersion>1.1.0.0</AssemblyVersion>
+        <Version>1.2.3.0</Version>
+        <AssemblyVersion>1.2.0.0</AssemblyVersion>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>..\Apollo.snk</AssemblyOriginatorKeyFile>
         <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
         <PackageTags>apollo configcenter ctrip</PackageTags>
         <PackageReleaseNotes>1.2.0: 添加ApolloConfigurationManager、key与apollo服务端一致，忽略大小写
 1.2.1: 修复ApolloOptions的Cluster未设置的情况下值错误的bug
-1.2.2: AddtNamespace应为AddNamespace</PackageReleaseNotes>
+1.2.2: AddtNamespace应为AddNamespace
+1.2.3: AddNamespace方法默认不添加namespcace前缀</PackageReleaseNotes>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)'=='Debug'">
