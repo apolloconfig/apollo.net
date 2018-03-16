@@ -1,10 +1,11 @@
 ﻿#if CONFIGURATIONBUILDER
-using System;
 using Com.Ctrip.Framework.Apollo.Util;
-using System.Collections.Specialized;
-using System.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Specialized;
+using System.Configuration;
+using System.Linq;
 
 namespace Com.Ctrip.Framework.Apollo
 {
@@ -26,44 +27,34 @@ namespace Com.Ctrip.Framework.Apollo
                 lock (this)
                 {
                     var config = GetConfig();
-                    foreach (var name in config.GetPropertyNames())
+                    var names = config.GetPropertyNames()
+                        .Where(name => name.StartsWith("ConnectionStrings:", StringComparison.OrdinalIgnoreCase))
+                        .GroupBy(name => name.Substring(18).Split(':')[0])
+                        .ToDictionary(group => group.Key, group => group.ToArray());
+
+                    foreach (var name in names)
                     {
-                        if (!name.StartsWith("ConnectionStrings:"))
-                            continue;
+                        var connectionName = name.Key;
+                        if (name.Value.Length == 1)
+                        {
+                            var connectionString = config.GetProperty(name.Value[0], null);
+                            if (string.IsNullOrWhiteSpace(connectionString))
+                                continue;
 
-                        var value = config.GetProperty(name, null);
-
-                        var connectionName = name.Substring(18);
-
-                        if (!string.IsNullOrEmpty(value))
                             connectionStrings.Remove(connectionName);
 
-                        if (value == null)
-                            continue;
-
-                        if (value[0] == '{')
-                        {
-                            try
-                            {
-                                var json = JsonConvert.DeserializeObject<JObject>(value);
-
-                                var connectionString = json.Value<string>("ConnectionString");
-                                var providerName = json.Value<string>("ProviderName") ?? _defaultProviderName;
-
-                                if (!string.IsNullOrEmpty(connectionString))
-                                {
-                                    connectionStrings.Add(new ConnectionStringSettings(connectionName, connectionString, providerName));
-
-                                    continue;
-                                }
-                            }
-                            catch
-                            {
-                                // ignored
-                            }
+                            connectionStrings.Add(new ConnectionStringSettings(connectionName, connectionString, _defaultProviderName));
                         }
+                        else
+                        {
+                            var connectionString = config.GetProperty($"ConnectionStrings:{connectionName}:ConnectionString", null);
+                            if (string.IsNullOrWhiteSpace(connectionString))
+                                continue;
 
-                        connectionStrings.Add(new ConnectionStringSettings(connectionName, value, _defaultProviderName));
+                            var providerName = config.GetProperty($"ConnectionStrings:{connectionName}:ProviderName", null);
+
+                            connectionStrings.Add(new ConnectionStringSettings(connectionName, connectionString, providerName ?? _defaultProviderName));
+                        }
                     }
                 }
             }
