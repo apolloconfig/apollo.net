@@ -6,6 +6,7 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Com.Ctrip.Framework.Apollo.Util.Http
@@ -17,8 +18,11 @@ namespace Com.Ctrip.Framework.Apollo.Util.Http
 
         public HttpUtil(IApolloOptions options) => _options = options;
 
-        public async Task<HttpResponse<T>> DoGetAsync<T>(string url, int timeout = 0)
+        public Task<HttpResponse<T>> DoGetAsync<T>(string url) => DoGetAsync<T>(url, _options.Timeout);
+
+        public async Task<HttpResponse<T>> DoGetAsync<T>(string url, int timeout)
         {
+
             HttpResponseMessage response = null;
             try
             {
@@ -27,7 +31,12 @@ namespace Com.Ctrip.Framework.Apollo.Util.Http
                 if (!string.IsNullOrEmpty(_options.Authorization))
                     httpRequest.Headers.TryAddWithoutValidation(nameof(httpRequest.Headers.Authorization), _options.Authorization);
 
-                response = await _httpClient.GetOrAdd(timeout > 0 ? timeout : _options.Timeout, t => new HttpClient { Timeout = TimeSpan.FromMilliseconds(t) }).SendAsync(httpRequest);
+                using (var cts = new CancellationTokenSource(timeout))
+                {
+                    var httpClient = _httpClient.GetOrAdd(timeout > 0 ? timeout : _options.Timeout, t => new HttpClient { Timeout = TimeSpan.FromMilliseconds(t) });
+
+                    response = await Timeout(httpClient.SendAsync(httpRequest, cts.Token), timeout, cts.Token);
+                }
 
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
@@ -51,7 +60,7 @@ namespace Com.Ctrip.Framework.Apollo.Util.Http
                 response?.Dispose();
             }
 
-            throw new ApolloConfigStatusCodeException(response.StatusCode, string.Format("Get operation failed for {0}", url));
+            throw new ApolloConfigStatusCodeException(response.StatusCode, $"Get operation failed for {url}");
         }
 
         public void Dispose()
@@ -70,6 +79,14 @@ namespace Com.Ctrip.Framework.Apollo.Util.Http
                     // ignored
                 }
             }
+        }
+
+        private static async Task<T> Timeout<T>(Task<T> task, int millisecondsDelay, CancellationToken token)
+        {
+            if (await Task.WhenAny(task, Task.Delay(millisecondsDelay, token)) == task)
+                return task.Result;
+
+            throw new TimeoutException();
         }
     }
 }

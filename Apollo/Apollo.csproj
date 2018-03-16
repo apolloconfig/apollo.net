@@ -14,13 +14,14 @@
         <RepositoryType>git</RepositoryType>
         <PackageProjectUrl>https://github.com/ctripcorp/apollo.net/tree/dotnet-core</PackageProjectUrl>
         <IncludeSymbols>True</IncludeSymbols>
-        <Version>1.2.0.0</Version>
-        <AssemblyVersion>1.0.0.0</AssemblyVersion>
+        <Version>1.2.1.0</Version>
+        <AssemblyVersion>1.2.0.0</AssemblyVersion>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>..\Apollo.snk</AssemblyOriginatorKeyFile>
         <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
         <PackageTags>apollo configcenter ctrip</PackageTags>
-        <PackageReleaseNotes>1.2.0: 重构日志功能，支持自定义日志输出</PackageReleaseNotes>
+        <PackageReleaseNotes>1.2.0: 重构日志功能，支持自定义日志输出
+1.2.1: 修复HttpClient默认超时错误的问题</PackageReleaseNotes>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)'=='Debug'">
