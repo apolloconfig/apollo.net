@@ -5,6 +5,7 @@ using Com.Ctrip.Framework.Apollo.Model;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Com.Ctrip.Framework.Apollo.Internals
 {
@@ -20,12 +21,12 @@ namespace Com.Ctrip.Framework.Apollo.Internals
         {
             _namespace = namespaceName;
             _configRepository = configRepository;
-
-            Initialize();
         }
 
-        private void Initialize()
+        public async Task Initialize()
         {
+            await _configRepository.Initialize();
+
             try
             {
                 _configProperties.WriteFullFence(_configRepository.GetConfig());

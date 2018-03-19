@@ -10,7 +10,7 @@ namespace Com.Ctrip.Framework.Apollo.Spi
         /// </summary>
         /// <param name="namespaceName"> the namespace </param>
         /// <returns> the newly created config instance </returns>
-        IConfig Create(string namespaceName);
+        Task<IConfig> Create(string namespaceName);
     }
 }
 

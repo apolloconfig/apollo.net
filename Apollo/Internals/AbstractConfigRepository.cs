@@ -2,6 +2,7 @@
 using Com.Ctrip.Framework.Apollo.Logging;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Com.Ctrip.Framework.Apollo.Internals
 {
@@ -15,6 +16,8 @@ namespace Com.Ctrip.Framework.Apollo.Internals
         protected AbstractConfigRepository(string @namespace) => Namespace = @namespace;
 
         public abstract Properties GetConfig();
+
+        public abstract Task Initialize();
 
         public void AddChangeListener(IRepositoryChangeListener listener)
         {

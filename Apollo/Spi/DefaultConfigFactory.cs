@@ -1,4 +1,5 @@
-﻿using Com.Ctrip.Framework.Apollo.Internals;
+﻿using System.Threading.Tasks;
+using Com.Ctrip.Framework.Apollo.Internals;
 
 namespace Com.Ctrip.Framework.Apollo.Spi
 {
@@ -8,11 +9,15 @@ namespace Com.Ctrip.Framework.Apollo.Spi
 
         public DefaultConfigFactory(ConfigRepositoryFactory repositoryFactory) => _repositoryFactory = repositoryFactory;
 
-        public IConfig Create(string namespaceName)
+        public async Task<IConfig> Create(string namespaceName)
         {
             var configRepository = _repositoryFactory.GetConfigRepository(namespaceName);
 
-            return new DefaultConfig(namespaceName, configRepository);
+            var config = new DefaultConfig(namespaceName, configRepository);
+
+            await config.Initialize();
+
+            return config;
         }
     }
 }

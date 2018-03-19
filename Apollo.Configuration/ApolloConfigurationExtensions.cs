@@ -43,16 +43,6 @@ namespace Com.Ctrip.Framework.Apollo
             builder.AddNamespace(ConfigConsts.NamespaceApplication, null);
 
         /// <summary>添加其他namespace，使用Configuration.GetSection(namespace)读取</summary>
-        [Obsolete("方法名称多加了一个t，请删除Add之后的t", true)]
-        public static IApolloConfigurationBuilder AddtNamespace(this IApolloConfigurationBuilder builder, string @namespace) =>
-            builder.AddNamespace(@namespace, null);
-
-        /// <summary>添加其他namespace。如果sectionKey为null则添加到root中，可以直接读取，否则使用Configuration.GetSection(sectionKey)读取</summary>
-        [Obsolete("方法名称多加了一个t，请删除Add之后的t", true)]
-        public static IApolloConfigurationBuilder AddtNamespace(this IApolloConfigurationBuilder builder, string @namespace, string sectionKey) =>
-            builder.AddNamespace(@namespace, sectionKey);
-
-        /// <summary>添加其他namespace，使用Configuration.GetSection(namespace)读取</summary>
         public static IApolloConfigurationBuilder AddNamespace(this IApolloConfigurationBuilder builder, string @namespace) =>
             builder.AddNamespace(@namespace, null);
 
