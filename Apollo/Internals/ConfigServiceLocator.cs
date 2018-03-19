@@ -69,14 +69,13 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             {
                 var url = AssembleMetaServiceUrl();
 
-                var maxRetries = 5;
                 Exception exception = null;
 
-                for (var i = 0; i < maxRetries; i++)
+                for (var i = 0; i < 3; i++)
                 {
                     try
                     {
-                        var response = await _httpUtil.DoGetAsync<IList<ServiceDto>>(url);
+                        var response = await _httpUtil.DoGetAsync<IList<ServiceDto>>(url, 2000);
                         var services = response.Body;
                         if (services == null || services.Count == 0)
                         {

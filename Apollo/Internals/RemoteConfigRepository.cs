@@ -60,7 +60,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
         public override Properties GetConfig()
         {
             if (_configCache.ReadFullFence() == null)
-                AsyncHelper.RunSync(SchedulePeriodicRefresh);
+                AsyncHelper.RunSync(Sync);
 
             return TransformApolloConfigToProperties(_configCache.ReadFullFence());
         }
@@ -83,26 +83,19 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
         private async Task Sync()
         {
-            try
-            {
-                var previous = _configCache.ReadFullFence();
-                var current = await LoadApolloConfig();
+            var previous = _configCache.ReadFullFence();
+            var current = await LoadApolloConfig();
 
-                //reference equals means HTTP 304
-                if (!ReferenceEquals(previous, current))
-                {
-                    Logger.Debug("Remote Config refreshed!");
-                    _configCache.WriteFullFence(current);
-                    FireRepositoryChange(Namespace, GetConfig());
-                }
-
-                if (!_resetEvent.IsSet)
-                    _resetEvent.Set();
-            }
-            catch (Exception e)
+            //reference equals means HTTP 304
+            if (!ReferenceEquals(previous, current))
             {
-                Logger.Warn(e);
+                Logger.Debug("Remote Config refreshed!");
+                _configCache.WriteFullFence(current);
+                FireRepositoryChange(Namespace, GetConfig());
             }
+
+            if (!_resetEvent.IsSet)
+                _resetEvent.Set();
         }
 
         private async Task<ApolloConfig> LoadApolloConfig()
