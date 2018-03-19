@@ -5,6 +5,7 @@ using Com.Ctrip.Framework.Apollo.Logging;
 using Com.Ctrip.Framework.Apollo.Util;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Com.Ctrip.Framework.Apollo.Internals
 {
@@ -27,14 +28,14 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             _options = configUtil;
 
             PrepareConfigCacheDir();
-
-            Sync();
         }
 
-        private void Sync()
+        public override async Task Initialize()
         {
             if (_upstream != null)
             {
+                await _upstream.Initialize();
+
                 _upstream.AddChangeListener(this);
 
                 //sync with upstream immediately
@@ -52,13 +53,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             }
         }
 
-        public override Properties GetConfig()
-        {
-            if (_fileProperties == null)
-                Sync();
-
-            return new Properties(_fileProperties);
-        }
+        public override Properties GetConfig() => new Properties(_fileProperties);
 
         bool _disposed;
         protected override void Dispose(bool disposing)

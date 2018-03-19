@@ -2,6 +2,7 @@
 using Com.Ctrip.Framework.Apollo.Internals;
 using Com.Ctrip.Framework.Apollo.Spi;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Com.Ctrip.Framework.Apollo
 {
@@ -18,13 +19,13 @@ namespace Com.Ctrip.Framework.Apollo
         /// <summary>
         /// Get Application's config instance. </summary>
         /// <returns> config instance </returns>
-        public IConfig GetAppConfig() => GetConfig(ConfigConsts.NamespaceApplication);
+        public Task<IConfig> GetAppConfig() => GetConfig(ConfigConsts.NamespaceApplication);
 
         /// <summary>
         /// Get the config instance for the namespace. </summary>
         /// <param name="namespaceName"> the namespace of the config </param>
         /// <returns> config instance </returns>
-        public IConfig GetConfig(string namespaceName) => _manager.GetConfig(namespaceName);
+        public Task<IConfig> GetConfig(string namespaceName) => _manager.GetConfig(namespaceName);
     }
 }
 

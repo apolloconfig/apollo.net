@@ -11,6 +11,8 @@ namespace Com.Ctrip.Framework.Apollo.Internals
         /// <returns> config </returns>
         Properties GetConfig();
 
+        Task Initialize();
+
         /// <summary>
         /// Add change listener. </summary>
         /// <param name="listener"> the listener to observe the changes </param>

@@ -28,8 +28,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
         private volatile ThreadSafe.AtomicReference<ApolloConfig> _configCache = new ThreadSafe.AtomicReference<ApolloConfig>(null);
         private readonly ThreadSafe.AtomicReference<ServiceDto> _longPollServiceDto = new ThreadSafe.AtomicReference<ServiceDto>(null);
         private readonly ThreadSafe.AtomicReference<ApolloNotificationMessages> _remoteMessages = new ThreadSafe.AtomicReference<ApolloNotificationMessages>(null);
-
-        private readonly ManualResetEventSlim _resetEvent = new ManualResetEventSlim(false);
+        private Exception _syncException;
         private readonly Timer _timer;
 
         public RemoteConfigRepository(string @namespace,
@@ -44,13 +43,11 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             _remoteConfigLongPollService = remoteConfigLongPollService;
 
             _timer = new Timer(SchedulePeriodicRefresh);
-
-            AsyncHelper.RunSync(BeginSync);
         }
 
-        private async Task BeginSync()
+        public override async Task Initialize()
         {
-            await SchedulePeriodicRefresh();
+            await SchedulePeriodicRefresh(true);
 
             _timer.Change(_options.RefreshInterval, _options.RefreshInterval);
 
@@ -59,53 +56,47 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
         public override Properties GetConfig()
         {
-            if (_configCache.ReadFullFence() == null)
-                AsyncHelper.RunSync(SchedulePeriodicRefresh);
+            if (_syncException != null)
+                throw _syncException;
 
             return TransformApolloConfigToProperties(_configCache.ReadFullFence());
         }
 
-        private async void SchedulePeriodicRefresh(object _) => await SchedulePeriodicRefresh();
+        private async void SchedulePeriodicRefresh(object _) => await SchedulePeriodicRefresh(false);
 
-        private async Task SchedulePeriodicRefresh()
+        private async Task SchedulePeriodicRefresh(bool isFirst)
         {
             try
             {
                 Logger.Debug($"refresh config for namespace: {Namespace}");
 
-                await Sync();
+                await Sync(isFirst);
+
+                _syncException = null;
             }
             catch (Exception ex)
             {
+                _syncException = ex;
+
                 Logger.Warn($"refresh config error for namespace: {Namespace}", ex);
             }
         }
 
-        private async Task Sync()
+        private async Task Sync(bool isFirst)
         {
-            try
-            {
-                var previous = _configCache.ReadFullFence();
-                var current = await LoadApolloConfig();
+            var previous = _configCache.ReadFullFence();
+            var current = await LoadApolloConfig(isFirst);
 
-                //reference equals means HTTP 304
-                if (!ReferenceEquals(previous, current))
-                {
-                    Logger.Debug("Remote Config refreshed!");
-                    _configCache.WriteFullFence(current);
-                    FireRepositoryChange(Namespace, GetConfig());
-                }
-
-                if (!_resetEvent.IsSet)
-                    _resetEvent.Set();
-            }
-            catch (Exception e)
+            //reference equals means HTTP 304
+            if (!ReferenceEquals(previous, current))
             {
-                Logger.Warn(e);
+                Logger.Debug("Remote Config refreshed!");
+                _configCache.WriteFullFence(current);
+                FireRepositoryChange(Namespace, GetConfig());
             }
         }
 
-        private async Task<ApolloConfig> LoadApolloConfig()
+        private async Task<ApolloConfig> LoadApolloConfig(bool isFirst)
         {
             var appId = _options.AppId;
             var cluster = _options.Cluster;
@@ -117,7 +108,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             string url = null;
 
             var notFound = false;
-            for (var i = 0; i < 2; i++)
+            for (var i = 0; i < (isFirst ? 1 : 2); i++)
             {
                 IList<ServiceDto> randomConfigServices = new List<ServiceDto>(configServices);
                 randomConfigServices.Shuffle();
@@ -251,7 +242,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             {
                 try
                 {
-                    await Sync();
+                    await Sync(false);
                 }
                 catch (Exception ex)
                 {
@@ -268,7 +259,6 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
             if (disposing)
             {
-                _resetEvent.Dispose();
             }
 
             //释放非托管资源

@@ -1,7 +1,9 @@
 ﻿#if CONFIGURATIONBUILDER
 using Com.Ctrip.Framework.Apollo.Model;
+using Com.Ctrip.Framework.Apollo.Util;
 using System.Collections.Specialized;
 using System.Configuration;
+using System.Threading;
 using System.Xml;
 
 namespace Com.Ctrip.Framework.Apollo
@@ -40,7 +42,10 @@ namespace Com.Ctrip.Framework.Apollo
                 {
                     if (_config == null)
                     {
-                        _config = Namespace == null ? ApolloConfigurationManager.GetAppConfig() : ApolloConfigurationManager.GetConfig(Namespace);
+                        if (SynchronizationContext.Current == null)
+                            _config = (Namespace == null ? ApolloConfigurationManager.GetAppConfig() : ApolloConfigurationManager.GetConfig(Namespace)).Result;
+                        else
+                            _config = AsyncHelper.RunSync(() => Namespace == null ? ApolloConfigurationManager.GetAppConfig() : ApolloConfigurationManager.GetConfig(Namespace));
 
                         _config.ConfigChanged += Config_ConfigChanged;
                     }

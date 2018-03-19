@@ -1,6 +1,5 @@
 ﻿using Com.Ctrip.Framework.Apollo.Enums;
 using Com.Ctrip.Framework.Apollo.Util;
-using System.Configuration;
 
 namespace Com.Ctrip.Framework.Apollo.Core
 {

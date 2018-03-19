@@ -19,7 +19,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
         private readonly IApolloOptions _options;
         private readonly ThreadSafe.AtomicReference<IList<ServiceDto>> _configServices;
-        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
+        private Task _updateConfigServicesTask;
         private readonly Timer _timer;
 
         public ConfigServiceLocator(HttpUtil httpUtil, IApolloOptions configUtil)
@@ -62,45 +62,45 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             }
         }
 
-        private async Task UpdateConfigServices()
+        private Task UpdateConfigServices()
         {
-            await _semaphore.WaitAsync();
-            try
+            Task task;
+            if ((task = _updateConfigServicesTask) == null)
+                lock (this)
+                    if ((task = _updateConfigServicesTask) == null)
+                        task = _updateConfigServicesTask = UpdateConfigServices(3);
+
+            return task;
+        }
+
+        private async Task UpdateConfigServices(int times)
+        {
+            var url = AssembleMetaServiceUrl();
+
+            Exception exception = null;
+
+            for (var i = 0; i < times; i++)
             {
-                var url = AssembleMetaServiceUrl();
-
-                var maxRetries = 5;
-                Exception exception = null;
-
-                for (var i = 0; i < maxRetries; i++)
+                try
                 {
-                    try
+                    var response = await _httpUtil.DoGetAsync<IList<ServiceDto>>(url, 2000);
+                    var services = response.Body;
+                    if (services == null || services.Count == 0)
                     {
-                        var response = await _httpUtil.DoGetAsync<IList<ServiceDto>>(url);
-                        var services = response.Body;
-                        if (services == null || services.Count == 0)
-                        {
-                            continue;
-                        }
-
-                        _configServices.WriteFullFence(services);
-                        return;
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Warn(ex);
-                        exception = ex;
+                        continue;
                     }
 
-                    await Task.Delay(1000); //sleep 1 second
+                    _configServices.WriteFullFence(services);
+                    return;
                 }
+                catch (Exception ex)
+                {
+                    Logger.Warn(ex);
+                    exception = ex;
+                }
+            }
 
-                throw new ApolloConfigException($"Get config services failed from {url}", exception);
-            }
-            finally
-            {
-                _semaphore.Release();
-            }
+            throw new ApolloConfigException($"Get config services failed from {url}", exception);
         }
 
         private string AssembleMetaServiceUrl()
@@ -125,7 +125,6 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
         public void Dispose()
         {
-            _semaphore?.Dispose();
             _timer?.Dispose();
         }
     }

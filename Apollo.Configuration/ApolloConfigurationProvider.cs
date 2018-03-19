@@ -1,9 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using Com.Ctrip.Framework.Apollo.Core.Utils;
+﻿using Com.Ctrip.Framework.Apollo.Core.Utils;
 using Com.Ctrip.Framework.Apollo.Internals;
+using Com.Ctrip.Framework.Apollo.Util;
 using Microsoft.Extensions.Configuration;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Com.Ctrip.Framework.Apollo
 {
@@ -11,15 +14,27 @@ namespace Com.Ctrip.Framework.Apollo
     {
         private readonly string _sectionKey;
         private readonly IConfigRepository _configRepository;
+        private readonly Task _initializeTask;
 
         public ApolloConfigurationProvider(string sectionKey, IConfigRepository configRepository)
         {
             _sectionKey = sectionKey;
             _configRepository = configRepository;
+
+            if (SynchronizationContext.Current == null)
+                _initializeTask = _configRepository.Initialize();
+            else
+            {
+                AsyncHelper.RunSync(_configRepository.Initialize);
+
+                _initializeTask = Task.CompletedTask;
+            }
         }
 
         public override void Load()
         {
+            _initializeTask.GetAwaiter().GetResult();
+
             _configRepository.AddChangeListener(this);
 
             SetData(_configRepository.GetConfig());

@@ -22,6 +22,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Apollo.ConfigurationManager
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demo", "Demo", "{12417079-E62C-4F29-ADDE-5EABD77331E2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.AspNet.Demo", "Apollo.AspNet.Demo\Apollo.AspNet.Demo.csproj", "{E1EF936E-182E-47BD-B658-87C0D872AB0C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -102,6 +104,18 @@ Global
 		{51A78BF1-4708-45EC-9F2E-59A24D64DB05}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{51A78BF1-4708-45EC-9F2E-59A24D64DB05}.Release|x86.ActiveCfg = Release|Any CPU
 		{51A78BF1-4708-45EC-9F2E-59A24D64DB05}.Release|x86.Build.0 = Release|Any CPU
+		{E1EF936E-182E-47BD-B658-87C0D872AB0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1EF936E-182E-47BD-B658-87C0D872AB0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1EF936E-182E-47BD-B658-87C0D872AB0C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{E1EF936E-182E-47BD-B658-87C0D872AB0C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{E1EF936E-182E-47BD-B658-87C0D872AB0C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E1EF936E-182E-47BD-B658-87C0D872AB0C}.Debug|x86.Build.0 = Debug|Any CPU
+		{E1EF936E-182E-47BD-B658-87C0D872AB0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1EF936E-182E-47BD-B658-87C0D872AB0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1EF936E-182E-47BD-B658-87C0D872AB0C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{E1EF936E-182E-47BD-B658-87C0D872AB0C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{E1EF936E-182E-47BD-B658-87C0D872AB0C}.Release|x86.ActiveCfg = Release|Any CPU
+		{E1EF936E-182E-47BD-B658-87C0D872AB0C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -110,6 +124,7 @@ Global
 		{D78C920D-C96B-4973-BBC8-35E5DB54DF2A} = {12417079-E62C-4F29-ADDE-5EABD77331E2}
 		{9BB8FFC6-7E8D-4449-BEFB-BAD8E035564A} = {12417079-E62C-4F29-ADDE-5EABD77331E2}
 		{51A78BF1-4708-45EC-9F2E-59A24D64DB05} = {12417079-E62C-4F29-ADDE-5EABD77331E2}
+		{E1EF936E-182E-47BD-B658-87C0D872AB0C} = {12417079-E62C-4F29-ADDE-5EABD77331E2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F567DF02-5944-4752-8996-BF7B12DC4DF3}
