@@ -14,7 +14,7 @@
         <RepositoryType>git</RepositoryType>
         <PackageProjectUrl>https://github.com/ctripcorp/apollo.net/tree/dotnet-core</PackageProjectUrl>
         <IncludeSymbols>True</IncludeSymbols>
-        <Version>1.3.0.0</Version>
+        <Version>1.3.1.0</Version>
         <AssemblyVersion>1.3.0.0</AssemblyVersion>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>..\Apollo.snk</AssemblyOriginatorKeyFile>
@@ -24,7 +24,8 @@
 1.2.1: 修复ApolloOptions的Cluster未设置的情况下值错误的bug
 1.2.2: AddtNamespace应为AddNamespace
 1.2.3: AddNamespace方法默认不添加namespcace前缀
-1.3.0: 优化初始化时不能连接上metaserver的等待时间</PackageReleaseNotes>
+1.3.0: 优化初始化时不能连接上metaserver的等待时间
+1.3.1: 修复QueryString连接错误</PackageReleaseNotes>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)'=='Debug'">

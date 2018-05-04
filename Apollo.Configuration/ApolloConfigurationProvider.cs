@@ -24,16 +24,12 @@ namespace Com.Ctrip.Framework.Apollo
             if (SynchronizationContext.Current == null)
                 _initializeTask = _configRepository.Initialize();
             else
-            {
                 AsyncHelper.RunSync(_configRepository.Initialize);
-
-                _initializeTask = Task.CompletedTask;
-            }
         }
 
         public override void Load()
         {
-            _initializeTask.GetAwaiter().GetResult();
+            _initializeTask?.GetAwaiter().GetResult();
 
             _configRepository.AddChangeListener(this);
 

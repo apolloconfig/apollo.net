@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Com.Ctrip.Framework.Apollo.Util
 {
@@ -21,7 +18,7 @@ namespace Com.Ctrip.Framework.Apollo.Util
                 sb.Append(WebUtility.UrlEncode(kv.Value));
             }
 
-            return sb.ToString(0, sb.Length - 1);
+            return sb.Length > 1 ? sb.ToString(1, sb.Length - 1) : "";
         }
     }
 }
