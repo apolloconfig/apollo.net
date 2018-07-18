@@ -19,10 +19,7 @@ namespace Com.Ctrip.Framework.Apollo.Util
 
             foreach (var kv in source)
             {
-                sb.Append('&');
-                sb.Append(WebUtility.UrlEncode(kv.Key));
-                sb.Append('=');
-                sb.Append(WebUtility.UrlEncode(kv.Value));
+                sb.Append($"{WebUtility.UrlEncode(kv.Key)}={WebUtility.UrlEncode(kv.Value)}&");
             }
 
             return sb.ToString(1, sb.Length - 1);
