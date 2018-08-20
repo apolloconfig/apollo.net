@@ -43,9 +43,11 @@ namespace Com.Ctrip.Framework.Apollo
                     if (_config == null)
                     {
                         if (SynchronizationContext.Current == null)
-                            _config = (Namespace == null ? ApolloConfigurationManager.GetAppConfig() : ApolloConfigurationManager.GetConfig(Namespace)).Result;
+                            _config = (Namespace == null ? ApolloConfigurationManager.GetAppConfig() : ApolloConfigurationManager.GetConfig(Namespace)).GetAwaiter().GetResult();
+                        else if (Namespace == null)
+                            _config = AsyncHelper.RunSync(ApolloConfigurationManager.GetAppConfig);
                         else
-                            _config = AsyncHelper.RunSync(() => Namespace == null ? ApolloConfigurationManager.GetAppConfig() : ApolloConfigurationManager.GetConfig(Namespace));
+                            _config = AsyncHelper.RunSync(() => ApolloConfigurationManager.GetConfig(Namespace));
 
                         _config.ConfigChanged += Config_ConfigChanged;
                     }

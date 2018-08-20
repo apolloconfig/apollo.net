@@ -221,8 +221,6 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             }
         }
 
-
-
         private string AssembleNamespaces()
         {
             return string.Join(ConfigConsts.ClusterNamespaceSeparator, _longPollNamespaces.Keys);

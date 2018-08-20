@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Sockets;
 
 namespace Com.Ctrip.Framework.Apollo.Foundation
@@ -13,10 +14,19 @@ namespace Com.Ctrip.Framework.Apollo.Foundation
 
         public static void Refresh()
         {
-            _hostName = Dns.GetHostName();
-            var ipHostEntry = Dns.GetHostEntry(_hostName);
-            _hostIp = GetIp(ipHostEntry);
-            _hostAddressBytes = GetAddressBytes(ipHostEntry);
+            try
+            {
+                _hostName = Dns.GetHostName();
+                var ipHostEntry = Dns.GetHostEntry(_hostName);
+                _hostIp = GetIp(ipHostEntry);
+                _hostAddressBytes = GetAddressBytes(ipHostEntry);
+            }
+            catch (Exception e)
+            {
+                _hostName = "localhost";
+                _hostIp = "127.0.0.1";
+                _hostAddressBytes = IPAddress.Loopback.GetAddressBytes();
+            }
         }
 
         private static string GetIp(IPHostEntry ipHostEntry)

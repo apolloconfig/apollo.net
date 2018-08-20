@@ -1,7 +1,4 @@
 ﻿#if CONFIGURATIONBUILDER
-using Com.Ctrip.Framework.Apollo.Util;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Specialized;
 using System.Configuration;
@@ -47,7 +44,7 @@ namespace Com.Ctrip.Framework.Apollo
                         }
                         else
                         {
-                            var connectionString = config.GetProperty($"ConnectionStrings:{connectionName}:ConnectionString", null);
+                            var connectionString = config.GetProperty($"ConnectionStrings:{connectionName}:ConnectionString", config.GetProperty($"ConnectionStrings:{connectionName}", null));
                             if (string.IsNullOrWhiteSpace(connectionString))
                                 continue;
 
