@@ -1,41 +1,44 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
-        <RootNamespace>Com.Ctrip.Framework.Apollo</RootNamespace>
-        <AssemblyName>Com.Ctrip.Framework.Apollo.Configuration</AssemblyName>
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>Com.Ctrip.Framework.Apollo</RootNamespace>
+    <AssemblyName>Com.Ctrip.Framework.Apollo.Configuration</AssemblyName>
 
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Description>携程Apollo客户端
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description>携程Apollo客户端
 
 　　与Microsoft.Extensions.Configuration集成请使用Com.Ctrip.Framework.Apollo.Configuration包
 　　与System.Configuration.ConfigurationManager集成(.net 4.7.1及以后版本)请使用Com.Ctrip.Framework.Apollo.ConfigurationManager包
 　　直接使用ApolloConfigurationManager请使用Com.Ctrip.Framework.Apollo.Configuration或者Com.Ctrip.Framework.Apollo.ConfigurationManager</Description>
-        <RepositoryType>git</RepositoryType>
-        <PackageProjectUrl>https://github.com/ctripcorp/apollo.net/tree/dotnet-core</PackageProjectUrl>
-        <IncludeSymbols>True</IncludeSymbols>
-        <Version>1.3.1.0</Version>
-        <AssemblyVersion>1.3.0.0</AssemblyVersion>
-        <SignAssembly>true</SignAssembly>
-        <AssemblyOriginatorKeyFile>..\Apollo.snk</AssemblyOriginatorKeyFile>
-        <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-        <PackageTags>apollo configcenter ctrip</PackageTags>
-        <PackageReleaseNotes>1.2.0: 添加ApolloConfigurationManager、key与apollo服务端一致，忽略大小写
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/ctripcorp/apollo.net/tree/dotnet-core</RepositoryUrl>
+    <PackageProjectUrl>$(RepositoryUrl)$(AssemblyName)</PackageProjectUrl>
+    <IncludeSymbols>True</IncludeSymbols>
+    <Version>1.3.2.0</Version>
+    <AssemblyVersion>1.3.0.0</AssemblyVersion>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\Apollo.snk</AssemblyOriginatorKeyFile>
+    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
+    <PackageTags>apollo configcenter ctrip</PackageTags>
+    <PackageReleaseNotes>1.2.0: 添加ApolloConfigurationManager、key与apollo服务端一致，忽略大小写
 1.2.1: 修复ApolloOptions的Cluster未设置的情况下值错误的bug
 1.2.2: AddtNamespace应为AddNamespace
 1.2.3: AddNamespace方法默认不添加namespcace前缀
 1.3.0: 优化初始化时不能连接上metaserver的等待时间
-1.3.1: 修复QueryString连接错误</PackageReleaseNotes>
-    </PropertyGroup>
+1.3.1: 修复QueryString连接错误
+1.3.2: 修复Issure：https://github.com/ctripcorp/apollo.net/issues/18</PackageReleaseNotes>
+  </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)'=='Debug'">
-        <DebugType>full</DebugType>
-        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+    <DebugType>full</DebugType>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\Apollo\Apollo.csproj" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="2.0.0" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Apollo\Apollo.csproj" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="2.0.0" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-*" PrivateAssets="All"/>
+  </ItemGroup>
 
 </Project>

@@ -38,11 +38,11 @@ namespace Com.Ctrip.Framework.Apollo
 {
     public static class ApolloConfigurationBuilderExtensions
     {
-        /// <summary>添加默认namespace: application，直接读取配置</summary>
+        /// <summary>添加默认namespace: application</summary>
         public static IApolloConfigurationBuilder AddDefault(this IApolloConfigurationBuilder builder) =>
             builder.AddNamespace(ConfigConsts.NamespaceApplication, null);
 
-        /// <summary>添加其他namespace，使用Configuration.GetSection(namespace)读取</summary>
+        /// <summary>添加其他namespace</summary>
         public static IApolloConfigurationBuilder AddNamespace(this IApolloConfigurationBuilder builder, string @namespace) =>
             builder.AddNamespace(@namespace, null);
 
