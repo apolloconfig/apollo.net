@@ -1,63 +1,33 @@
-﻿using System;
+﻿using System.Linq;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 
 namespace Com.Ctrip.Framework.Apollo.Foundation
 {
     public class NetworkInterfaceManager
     {
-        private static string _hostName = string.Empty;
-        private static string _hostIp = string.Empty;
-        private static byte[] _hostAddressBytes;
-
-        static NetworkInterfaceManager() => Refresh();
-
-        public static void Refresh()
+        static NetworkInterfaceManager()
         {
             try
             {
-                _hostName = Dns.GetHostName();
-                var ipHostEntry = Dns.GetHostEntry(_hostName);
-                _hostIp = GetIp(ipHostEntry);
-                _hostAddressBytes = GetAddressBytes(ipHostEntry);
+                var hostIp = NetworkInterface.GetAllNetworkInterfaces()
+                    .Where(network => network.OperationalStatus == OperationalStatus.Up)
+                    .Select(network => network.GetIPProperties())
+                    .OrderByDescending(properties => properties.GatewayAddresses.Count)
+                    .SelectMany(properties => properties.UnicastAddresses)
+                    .FirstOrDefault(address => !IPAddress.IsLoopback(address.Address) &&
+                                               address.Address.AddressFamily == AddressFamily.InterNetwork);
+
+                if (hostIp != null)
+                    HostIp = hostIp.ToString();
             }
-            catch (Exception e)
+            catch
             {
-                _hostName = "localhost";
-                _hostIp = "127.0.0.1";
-                _hostAddressBytes = IPAddress.Loopback.GetAddressBytes();
+                // ignored
             }
         }
 
-        private static string GetIp(IPHostEntry ipHostEntry)
-        {
-            foreach (var ip in ipHostEntry.AddressList)
-            {
-                if (ip.AddressFamily == AddressFamily.InterNetwork)
-                {
-                    return ip.ToString();
-                }
-            }
-            return ipHostEntry.AddressList[0].ToString();
-        }
-
-        private static byte[] GetAddressBytes(IPHostEntry ipHostEntry)
-        {
-            foreach (var ip in ipHostEntry.AddressList)
-            {
-                if (ip.AddressFamily == AddressFamily.InterNetwork)
-                {
-                    return ip.GetAddressBytes();
-                }
-            }
-            return ipHostEntry.AddressList[0].GetAddressBytes();
-        }
-
-
-        public static string HostName => _hostName ?? "";
-
-        public static string HostIp => _hostIp ?? "127.0.0.1";
-
-        public static byte[] AddressBytes => _hostAddressBytes;
+        public static string HostIp { get; } = "127.0.0.1";
     }
 }
