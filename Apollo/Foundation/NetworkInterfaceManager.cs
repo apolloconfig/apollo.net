@@ -20,7 +20,7 @@ namespace Com.Ctrip.Framework.Apollo.Foundation
                                                address.Address.AddressFamily == AddressFamily.InterNetwork);
 
                 if (hostIp != null)
-                    HostIp = hostIp.ToString();
+                    HostIp = hostIp.Address.ToString();
             }
             catch
             {
