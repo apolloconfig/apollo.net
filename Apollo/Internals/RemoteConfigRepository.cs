@@ -47,7 +47,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
         public override async Task Initialize()
         {
-            await SchedulePeriodicRefresh(true);
+            await SchedulePeriodicRefresh(true).ConfigureAwait(false);
 
             _timer.Change(_options.RefreshInterval, _options.RefreshInterval);
 
@@ -62,7 +62,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             return TransformApolloConfigToProperties(_configCache.ReadFullFence());
         }
 
-        private async void SchedulePeriodicRefresh(object _) => await SchedulePeriodicRefresh(false);
+        private async void SchedulePeriodicRefresh(object _) => await SchedulePeriodicRefresh(false).ConfigureAwait(false);
 
         private async Task SchedulePeriodicRefresh(bool isFirst)
         {
@@ -70,7 +70,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             {
                 Logger.Debug($"refresh config for namespace: {Namespace}");
 
-                await Sync(isFirst);
+                await Sync(isFirst).ConfigureAwait(false);
 
                 _syncException = null;
             }
@@ -85,7 +85,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
         private async Task Sync(bool isFirst)
         {
             var previous = _configCache.ReadFullFence();
-            var current = await LoadApolloConfig(isFirst);
+            var current = await LoadApolloConfig(isFirst).ConfigureAwait(false);
 
             //reference equals means HTTP 304
             if (!ReferenceEquals(previous, current))
@@ -102,7 +102,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             var cluster = _options.Cluster;
             var dataCenter = _options.DataCenter;
 
-            var configServices = await _serviceLocator.GetConfigServices();
+            var configServices = await _serviceLocator.GetConfigServices().ConfigureAwait(false);
 
             Exception exception = null;
             string url = null;
@@ -126,7 +126,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
                     try
                     {
-                        var response = await _httpUtil.DoGetAsync<ApolloConfig>(url);
+                        var response = await _httpUtil.DoGetAsync<ApolloConfig>(url).ConfigureAwait(false);
 
                         if (response.StatusCode == HttpStatusCode.NotModified)
                         {
@@ -163,7 +163,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                     }
                 }
 
-                await Task.Delay(1000); //sleep 1 second
+                await Task.Delay(1000).ConfigureAwait(false); //sleep 1 second
             }
 
             if (notFound)
@@ -242,7 +242,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             {
                 try
                 {
-                    await Sync(false);
+                    await Sync(false).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {

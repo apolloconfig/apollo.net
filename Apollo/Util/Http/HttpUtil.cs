@@ -35,12 +35,12 @@ namespace Com.Ctrip.Framework.Apollo.Util.Http
                 {
                     var httpClient = _httpClient.GetOrAdd(timeout > 0 ? timeout : _options.Timeout, t => new HttpClient { Timeout = TimeSpan.FromMilliseconds(t) });
 
-                    response = await Timeout(httpClient.SendAsync(httpRequest, cts.Token), timeout, cts.Token);
+                    response = await Timeout(httpClient.SendAsync(httpRequest, cts.Token), timeout, cts).ConfigureAwait(false);
                 }
 
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
-                    using (var s = await response.Content.ReadAsStreamAsync())
+                    using (var s = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
                     using (var sr = new StreamReader(s, Encoding.UTF8))
                     using (var jtr = new JsonTextReader(sr))
                         return new HttpResponse<T>(response.StatusCode, JsonSerializer.Create().Deserialize<T>(jtr));
@@ -81,10 +81,12 @@ namespace Com.Ctrip.Framework.Apollo.Util.Http
             }
         }
 
-        private static async Task<T> Timeout<T>(Task<T> task, int millisecondsDelay, CancellationToken token)
+        private static async Task<T> Timeout<T>(Task<T> task, int millisecondsDelay, CancellationTokenSource cts)
         {
-            if (await Task.WhenAny(task, Task.Delay(millisecondsDelay, token)) == task)
+            if (await Task.WhenAny(task, Task.Delay(millisecondsDelay, cts.Token)).ConfigureAwait(false) == task)
                 return task.Result;
+
+            cts.Cancel();
 
             throw new TimeoutException();
         }

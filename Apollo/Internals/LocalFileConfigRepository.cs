@@ -34,7 +34,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
         {
             if (_upstream != null)
             {
-                await _upstream.Initialize();
+                await _upstream.Initialize().ConfigureAwait(false);
 
                 _upstream.AddChangeListener(this);
 
