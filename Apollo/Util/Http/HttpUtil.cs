@@ -14,12 +14,6 @@ namespace Com.Ctrip.Framework.Apollo.Util.Http
     {
         [Inject]
         private ConfigUtil m_configUtil;
-        private string basicAuth;
-
-        public HttpUtil()
-        {
-            basicAuth = "Basic " + Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes("user:"));
-        }
 
         public HttpResponse<T> DoGet<T>(HttpRequest httpRequest)
         {
@@ -28,7 +22,6 @@ namespace Com.Ctrip.Framework.Apollo.Util.Http
             {
                 HttpWebRequest req = (HttpWebRequest)WebRequest.Create(httpRequest.Url);
                 req.Method = "GET";
-                req.Headers["Authorization"] = basicAuth;
 
                 int timeout = httpRequest.Timeout;
                 if (timeout <= 0 && timeout != Timeout.Infinite)
