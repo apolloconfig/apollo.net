@@ -15,7 +15,7 @@ namespace Com.Ctrip.Framework.Apollo.Model
 
         /// <summary>
         /// Constructor. </summary>
-        /// <param name="namespace"> the namespace of the key </param>
+        /// <param name="namespaceName"> the namespace of the key </param>
         /// <param name="propertyName"> the key whose value is changed </param>
         /// <param name="oldValue"> the value before change </param>
         /// <param name="newValue"> the value after change </param>
