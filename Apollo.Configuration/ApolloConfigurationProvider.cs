@@ -20,16 +20,12 @@ namespace Com.Ctrip.Framework.Apollo
         {
             _sectionKey = sectionKey;
             _configRepository = configRepository;
-
-            if (SynchronizationContext.Current == null)
-                _initializeTask = _configRepository.Initialize();
-            else
-                AsyncHelper.RunSync(_configRepository.Initialize);
+            _initializeTask = _configRepository.Initialize();
         }
 
         public override void Load()
         {
-            _initializeTask?.GetAwaiter().GetResult();
+            _initializeTask.GetAwaiter().GetResult();
 
             _configRepository.AddChangeListener(this);
 

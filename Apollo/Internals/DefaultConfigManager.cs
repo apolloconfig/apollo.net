@@ -17,11 +17,11 @@ namespace Com.Ctrip.Framework.Apollo.Internals
         {
             if (!_configs.TryGetValue(namespaceName, out var config))
             {
-                await _semaphore.WaitAsync();
+                await _semaphore.WaitAsync().ConfigureAwait(false);
                 try
                 {
                     if (!_configs.TryGetValue(namespaceName, out config))
-                        _configs[namespaceName] = config = await _factoryManager.GetFactory(namespaceName).Create(namespaceName);
+                        _configs[namespaceName] = config = await _factoryManager.GetFactory(namespaceName).Create(namespaceName).ConfigureAwait(false);
                 }
                 finally
                 {

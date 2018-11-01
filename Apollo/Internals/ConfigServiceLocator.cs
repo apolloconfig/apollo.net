@@ -39,7 +39,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
         {
             var services = _configServices.ReadFullFence();
             if (services.Count == 0)
-                await UpdateConfigServices();
+                await UpdateConfigServices().ConfigureAwait(false);
 
             services = _configServices.ReadFullFence();
             if (services.Count == 0)
@@ -54,7 +54,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             {
                 Logger.Debug("refresh config services");
 
-                await UpdateConfigServices();
+                await UpdateConfigServices().ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -83,7 +83,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             {
                 try
                 {
-                    var response = await _httpUtil.DoGetAsync<IList<ServiceDto>>(url, 2000);
+                    var response = await _httpUtil.DoGetAsync<IList<ServiceDto>>(url, 2000).ConfigureAwait(false);
                     var services = response.Body;
                     if (services == null || services.Count == 0)
                     {

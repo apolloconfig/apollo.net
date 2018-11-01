@@ -95,7 +95,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                 {
                     if (lastServiceDto == null)
                     {
-                        var configServices = await _serviceLocator.GetConfigServices();
+                        var configServices = await _serviceLocator.GetConfigServices().ConfigureAwait(false);
                         lastServiceDto = configServices[random.Next(configServices.Count)];
                     }
 
@@ -103,7 +103,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
                     Logger.Debug($"Long polling from {url}");
 
-                    var response = await _httpUtil.DoGetAsync<IList<ApolloConfigNotification>>(url, 600000);
+                    var response = await _httpUtil.DoGetAsync<IList<ApolloConfigNotification>>(url, 600000).ConfigureAwait(false);
 
                     Logger.Debug(
                         $"Long polling response: {response.StatusCode}, url: {url}");
@@ -139,7 +139,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                 }
                 finally
                 {
-                    await Task.Delay(sleepTime);
+                    await Task.Delay(sleepTime).ConfigureAwait(false);
                 }
             }
         }

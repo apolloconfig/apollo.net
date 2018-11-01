@@ -1,9 +1,6 @@
-﻿#if CONFIGURATIONBUILDER
-using Com.Ctrip.Framework.Apollo.Model;
-using Com.Ctrip.Framework.Apollo.Util;
+﻿using Com.Ctrip.Framework.Apollo.Model;
 using System.Collections.Specialized;
 using System.Configuration;
-using System.Threading;
 using System.Xml;
 
 namespace Com.Ctrip.Framework.Apollo
@@ -42,12 +39,7 @@ namespace Com.Ctrip.Framework.Apollo
                 {
                     if (_config == null)
                     {
-                        if (SynchronizationContext.Current == null)
-                            _config = (Namespace == null ? ApolloConfigurationManager.GetAppConfig() : ApolloConfigurationManager.GetConfig(Namespace)).GetAwaiter().GetResult();
-                        else if (Namespace == null)
-                            _config = AsyncHelper.RunSync(ApolloConfigurationManager.GetAppConfig);
-                        else
-                            _config = AsyncHelper.RunSync(() => ApolloConfigurationManager.GetConfig(Namespace));
+                        _config = (Namespace == null ? ApolloConfigurationManager.GetAppConfig() : ApolloConfigurationManager.GetConfig(Namespace)).GetAwaiter().GetResult();
 
                         _config.ConfigChanged += Config_ConfigChanged;
                     }
@@ -59,4 +51,3 @@ namespace Com.Ctrip.Framework.Apollo
         private void Config_ConfigChanged(object sender, ConfigChangeEventArgs args) => ConfigurationManager.RefreshSection(SectionName);
     }
 }
-#endif

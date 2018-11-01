@@ -25,7 +25,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
         public async Task Initialize()
         {
-            await _configRepository.Initialize();
+            await _configRepository.Initialize().ConfigureAwait(false);
 
             try
             {

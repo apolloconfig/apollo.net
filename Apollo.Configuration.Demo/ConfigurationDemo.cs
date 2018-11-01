@@ -17,8 +17,8 @@ namespace Apollo.Configuration.Demo
             builder.AddJsonFile("appsettings.json");
                 builder
                 .AddApollo(builder.Build().GetSection("apollo"))
-                .AddDefault()
-                .AddNamespace("TEST1.test");
+                .AddDefault();
+                //.AddNamespace("TEST1.test");
 
             Configuration = builder.Build();
         }
@@ -45,7 +45,7 @@ namespace Apollo.Configuration.Demo
 
             optionsMonitor.OnChange(OnChanged);
 
-            new ConfigurationManagerDemo(serviceProvider.GetService<ApolloConfigurationManager>());
+            //new ConfigurationManagerDemo(serviceProvider.GetService<ApolloConfigurationManager>());
         }
 
         public string GetConfig(string key)

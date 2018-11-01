@@ -1,5 +1,4 @@
-﻿#if CONFIGURATIONBUILDER
-using Com.Ctrip.Framework.Apollo.Util;
+﻿using Com.Ctrip.Framework.Apollo.Util;
 using System.Collections.Specialized;
 using System.Configuration;
 
@@ -63,4 +62,3 @@ namespace Com.Ctrip.Framework.Apollo
         }
     }
 }
-#endif

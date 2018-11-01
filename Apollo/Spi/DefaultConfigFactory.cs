@@ -15,7 +15,7 @@ namespace Com.Ctrip.Framework.Apollo.Spi
 
             var config = new DefaultConfig(namespaceName, configRepository);
 
-            await config.Initialize();
+            await config.Initialize().ConfigureAwait(false);
 
             return config;
         }
