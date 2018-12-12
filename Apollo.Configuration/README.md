@@ -125,7 +125,7 @@ Apollo支持配置按照集群划分，也就是说对于一个appId和一个环
 
 ``` diff
     WebHost.CreateDefaultBuilder(args)
-+       .ConfigureAppConfiguration((_, builder) => builder
++       .ConfigureAppConfiguration(builder => builder
 +           .AddApollo(builder.Build().GetSection("apollo"))
 +           .AddNamespace("Some namespace")
 +           .AddDefault())
