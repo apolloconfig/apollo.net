@@ -141,7 +141,7 @@ apollo.net项目中有一个样例客户端的项目：[Apollo.Configuration.Dem
 
 # 四、FAQ
 
-## 4.1 如何将配置JSON或者XML直接绑定到类？（已超出Apollo范畴）
+## 4.1 如何将配置的JSON或者XML值直接绑定到Options？（已超出Apollo范畴）
 
 ``` C#
 internal static IServiceCollection BindJson<TOptions>(this IServiceCollection services, IConfigurationSection config) where TOptions : class =>
