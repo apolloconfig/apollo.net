@@ -143,12 +143,13 @@ apollo.net项目中有一个样例客户端的项目：[Apollo.Configuration.Dem
 
 ## 4.1 如何将配置的JSON或者XML值直接绑定到Options？（已超出Apollo范畴）
 
+扩展方法（方法名请自便）：
 ``` C#
 internal static IServiceCollection BindJson<TOptions>(this IServiceCollection services, IConfigurationSection config) where TOptions : class =>
     services.BindJson<TOptions>(Options.DefaultName, config);
 
 internal static IServiceCollection BindJson<TOptions>(this IServiceCollection services, string name, IConfigurationSection config) where TOptions : class =>
-    services.AddSingleton((IOptionsChangeTokenSource<TOptions>)new ConfigurationChangeTokenSource<TOptions>(name, config))
+    services.AddSingleton<IOptionsChangeTokenSource<TOptions>>(new ConfigurationChangeTokenSource<TOptions>(name, config))
         .Configure<TOptions>(name, options =>
         {
             if (string.IsNullOrWhiteSpace(config.Value)) return;
@@ -161,4 +162,8 @@ internal static IServiceCollection BindJson<TOptions>(this IServiceCollection se
 
             root.Bind(options);
         });
+```
+用例代码：
+``` C#
+services.BindJson<Options>(/*name, */config.GetSection("somPrefix:JsonKey")); //一定要是完整的Key，取不到Value就不能绑定了
 ```
