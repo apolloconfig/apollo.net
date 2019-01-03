@@ -138,3 +138,27 @@ sdk已经完美支持Microsoft.Extensions.Configuration，请参考[IOptionsMoni
 
 ## 3.3 Demo
 apollo.net项目中有一个样例客户端的项目：[Apollo.Configuration.Demo](https://github.com/ctripcorp/apollo.net/tree/dotnet-core/Apollo.Configuration.Demo)
+
+# 四、FAQ
+
+## 4.1 如何将配置JSON或者XML直接绑定到类？（已超出Apollo范畴）
+
+``` C#
+internal static IServiceCollection BindJson<TOptions>(this IServiceCollection services, IConfigurationSection config) where TOptions : class =>
+    services.BindJson<TOptions>(Options.DefaultName, config);
+
+internal static IServiceCollection BindJson<TOptions>(this IServiceCollection services, string name, IConfigurationSection config) where TOptions : class =>
+    services.AddSingleton((IOptionsChangeTokenSource<TOptions>)new ConfigurationChangeTokenSource<TOptions>(name, config))
+        .Configure<TOptions>(name, options =>
+        {
+            if (string.IsNullOrWhiteSpace(config.Value)) return;
+
+            var provider = new JsonConfigurationProvider(new JsonConfigurationSource { Optional = true }); //可以换成其他的，比如XML
+            var root = new ConfigurationRoot(new List<IConfigurationProvider> { provider });
+
+            using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(config.Value)))
+                provider.Load(stream);
+
+            root.Bind(options);
+        });
+```
