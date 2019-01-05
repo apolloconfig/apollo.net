@@ -145,10 +145,10 @@ apollo.net项目中有一个样例客户端的项目：[Apollo.Configuration.Dem
 
 扩展方法（方法名请自便）：
 ``` C#
-internal static IServiceCollection BindJson<TOptions>(this IServiceCollection services, IConfigurationSection config) where TOptions : class =>
+public static IServiceCollection BindJson<TOptions>(this IServiceCollection services, IConfigurationSection config) where TOptions : class =>
     services.BindJson<TOptions>(Options.DefaultName, config);
 
-internal static IServiceCollection BindJson<TOptions>(this IServiceCollection services, string name, IConfigurationSection config) where TOptions : class =>
+public static IServiceCollection BindJson<TOptions>(this IServiceCollection services, string name, IConfigurationSection config) where TOptions : class =>
     services.AddSingleton<IOptionsChangeTokenSource<TOptions>>(new ConfigurationChangeTokenSource<TOptions>(name, config))
         .Configure<TOptions>(name, options =>
         {
@@ -165,5 +165,5 @@ internal static IServiceCollection BindJson<TOptions>(this IServiceCollection se
 ```
 用例代码：
 ``` C#
-services.BindJson<Options>(/*name, */config.GetSection("somPrefix:JsonKey")); //一定要是完整的Key，取不到Value就不能绑定了
+services.BindJson<Options>(/*name, */config.GetSection("somePrefix:JsonKey")); //一定要是完整的Key，取不到Value就不能绑定了
 ```
