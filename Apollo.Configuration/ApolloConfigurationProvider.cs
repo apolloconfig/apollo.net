@@ -1,11 +1,8 @@
 ﻿using Com.Ctrip.Framework.Apollo.Core.Utils;
 using Com.Ctrip.Framework.Apollo.Internals;
-using Com.Ctrip.Framework.Apollo.Util;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Com.Ctrip.Framework.Apollo
@@ -25,7 +22,7 @@ namespace Com.Ctrip.Framework.Apollo
 
         public override void Load()
         {
-            _initializeTask.GetAwaiter().GetResult();
+            _initializeTask.ConfigureAwait(false).GetAwaiter().GetResult();
 
             _configRepository.AddChangeListener(this);
 
@@ -34,16 +31,26 @@ namespace Com.Ctrip.Framework.Apollo
 
         private void SetData(Properties properties)
         {
-            Data = string.IsNullOrEmpty(_sectionKey) || properties.Source == null ? properties.Source : new Dictionary<string, string>(properties.Source.ToDictionary(kv => $"{_sectionKey}{ConfigurationPath.KeyDelimiter}{kv.Key}", kv => kv.Value), StringComparer.OrdinalIgnoreCase);
+            if (string.IsNullOrEmpty(_sectionKey) || properties.Source == null || properties.Source.Count == 0)
+                Data = properties.Source;
+            else
+            {
+                var data = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+                foreach (var kv in properties.Source)
+                    data[$"{_sectionKey}{ConfigurationPath.KeyDelimiter}{kv.Key}"] = kv.Value;
+
+                Data = data;
+            }
         }
 
-        public void OnRepositoryChange(string namespaceName, Properties newProperties)
+        void IRepositoryChangeListener.OnRepositoryChange(string namespaceName, Properties newProperties)
         {
             SetData(newProperties);
 
             OnReload();
         }
 
-        public IConfigurationProvider Build(IConfigurationBuilder builder) => this;
+        IConfigurationProvider IConfigurationSource.Build(IConfigurationBuilder builder) => this;
     }
 }
