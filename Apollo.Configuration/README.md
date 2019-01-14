@@ -143,27 +143,20 @@ apollo.net项目中有一个样例客户端的项目：[Apollo.Configuration.Dem
 
 ## 4.1 如何将配置的JSON或者XML值直接绑定到Options？（已超出Apollo范畴）
 
+``` PS
+Install-Package Tuhu.Extensions.Configuration.ValueBinder
+```
+
 扩展方法（方法名请自便）：
 ``` C#
-public static IServiceCollection BindJson<TOptions>(this IServiceCollection services, IConfigurationSection config) where TOptions : class =>
-    services.BindJson<TOptions>(Options.DefaultName, config);
+public static IServiceCollection BindJson<TOptions>(this IServiceCollection services, IConfigurationSection section) where TOptions : class =>
+    services.BindJson<TOptions>(Options.DefaultName, section);
 
-public static IServiceCollection BindJson<TOptions>(this IServiceCollection services, string name, IConfigurationSection config) where TOptions : class =>
-    services.AddSingleton<IOptionsChangeTokenSource<TOptions>>(new ConfigurationChangeTokenSource<TOptions>(name, config))
-        .Configure<TOptions>(name, options =>
-        {
-            if (string.IsNullOrWhiteSpace(config.Value)) return;
-
-            var provider = new JsonConfigurationProvider(new JsonConfigurationSource { Optional = true }); //可以换成其他的，比如XML
-            var root = new ConfigurationRoot(new List<IConfigurationProvider> { provider });
-
-            using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(config.Value)))
-                provider.Load(stream);
-
-            root.Bind(options);
-        });
+public static IServiceCollection BindJson<TOptions>(this IServiceCollection services, string name, IConfigurationSection section) where TOptions : class =>
+    services.ConfigureValue<TOptions>(name, section, () => new JsonConfigurationProvider(new JsonConfigurationSource { Optional = true }));
 ```
 用例代码：
 ``` C#
 services.BindJson<Options>(/*name, */config.GetSection("somePrefix:JsonKey")); //一定要是完整的Key，取不到Value就不能绑定了
 ```
+更多信息请点出[此处](https://github.com/pengweiqhca/Microsoft.Extensions.Configuration.ValueBinder)
