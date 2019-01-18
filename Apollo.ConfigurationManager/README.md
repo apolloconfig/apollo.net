@@ -160,6 +160,16 @@ string someDefaultValue = "someDefaultValueForTheKey";
 string value = config.GetProperty(someKey, someDefaultValue);
 ```
 
+## 3.4 获取多个Namespace的合并结果
+
+```c#
+string somePublicNamespace = "CAT";
+IConfig config = await ApolloConfigurationManager.GetConfig(new [] { somePublicNamespace， ConfigConsts.NamespaceApplication }); //config instance is singleton for each namespace and is never null
+string someKey = "someKeyFromPublicNamespace";
+string someDefaultValue = "someDefaultValueForTheKey";
+string value = config.GetProperty(someKey, someDefaultValue);
+```
+
 ## 3.4 Demo
 
 apollo.net项目中有多个样例客户端的项目：
@@ -174,14 +184,14 @@ apollo.net项目中有多个样例客户端的项目：
 <configuration>
     <configBuilders>
         <builders>
-            <add name="ApolloConfigBuilder1" type="Com.Ctrip.Framework.Apollo.AppSettingsSectionBuilder, Com.Ctrip.Framework.Apollo.ConfigurationManager" namespace="TEST1.test" />
+            <add name="ApolloConfigBuilder1" type="Com.Ctrip.Framework.Apollo.AppSettingsSectionBuilder, Com.Ctrip.Framework.Apollo.ConfigurationManager" namespace="TEST1.test;application" />
         </builders>
     </configBuilders>
 </configuration>
 
 ```
-* namespace为可选值，该值对应apollo中的namespace。
-* keyPrefix为可选值，默认值等于namespace值，如果有值则会使用:合并key，如果不想设置值请将值设置成空字符串。    
+* namespace为可选值，该值对应apollo中的namespace。支持多个值，以`,`或`;`分割，优先级从低到高
+
 ## 4.2 ConnectionStringsSectionBuilder使用说明
 ``` xml
 <configuration>
@@ -193,7 +203,7 @@ apollo.net项目中有多个样例客户端的项目：
 </configuration>
 
 ```
-* namespace为可选值，该值对应apollo中的namespace。
+* namespace为可选值，该值对应apollo中的namespace。支持多个值，以`,`或`;`分割，优先级从低到高
 * defaultProviderName为可选值，默认值为System.Data.SqlClient,，对应ConnectionString的ProviderName。
 * key必须以ConnectionStrings:开始
 * 通过ConnectionStrings:ConnectionName:ConnectionString或者ConnectionStrings:ConnectionName来设置连接字符串（同时指定时ConnectionStrings:ConnectionName:ConnectionString优先级高）

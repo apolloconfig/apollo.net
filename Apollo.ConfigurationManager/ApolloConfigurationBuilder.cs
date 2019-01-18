@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Configuration;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Xml;
 
 namespace Com.Ctrip.Framework.Apollo
@@ -13,12 +14,12 @@ namespace Com.Ctrip.Framework.Apollo
         private static readonly object Lock = new object();
 
         private IConfig _config;
-        public IReadOnlyCollection<string> Namespace { get; private set; }
+        public IReadOnlyList<string> Namespaces { get; private set; }
         public string SectionName { get; private set; }
 
         public override void Initialize(string name, NameValueCollection config)
         {
-            Namespace = config["namespace"]?.Split(new[] { ';', ',' }, StringSplitOptions.RemoveEmptyEntries);
+            Namespaces = config["namespace"]?.Split(new[] { ';', ',' }, StringSplitOptions.RemoveEmptyEntries);
 
             if (!(this is AppSettingsSectionBuilder))
             {
@@ -45,8 +46,15 @@ namespace Com.Ctrip.Framework.Apollo
 
                 if (_config != null) return _config;
 
-                _config = (Namespace == null || Namespace.Count == 0 ? ApolloConfigurationManager.GetAppConfig() : ApolloConfigurationManager.GetConfig(Namespace))
-                    .ConfigureAwait(false).GetAwaiter().GetResult();
+                Task<IConfig> config;
+                if (Namespaces == null || Namespaces.Count == 0)
+                    config = ApolloConfigurationManager.GetAppConfig();
+                else if (Namespaces.Count == 1)
+                    config = ApolloConfigurationManager.GetConfig(Namespaces[0]);
+                else
+                    config = ApolloConfigurationManager.GetConfig(Namespaces);
+
+                _config = config.ConfigureAwait(false).GetAwaiter().GetResult();
 
                 _config.ConfigChanged += Config_ConfigChanged;
             }
