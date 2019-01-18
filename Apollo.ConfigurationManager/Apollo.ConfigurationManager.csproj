@@ -19,7 +19,7 @@
         <RepositoryUrl>https://github.com/ctripcorp/apollo.net/tree/dotnet-core</RepositoryUrl>
         <PackageProjectUrl>$(RepositoryUrl)/Apollo.ConfigurationManager</PackageProjectUrl>
         <IncludeSymbols>True</IncludeSymbols>
-        <Version>1.5.0.0</Version>
+        <Version>1.5.1.0</Version>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>..\Apollo.snk</AssemblyOriginatorKeyFile>
         <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
