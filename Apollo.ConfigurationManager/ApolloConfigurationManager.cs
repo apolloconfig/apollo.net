@@ -1,8 +1,10 @@
-﻿using System.Threading.Tasks;
-using Com.Ctrip.Framework.Apollo.Core;
+﻿using Com.Ctrip.Framework.Apollo.Core;
 using Com.Ctrip.Framework.Apollo.Internals;
 using Com.Ctrip.Framework.Apollo.Spi;
 using Com.Ctrip.Framework.Apollo.Util;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Com.Ctrip.Framework.Apollo
 {
@@ -24,6 +26,13 @@ namespace Com.Ctrip.Framework.Apollo
         /// <param name="namespaceName"> the namespace of the config </param>
         /// <returns> config instance </returns>
         public static Task<IConfig> GetConfig(string namespaceName) => Manager.GetConfig(namespaceName);
+
+        /// <summary>
+        /// Get the config instance for the namespace. </summary>
+        /// <param name="namespaces"> the namespaces of the config, order desc. </param>
+        /// <returns> config instance </returns>
+        public static async Task<IConfig> GetConfig(IEnumerable<string> namespaces) =>
+            new MultiConfig(await Task.WhenAll(namespaces.Select(GetConfig)));
     }
 }
 

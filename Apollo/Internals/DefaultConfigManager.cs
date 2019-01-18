@@ -15,18 +15,17 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
         public async Task<IConfig> GetConfig(string namespaceName)
         {
-            if (!_configs.TryGetValue(namespaceName, out var config))
+            if (_configs.TryGetValue(namespaceName, out var config)) return config;
+
+            await _semaphore.WaitAsync().ConfigureAwait(false);
+            try
             {
-                await _semaphore.WaitAsync().ConfigureAwait(false);
-                try
-                {
-                    if (!_configs.TryGetValue(namespaceName, out config))
-                        _configs[namespaceName] = config = await _factoryManager.GetFactory(namespaceName).Create(namespaceName).ConfigureAwait(false);
-                }
-                finally
-                {
-                    _semaphore.Release();
-                }
+                if (!_configs.TryGetValue(namespaceName, out config))
+                    _configs[namespaceName] = config = await _factoryManager.GetFactory(namespaceName).Create(namespaceName).ConfigureAwait(false);
+            }
+            finally
+            {
+                _semaphore.Release();
             }
 
             return config;
