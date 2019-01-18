@@ -1,6 +1,9 @@
 ﻿using Com.Ctrip.Framework.Apollo.Model;
+using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Configuration;
+using System.Threading;
 using System.Xml;
 
 namespace Com.Ctrip.Framework.Apollo
@@ -10,12 +13,12 @@ namespace Com.Ctrip.Framework.Apollo
         private static readonly object Lock = new object();
 
         private IConfig _config;
-        public string Namespace { get; private set; }
+        public IReadOnlyCollection<string> Namespace { get; private set; }
         public string SectionName { get; private set; }
 
         public override void Initialize(string name, NameValueCollection config)
         {
-            Namespace = config["namespace"];
+            Namespace = config["namespace"]?.Split(new[] { ';', ',' }, StringSplitOptions.RemoveEmptyEntries);
 
             if (!(this is AppSettingsSectionBuilder))
             {
@@ -34,17 +37,19 @@ namespace Com.Ctrip.Framework.Apollo
 
         protected IConfig GetConfig()
         {
-            if (_config == null)
-                lock (Lock)
-                {
-                    if (_config == null)
-                    {
-                        _config = (Namespace == null ? ApolloConfigurationManager.GetAppConfig() : ApolloConfigurationManager.GetConfig(Namespace))
-                            .ConfigureAwait(false).GetAwaiter().GetResult();
+            if (_config != null) return _config;
 
-                        _config.ConfigChanged += Config_ConfigChanged;
-                    }
-                }
+            lock (Lock)
+            {
+                Interlocked.MemoryBarrier();
+
+                if (_config != null) return _config;
+
+                _config = (Namespace == null || Namespace.Count == 0 ? ApolloConfigurationManager.GetAppConfig() : ApolloConfigurationManager.GetConfig(Namespace))
+                    .ConfigureAwait(false).GetAwaiter().GetResult();
+
+                _config.ConfigChanged += Config_ConfigChanged;
+            }
 
             return _config;
         }
