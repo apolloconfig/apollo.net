@@ -107,7 +107,7 @@ namespace Com.Ctrip.Framework.Apollo.Util
         /// Get the current environment.
         /// </summary>
         /// <returns> the env </returns>
-        public Env Env => Enum.TryParse(GetAppConfig("Env"), out Env env) ? env : Env.Dev;
+        public Env Env => Enum.TryParse(GetAppConfig("Env"), true, out Env env) ? env : Env.Dev;
 
         public string LocalIp { get; set; } = NetworkInterfaceManager.HostIp;
 
