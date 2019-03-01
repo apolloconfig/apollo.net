@@ -9,6 +9,20 @@ namespace Com.Ctrip.Framework.Apollo.Internals
     {
         private readonly IReadOnlyCollection<IConfig> _configs;
 
+        public override event ConfigChangeEvent ConfigChanged
+        {
+            add
+            {
+                foreach (var config in _configs)
+                    config.ConfigChanged += value;
+            }
+            remove
+            {
+                foreach (var config in _configs)
+                    config.ConfigChanged -= value;
+            }
+        }
+
         /// <param name="configs">order desc</param>
         public MultiConfig([NotNull] IEnumerable<IConfig> configs)
         {
