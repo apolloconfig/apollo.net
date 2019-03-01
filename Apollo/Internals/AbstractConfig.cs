@@ -15,7 +15,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
     public abstract class AbstractConfig : IConfig
     {
         private static readonly ILogger Logger = LogManager.CreateLogger(typeof(AbstractConfig));
-        public event ConfigChangeEvent ConfigChanged;
+        public virtual event ConfigChangeEvent ConfigChanged;
         private static readonly TaskFactory ExecutorService;
 
         static AbstractConfig()
