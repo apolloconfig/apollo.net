@@ -6,13 +6,16 @@ using System;
 using System.Collections.Specialized;
 using System.Configuration;
 using System.IO;
+using System.Net.Http;
 using System.Text;
+using System.Threading;
 
 namespace Com.Ctrip.Framework.Apollo.Util
 {
     public class ConfigUtil : IApolloOptions
     {
         internal static NameValueCollection AppSettings { get; set; }
+        private static Func<HttpMessageHandler> _httpMessageHandlerFactory;
 
         private static readonly ILogger Logger = LogManager.CreateLogger(typeof(ConfigUtil));
         private int _refreshInterval = 5 * 60 * 1000; //5 minutes
@@ -156,5 +159,9 @@ namespace Com.Ctrip.Framework.Apollo.Util
         public int RefreshInterval => _refreshInterval;
 
         public string LocalCacheDir => GetAppConfig("LocalCacheDir") ?? Path.Combine(ConfigConsts.DefaultLocalCacheDir, AppId);
+
+        public Func<HttpMessageHandler> HttpMessageHandlerFactory => _httpMessageHandlerFactory;
+
+        public static void UseHttpMessageHandlerFactory(Func<HttpMessageHandler> factory) => Interlocked.CompareExchange(ref _httpMessageHandlerFactory, factory, null);
     }
 }

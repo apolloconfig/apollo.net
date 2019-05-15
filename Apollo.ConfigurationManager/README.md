@@ -208,3 +208,17 @@ apollo.net项目中有多个样例客户端的项目：
 * key必须以ConnectionStrings:开始
 * 通过ConnectionStrings:ConnectionName:ConnectionString或者ConnectionStrings:ConnectionName来设置连接字符串（同时指定时ConnectionStrings:ConnectionName:ConnectionString优先级高）
 * 通过ConnectionStrings:ConnectionName:ProviderName来指定使用其他数据库，比如MySql.Data.MySqlClient来指定是MySql
+
+# 五、FAQ
+
+## 4.1 Apollo内部HttpClient如何配置代理
+
+在读取任何配置之前执行如下代码
+
+``` C#
+ConfigUtil.UseHttpMessageHandlerFactory(() => new HttpClientHandler
+{
+    UseProxy = true,
+    Proxy = new WebProxy(new Uri("http://代理地址"))
+});
+```

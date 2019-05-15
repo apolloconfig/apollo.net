@@ -19,7 +19,7 @@
     <RepositoryUrl>https://github.com/ctripcorp/apollo.net/tree/dotnet-core</RepositoryUrl>
     <PackageProjectUrl>$(RepositoryUrl)/Apollo.Configuration</PackageProjectUrl>
     <IncludeSymbols>True</IncludeSymbols>
-    <Version>1.5.1.0</Version>
+    <Version>1.5.2.0</Version>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\Apollo.snk</AssemblyOriginatorKeyFile>
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
@@ -32,7 +32,8 @@
 1.3.1: 修复QueryString连接错误
 1.4.0: 添加SourceLink、更新包
 1.5.0: 使用.ConfigureAwait(false)替代AsyncHelper来解决同步调用异步方法出现的死锁问题
-1.5.1: ApolloConfigurationManager支持多namespaces</PackageReleaseNotes>
+1.5.1: ApolloConfigurationManager支持多namespaces
+1.5.2: Apollo内部HttpClient允许使用自定义HttpMessageHandler，比如配置代理</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

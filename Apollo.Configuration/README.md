@@ -151,3 +151,24 @@ Install-Package Tuhu.Extensions.Configuration.ValueBinder.Json
 services.ConfigureJsonValue<Options>(/*name, */config.GetSection("somePrefix:JsonKey")); //一定要是完整的Key，取不到Value就不能绑定了
 ```
 更多信息请点出[此处](https://github.com/pengweiqhca/Microsoft.Extensions.Configuration.ValueBinder)
+
+## 4.2 Apollo内部HttpClient如何配置代理
+
+``` diff
+    WebHost.CreateDefaultBuilder(args)
++       .ConfigureAppConfiguration(builder =>
++       {
++           var apollo = builder.Build().GetSection("apollo").Get<ApolloOptions>();
++           apollo.HttpMessageHandlerFactory = () => new HttpClientHandler
++           {
++               UseProxy = true,
++               Proxy = new WebProxy(new Uri("http://代理地址"))
++           };
++
++           builder
++               .AddApollo(apollo)
++               .AddNamespace("RD.SharedConfiguration")
++               .AddDefault();
++       })
+        .UseStartup<Startup>()
+```

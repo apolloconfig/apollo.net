@@ -4,6 +4,7 @@ using System;
 using System.IO;
 using System.Text;
 using Com.Ctrip.Framework.Apollo.Foundation;
+using System.Net.Http;
 
 namespace Com.Ctrip.Framework.Apollo
 {
@@ -59,6 +60,8 @@ namespace Com.Ctrip.Framework.Apollo
         public virtual int RefreshInterval { get; set; } = 5 * 60 * 1000; //5 minutes
 
         public string LocalCacheDir { get; set; }
+
+        public Func<HttpMessageHandler> HttpMessageHandlerFactory { get; set; }
 
         protected internal void InitCluster()
         {
