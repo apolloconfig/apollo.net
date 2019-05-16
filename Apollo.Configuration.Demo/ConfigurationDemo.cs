@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
+using System.Net;
+using System.Net.Http;
 
 namespace Apollo.Configuration.Demo
 {
@@ -15,10 +17,16 @@ namespace Apollo.Configuration.Demo
             var builder = new ConfigurationBuilder();
 
             builder.AddJsonFile("appsettings.json");
-                builder
-                .AddApollo(builder.Build().GetSection("apollo"))
-                .AddDefault();
-                //.AddNamespace("TEST1.test");
+
+            var apollo = builder.Build().GetSection("apollo").Get<ApolloOptions>();
+
+            //apollo.HttpMessageHandlerFactory = () => new HttpClientHandler
+            //{
+            //    UseProxy = true,
+            //    Proxy = new WebProxy(new Uri("http://127.0.0.1:8888"))
+            //};
+
+            builder.AddApollo(builder.Build().GetSection("apollo")).AddDefault();
 
             Configuration = builder.Build();
         }

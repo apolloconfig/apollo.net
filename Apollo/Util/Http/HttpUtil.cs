@@ -22,7 +22,6 @@ namespace Com.Ctrip.Framework.Apollo.Util.Http
 
         public async Task<HttpResponse<T>> DoGetAsync<T>(string url, int timeout)
         {
-
             HttpResponseMessage response = null;
             try
             {
@@ -33,7 +32,7 @@ namespace Com.Ctrip.Framework.Apollo.Util.Http
 
                 using (var cts = new CancellationTokenSource(timeout))
                 {
-                    var httpClient = _httpClient.GetOrAdd(timeout > 0 ? timeout : _options.Timeout, t => new HttpClient { Timeout = TimeSpan.FromMilliseconds(t) });
+                    var httpClient = _httpClient.GetOrAdd(timeout > 0 ? timeout : _options.Timeout, t => new HttpClient(_options.HttpMessageHandlerFactory == null ? new HttpClientHandler() : _options.HttpMessageHandlerFactory()) { Timeout = TimeSpan.FromMilliseconds(t) });
 
                     response = await Timeout(httpClient.SendAsync(httpRequest, cts.Token), timeout, cts).ConfigureAwait(false);
                 }

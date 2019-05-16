@@ -1,4 +1,6 @@
-﻿using Com.Ctrip.Framework.Apollo.Enums;
+﻿using System;
+using System.Net.Http;
+using Com.Ctrip.Framework.Apollo.Enums;
 
 namespace Com.Ctrip.Framework.Apollo
 {
@@ -39,5 +41,7 @@ namespace Com.Ctrip.Framework.Apollo
         int RefreshInterval { get; }
 
         string LocalCacheDir { get; }
+
+        Func<HttpMessageHandler> HttpMessageHandlerFactory { get; }
     }
 }
