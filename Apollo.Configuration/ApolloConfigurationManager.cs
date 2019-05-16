@@ -34,7 +34,7 @@ namespace Com.Ctrip.Framework.Apollo
         /// <param name="namespaces"> the namespaces of the config, order desc. </param>
         /// <returns> config instance </returns>
         public async Task<IConfig> GetConfig(IEnumerable<string> namespaces) =>
-            new MultiConfig(await Task.WhenAll(namespaces.Select(GetConfig)));
+            new MultiConfig(await Task.WhenAll(namespaces.Select(GetConfig)).ConfigureAwait(false));
     }
 }
 

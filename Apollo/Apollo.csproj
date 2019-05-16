@@ -38,7 +38,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ConfigureAwaitChecker.Analyzer" Version="2.*" Condition="'$(Configuration)' != 'Release'" PrivateAssets="All" />
+    <PackageReference Include="ConfigureAwaitChecker.Analyzer" Version="3.*" Condition="'$(Configuration)' != 'Release'" PrivateAssets="All" />
     <PackageReference Include="JetBrains.Annotations" Version="2018.*" PrivateAssets="All" />
     <PackageReference Include="Microsoft.DotNet.Analyzers.Compatibility" Version="0.2.12-alpha" Condition="'$(TargetFramework)' == 'netstandard2.0'" PrivateAssets="All" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-*" PrivateAssets="All" />

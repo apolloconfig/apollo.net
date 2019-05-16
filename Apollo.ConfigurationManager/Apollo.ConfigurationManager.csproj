@@ -19,7 +19,7 @@
         <RepositoryUrl>https://github.com/ctripcorp/apollo.net/tree/dotnet-core</RepositoryUrl>
         <PackageProjectUrl>$(RepositoryUrl)/Apollo.ConfigurationManager</PackageProjectUrl>
         <IncludeSymbols>True</IncludeSymbols>
-        <Version>1.5.3.0</Version>
+        <Version>1.5.4.0</Version>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>..\Apollo.snk</AssemblyOriginatorKeyFile>
         <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
@@ -32,11 +32,13 @@
 1.5.0: 使用.ConfigureAwait(false)替代AsyncHelper来解决同步调用异步方法出现的死锁问题
 1.5.1: ApolloConfigurationManager和ApolloConfigurationBuilder支持多namespaces
 1.5.2: 修复Env大小写敏感的问题，感觉@LabelZhou
-1.5.3: Apollo内部HttpClient允许使用自定义HttpMessageHandler，比如配置代理</PackageReleaseNotes>
+1.5.3: Apollo内部HttpClient允许使用自定义HttpMessageHandler，比如配置代理
+1.5.4: 添加缺少的.ConfigureAwait(false)</PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\Apollo\Apollo.csproj" />
+        <PackageReference Include="ConfigureAwaitChecker.Analyzer" Version="3.*" Condition="'$(Configuration)' != 'Release'" PrivateAssets="All" />
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-*" PrivateAssets="All" />
         <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" Condition="'$(TargetFramework)' == 'netstandard2.0'" />
     </ItemGroup>
