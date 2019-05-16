@@ -1,5 +1,4 @@
-﻿using System;
-using Com.Ctrip.Framework.Apollo.Util;
+﻿using Com.Ctrip.Framework.Apollo.Util;
 using System.Collections.Specialized;
 using System.Configuration;
 
@@ -34,14 +33,6 @@ namespace Com.Ctrip.Framework.Apollo
 
         private static void TrySetConfigUtil(KeyValueConfigurationCollection appSettings)
         {
-            if (Environment.GetEnvironmentVariable("ASPNET_ENVIRONMENT") == "Staging")
-            {
-                ConfigurationManager.AppSettings["Apollo.Env"] = "UAT";
-                ConfigurationManager.AppSettings["Apollo.MetaServer"] = "http://apollo.ad.tuhu.cn:8081";
-
-                Activator.CreateInstance<ConfigUtil>();
-            }
-
             if (ConfigUtil.AppSettings != null) return;
 
             var settings = new NameValueCollection();
