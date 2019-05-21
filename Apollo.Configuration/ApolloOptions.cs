@@ -1,10 +1,10 @@
 ﻿using Com.Ctrip.Framework.Apollo.Core;
 using Com.Ctrip.Framework.Apollo.Enums;
+using Com.Ctrip.Framework.Apollo.Foundation;
 using System;
 using System.IO;
-using System.Text;
-using Com.Ctrip.Framework.Apollo.Foundation;
 using System.Net.Http;
+using System.Text;
 
 namespace Com.Ctrip.Framework.Apollo
 {
@@ -65,17 +65,9 @@ namespace Com.Ctrip.Framework.Apollo
 
         protected internal void InitCluster()
         {
-            //LPT and DEV will be treated as a cluster(lower case)
-            if (string.IsNullOrWhiteSpace(Cluster) && (Env.Dev == Env || Env.Lpt == Env))
-                Cluster = Env.ToString().ToLower();
-
             //Use data center as cluster
             if (string.IsNullOrWhiteSpace(Cluster))
                 Cluster = DataCenter;
-
-            //Use sub env as cluster
-            if (string.IsNullOrWhiteSpace(Cluster))
-                Cluster = SubEnv;
 
             //Use default cluster
             if (string.IsNullOrWhiteSpace(Cluster))
