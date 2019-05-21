@@ -20,7 +20,6 @@ namespace Com.Ctrip.Framework.Apollo.Util
         private static readonly ILogger Logger = LogManager.CreateLogger(typeof(ConfigUtil));
         private int _refreshInterval = 5 * 60 * 1000; //5 minutes
         private int _timeout = 5000; //5 seconds, c# has no connectTimeout but response timeout
-        private string _cluster;
 
         public ConfigUtil()
         {
@@ -55,7 +54,7 @@ namespace Com.Ctrip.Framework.Apollo.Util
                 if (string.IsNullOrWhiteSpace(appId))
                 {
                     appId = ConfigConsts.NoAppidPlaceholder;
-                    Logger.Warn("app.id is not set, apollo will only load public namespace configurations!");
+                    Logger.Warn("Apollo.AppId is not set, apollo will only load public namespace configurations!");
                 }
 
                 return appId;
@@ -73,38 +72,22 @@ namespace Com.Ctrip.Framework.Apollo.Util
         private void InitCluster()
         {
             //Load data center from app.config
-            _cluster = GetAppConfig("Cluster");
-
-            //LPT and DEV will be treated as a cluster(lower case)
-            if (string.IsNullOrWhiteSpace(_cluster) && (Env == Env.Dev || Env == Env.Lpt))
-            {
-                _cluster = Env.ToString().ToLower();
-            }
+            Cluster = GetAppConfig("Cluster");
 
             //Use data center as cluster
-            if (string.IsNullOrWhiteSpace(_cluster))
-            {
-                _cluster = DataCenter;
-            }
-
-            //Use sub env as cluster
-            if (string.IsNullOrWhiteSpace(_cluster))
-            {
-                _cluster = SubEnv;
-            }
+            if (string.IsNullOrWhiteSpace(Cluster))
+                Cluster = DataCenter;
 
             //Use default cluster
-            if (string.IsNullOrWhiteSpace(_cluster))
-            {
-                _cluster = ConfigConsts.ClusterNameDefault;
-            }
+            if (string.IsNullOrWhiteSpace(Cluster))
+                Cluster = ConfigConsts.ClusterNameDefault;
         }
 
         /// <summary>
         /// Get the cluster name for the current application.
         /// </summary>
         /// <returns> the cluster name, or "default" if not specified </returns>
-        public string Cluster => _cluster;
+        public string Cluster { get; private set; }
 
         /// <summary>
         /// Get the current environment.
@@ -119,18 +102,12 @@ namespace Com.Ctrip.Framework.Apollo.Util
         private void InitTimeout()
         {
             var customizedTimeout = GetAppConfig("Timeout");
-            if (customizedTimeout != null)
-            {
-                try
-                {
-                    _timeout = int.Parse(customizedTimeout);
-                }
-                catch (Exception)
-                {
-                    Logger.Error(
-                        $"Config for Apollo.Timeout is invalid: {customizedTimeout}");
-                }
-            }
+
+            if (int.TryParse(customizedTimeout, out _timeout)) return;
+
+            _timeout = 5000;
+
+            Logger.Error($"Config for Apollo.Timeout is invalid: {customizedTimeout}");
         }
 
         public int Timeout => _timeout;
@@ -142,18 +119,11 @@ namespace Com.Ctrip.Framework.Apollo.Util
         {
             var customizedRefreshInterval = GetAppConfig("RefreshInterval");
 
-            if (customizedRefreshInterval != null)
-            {
-                try
-                {
-                    _refreshInterval = int.Parse(customizedRefreshInterval);
-                }
-                catch (Exception)
-                {
-                    Logger.Error(
-                        $"Config for Apollo.RefreshInterval is invalid: {customizedRefreshInterval}");
-                }
-            }
+            if (int.TryParse(GetAppConfig("RefreshInterval"), out _refreshInterval)) return;
+
+            _refreshInterval = 5 * 60 * 1000;
+
+            Logger.Error($"Config for Apollo.RefreshInterval is invalid: {customizedRefreshInterval}");
         }
 
         public int RefreshInterval => _refreshInterval;
