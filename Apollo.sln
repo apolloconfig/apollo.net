@@ -24,6 +24,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demo", "Demo", "{12417079-E
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.AspNet.Demo", "Apollo.AspNet.Demo\Apollo.AspNet.Demo.csproj", "{E1EF936E-182E-47BD-B658-87C0D872AB0C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Configuration.Json", "Apollo.Configuration.Json\Apollo.Configuration.Json.csproj", "{76019435-B30A-4A23-8C49-F6FD5E3E43D4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -116,6 +118,18 @@ Global
 		{E1EF936E-182E-47BD-B658-87C0D872AB0C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{E1EF936E-182E-47BD-B658-87C0D872AB0C}.Release|x86.ActiveCfg = Release|Any CPU
 		{E1EF936E-182E-47BD-B658-87C0D872AB0C}.Release|x86.Build.0 = Release|Any CPU
+		{76019435-B30A-4A23-8C49-F6FD5E3E43D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76019435-B30A-4A23-8C49-F6FD5E3E43D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76019435-B30A-4A23-8C49-F6FD5E3E43D4}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{76019435-B30A-4A23-8C49-F6FD5E3E43D4}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{76019435-B30A-4A23-8C49-F6FD5E3E43D4}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{76019435-B30A-4A23-8C49-F6FD5E3E43D4}.Debug|x86.Build.0 = Debug|Any CPU
+		{76019435-B30A-4A23-8C49-F6FD5E3E43D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76019435-B30A-4A23-8C49-F6FD5E3E43D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76019435-B30A-4A23-8C49-F6FD5E3E43D4}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{76019435-B30A-4A23-8C49-F6FD5E3E43D4}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{76019435-B30A-4A23-8C49-F6FD5E3E43D4}.Release|x86.ActiveCfg = Release|Any CPU
+		{76019435-B30A-4A23-8C49-F6FD5E3E43D4}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
