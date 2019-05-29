@@ -2,7 +2,7 @@ using Com.Ctrip.Framework.Apollo.Core.Utils;
 using Com.Ctrip.Framework.Apollo.Internals;
 using System.Collections.Generic;
 
-namespace Com.Ctrip.Framework.Apollo.Json
+namespace Com.Ctrip.Framework.Apollo
 {
     public class ApolloJsonConfigurationProvider : ApolloConfigurationProvider
     {

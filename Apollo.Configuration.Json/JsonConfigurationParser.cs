@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Com.Ctrip.Framework.Apollo.Json
+namespace Com.Ctrip.Framework.Apollo
 {
     public class JsonConfigurationParser
     {

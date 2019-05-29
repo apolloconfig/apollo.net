@@ -1,6 +1,6 @@
 using System;
 
-namespace Com.Ctrip.Framework.Apollo.Json
+namespace Com.Ctrip.Framework.Apollo
 {
     public static class ApolloJsonConfigurationExtensions
     {
@@ -11,7 +11,7 @@ namespace Com.Ctrip.Framework.Apollo.Json
         /// <param name="namespace">会自动添加 `.json` 后缀.</param>
         /// <param name="sectionKey"><paramref name="sectionKey"/>会放在最前面</param>
         /// <returns></returns>
-        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentNullException"><paramref name="namespace"/>不能为空</exception>
         public static IApolloConfigurationBuilder AddJsonNamespace(this IApolloConfigurationBuilder builder,
             string @namespace, string sectionKey)
         {
@@ -30,7 +30,7 @@ namespace Com.Ctrip.Framework.Apollo.Json
         /// <param name="builder"></param>
         /// <param name="namespace">会自动添加 `.json` 后缀.</param>
         /// <returns></returns>
-        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentNullException"><paramref name="namespace"/>不能为空</exception>
         public static IApolloConfigurationBuilder AddJsonNamespace(this IApolloConfigurationBuilder builder,
             string @namespace) => builder.AddJsonNamespace(@namespace, null);
 
