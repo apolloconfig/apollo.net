@@ -34,7 +34,7 @@ namespace Com.Ctrip.Framework.Apollo.Util.Http
                 {
                     var httpClient = _httpClient.GetOrAdd(timeout > 0 ? timeout : _options.Timeout, t => new HttpClient(_options.HttpMessageHandlerFactory == null ? new HttpClientHandler() : _options.HttpMessageHandlerFactory()) { Timeout = TimeSpan.FromMilliseconds(t) });
 
-                    response = await Timeout(httpClient.SendAsync(httpRequest, cts.Token), timeout, cts).ConfigureAwait(false);
+                    response = await httpClient.SendAsync(httpRequest, cts.Token).ConfigureAwait(false);
                 }
 
                 if (response.StatusCode == HttpStatusCode.OK)
@@ -78,16 +78,6 @@ namespace Com.Ctrip.Framework.Apollo.Util.Http
                     // ignored
                 }
             }
-        }
-
-        private static async Task<T> Timeout<T>(Task<T> task, int millisecondsDelay, CancellationTokenSource cts)
-        {
-            if (await Task.WhenAny(task, Task.Delay(millisecondsDelay, cts.Token)).ConfigureAwait(false) == task)
-                return task.Result;
-
-            cts.Cancel();
-
-            throw new TimeoutException();
         }
     }
 }
