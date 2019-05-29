@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Apollo.Configuration.Json
+namespace Com.Ctrip.Framework.Apollo.Json
 {
     public class JsonConfigurationParser
     {
@@ -18,14 +19,18 @@ namespace Apollo.Configuration.Json
 
         private JsonTextReader _reader;
 
-        public static IDictionary<string, string> Parse(Stream input)
-            => new JsonConfigurationParser().ParseStream(input);
+        public static IDictionary<string, string> Parse(string input, string startPath = null)
+            => new JsonConfigurationParser().ParseString(input, startPath);
 
-        private IDictionary<string, string> ParseStream(Stream input)
+        private IDictionary<string, string> ParseString(string input, string startPath)
         {
             _data.Clear();
-            _reader = new JsonTextReader(new StreamReader(input));
-            _reader.DateParseHandling = DateParseHandling.None;
+            _reader = new JsonTextReader(new StringReader(input))
+            {
+                DateParseHandling = DateParseHandling.None
+            };
+            if(!string.IsNullOrEmpty(startPath))
+                _context.Push(startPath);
 
             var jsonConfig = JObject.Load(_reader);
 
@@ -72,7 +77,7 @@ namespace Apollo.Configuration.Json
                     break;
 
                 default:
-                    throw new FormatException(Resources.FormatError_UnsupportedJSONToken(
+                    throw new FormatException(string.Format("Unsupported JSON token '{0}' was found. Path '{1}', line {2} position {3}.",
                         _reader.TokenType,
                         _reader.Path,
                         _reader.LineNumber,
@@ -96,7 +101,7 @@ namespace Apollo.Configuration.Json
 
             if (_data.ContainsKey(key))
             {
-                throw new FormatException(Resources.FormatError_KeyIsDuplicated(key));
+                throw new FormatException(string.Format("A duplicate key '{0}' was found.", key));
             }
             _data[key] = data.ToString(CultureInfo.InvariantCulture);
         }
