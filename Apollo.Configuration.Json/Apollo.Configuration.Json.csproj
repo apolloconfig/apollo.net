@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <RootNamespace>Com.Ctrip.Framework.Apollo</RootNamespace>
+        <AssemblyName>Com.Ctrip.Framework.Apollo.Configuration.Json</AssemblyName>
+
+        <DebugType Condition="'$(TargetFramework)' != 'netstandard2.0'">full</DebugType>
+        <DebugType Condition="'$(TargetFramework)' == 'netstandard2.0'">portable</DebugType>
+        <GenerateDocumentationFile>True</GenerateDocumentationFile>
+        <NoWarn>1591</NoWarn>
+        <GeneratePackageOnBuild Condition="'$(Configuration)'=='Release'">True</GeneratePackageOnBuild>
+        <Description>携程Apollo客户端Json绑定</Description>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/ctripcorp/apollo.net/tree/dotnet-core</RepositoryUrl>
+        <PackageProjectUrl>$(RepositoryUrl)/Apollo.Configuration.Json</PackageProjectUrl>
+        <IncludeSymbols>True</IncludeSymbols>
+        <Version>1.5.3.0</Version>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>..\Apollo.snk</AssemblyOriginatorKeyFile>
+        <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
+        <PackageTags>apollo configcenter ctrip</PackageTags>
+        <PackageReleaseNotes></PackageReleaseNotes>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Apollo.Configuration\Apollo.Configuration.csproj" />
+    </ItemGroup>
+
+</Project>

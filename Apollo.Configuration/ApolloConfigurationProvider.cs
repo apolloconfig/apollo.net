@@ -9,7 +9,7 @@ namespace Com.Ctrip.Framework.Apollo
 {
     public class ApolloConfigurationProvider : ConfigurationProvider, IRepositoryChangeListener, IConfigurationSource
     {
-        private readonly string _sectionKey;
+        protected readonly string _sectionKey;
         private readonly IConfigRepository _configRepository;
         private readonly Task _initializeTask;
 
@@ -29,7 +29,7 @@ namespace Com.Ctrip.Framework.Apollo
             SetData(_configRepository.GetConfig());
         }
 
-        private void SetData(Properties properties)
+        protected virtual void SetData(Properties properties)
         {
             if (string.IsNullOrEmpty(_sectionKey) || properties.Source == null || properties.Source.Count == 0)
                 Data = properties.Source;
