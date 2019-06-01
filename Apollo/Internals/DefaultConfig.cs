@@ -43,35 +43,14 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             }
         }
 
-        public override string GetProperty(string key, string defaultValue)
+        public override bool TryGetProperty(string key, out string value)
         {
-            // step 1: check system properties, i.e. -Dkey=value
-            //TODO looks like .Net doesn't have such system property?
-            string value = null;
+            value = _configProperties.ReadFullFence()?.GetProperty(key);
 
-            // step 2: check local cached properties file
-            if (_configProperties.ReadFullFence() != null)
-            {
-                value = _configProperties.ReadFullFence().GetProperty(key);
-            }
-
-            // step 3: check env variable, i.e. PATH=...
-            // normally system environment variables are in UPPERCASE, however there might be exceptions.
-            // so the caller should provide the key in the right case
             if (value == null)
-            {
-                value = Environment.GetEnvironmentVariable(key);
-            }
-
-            //TODO step 4: check properties file from classpath
-
-
-            if (value == null && _configProperties.ReadFullFence() == null)
-            {
                 Logger.Warn($"Could not load config for namespace {_namespace} from Apollo, please check whether the configs are released in Apollo! Return default value now!");
-            }
 
-            return value ?? defaultValue;
+            return value == null;
         }
 
         public void OnRepositoryChange(string namespaceName, Properties newProperties)
@@ -101,7 +80,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             //1. use getProperty to update configChanges's old value
             foreach (var change in configChanges)
             {
-                change.OldValue = GetProperty(change.PropertyName, change.OldValue);
+                change.OldValue = this.GetProperty(change.PropertyName, change.OldValue);
             }
 
             //2. update _configProperties
@@ -110,7 +89,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             //3. use getProperty to update configChange's new value and calc the final changes
             foreach (var change in configChanges)
             {
-                change.NewValue = GetProperty(change.PropertyName, change.NewValue);
+                change.NewValue = this.GetProperty(change.PropertyName, change.NewValue);
                 switch (change.ChangeType)
                 {
                     case PropertyChangeType.Added:
@@ -146,7 +125,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             return actualChanges;
         }
 
-        public override ISet<string> GetPropertyNames()
+        public override IEnumerable<string> GetPropertyNames()
         {
             var properties = _configProperties.ReadFullFence();
             return properties == null ? new HashSet<string>() : properties.GetPropertyNames();

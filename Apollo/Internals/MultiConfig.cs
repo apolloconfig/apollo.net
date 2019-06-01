@@ -31,19 +31,19 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             _configs = configs.Reverse().ToArray();
         }
 
-        public override string GetProperty(string key, string defaultValue)
+        public override bool TryGetProperty(string key, out string value)
         {
+            value = null;
+
             foreach (var config in _configs)
             {
-                var value = config.GetProperty(key, null);
-                if (value != null)
-                    return value;
+                if (config.TryGetProperty(key, out value)) return true;
             }
 
-            return defaultValue;
+            return false;
         }
 
-        public override ISet<string> GetPropertyNames()
+        public override IEnumerable<string> GetPropertyNames()
         {
             var names = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 

@@ -33,9 +33,8 @@ namespace Com.Ctrip.Framework.Apollo
                         var connectionName = name.Key;
                         if (name.Value.Length == 1)
                         {
-                            var connectionString = config.GetProperty(name.Value[0], null);
-                            if (string.IsNullOrWhiteSpace(connectionString))
-                                continue;
+                            if (!config.TryGetProperty(name.Value[0], out var connectionString) ||
+                                string.IsNullOrWhiteSpace(connectionString)) continue;
 
                             connectionStrings.Remove(connectionName);
 
@@ -43,11 +42,11 @@ namespace Com.Ctrip.Framework.Apollo
                         }
                         else
                         {
-                            var connectionString = config.GetProperty($"ConnectionStrings:{connectionName}:ConnectionString", config.GetProperty($"ConnectionStrings:{connectionName}", null));
-                            if (string.IsNullOrWhiteSpace(connectionString))
-                                continue;
+                            if (!config.TryGetProperty($"ConnectionStrings:{connectionName}:ConnectionString", out var connectionString) ||
+                                !config.TryGetProperty($"ConnectionStrings:{connectionName}", out connectionString) ||
+                                string.IsNullOrWhiteSpace(connectionString)) continue;
 
-                            var providerName = config.GetProperty($"ConnectionStrings:{connectionName}:ProviderName", null);
+                            config.TryGetProperty($"ConnectionStrings:{connectionName}:ProviderName", out var providerName);
 
                             connectionStrings.Add(new ConnectionStringSettings(connectionName, connectionString, providerName ?? _defaultProviderName));
                         }
