@@ -1,7 +1,7 @@
 ﻿using Com.Ctrip.Framework.Apollo;
 using Com.Ctrip.Framework.Apollo.Core;
-using Com.Ctrip.Framework.Apollo.Enums;
 using Com.Ctrip.Framework.Apollo.Internals;
+using Com.Ctrip.Framework.Apollo.Spi;
 using System;
 
 // ReSharper disable once CheckNamespace
@@ -9,22 +9,14 @@ namespace Microsoft.Extensions.Configuration
 {
     public static class ApolloConfigurationExtensions
     {
-        /// <summary>通过已有的配置中读取apollo配置，比如appsettings.json。</summary>
-        [Obsolete("请使用builder.Build().GetSection(\"apollo\")或其他方式传入apollo配置", true)]
-        public static IApolloConfigurationBuilder AddApollo(this IConfigurationBuilder builder) =>
-            builder.AddApollo(builder.Build().GetSection("apollo").Get<ApolloOptions>());
-
         public static IApolloConfigurationBuilder AddApollo(this IConfigurationBuilder builder, IConfiguration apolloConfiguration) =>
             builder.AddApollo(apolloConfiguration.Get<ApolloOptions>());
 
-        public static IApolloConfigurationBuilder AddApollo(this IConfigurationBuilder builder, string appId, string metaServer, Env env) =>
-            builder.AddApollo(new ApolloOptions { AppId = appId, MetaServer = metaServer, Env = env });
+        public static IApolloConfigurationBuilder AddApollo(this IConfigurationBuilder builder, string appId, string metaServer) =>
+            builder.AddApollo(new ApolloOptions { AppId = appId, MetaServer = metaServer });
 
         public static IApolloConfigurationBuilder AddApollo(this IConfigurationBuilder builder, IApolloOptions options)
         {
-            if (options is ApolloOptions ao)
-                ao.InitCluster();
-
             var repositoryFactory = new ConfigRepositoryFactory(options ?? throw new ArgumentNullException(nameof(options)));
 
             ApolloConfigurationManager.SetApolloOptions(repositoryFactory);
@@ -50,6 +42,8 @@ namespace Com.Ctrip.Framework.Apollo
         public static IApolloConfigurationBuilder AddNamespace(this IApolloConfigurationBuilder builder, string @namespace, string sectionKey)
         {
             builder.Add(new ApolloConfigurationProvider(sectionKey, builder.ConfigRepositoryFactory.GetConfigRepository(@namespace ?? throw new ArgumentNullException(nameof(@namespace)))));
+
+            ApolloConfigurationManager.Manager.Registry.Register(@namespace, new DefaultConfigFactory(builder.ConfigRepositoryFactory));
 
             return builder;
         }

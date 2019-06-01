@@ -11,7 +11,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 {
     public class DefaultConfig : AbstractConfig, IRepositoryChangeListener, IDisposable
     {
-        private static readonly ILogger Logger = LogManager.CreateLogger(typeof(DefaultConfig));
+        private static readonly Action<LogLevel, string, Exception> Logger = LogManager.CreateLogger(typeof(DefaultConfig));
         private readonly string _namespace;
         private readonly ThreadSafe.AtomicReference<Properties> _configProperties = new ThreadSafe.AtomicReference<Properties>(null);
         private readonly IConfigRepository _configRepository;
@@ -152,10 +152,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             return properties == null ? new HashSet<string>() : properties.GetPropertyNames();
         }
 
-        public void Dispose()
-        {
-            _waitHandle?.Dispose();
-        }
+        public void Dispose() => _waitHandle?.Dispose();
     }
 }
 

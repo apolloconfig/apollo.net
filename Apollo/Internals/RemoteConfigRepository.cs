@@ -17,7 +17,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 {
     public class RemoteConfigRepository : AbstractConfigRepository
     {
-        private static readonly ILogger Logger = LogManager.CreateLogger(typeof(RemoteConfigRepository));
+        private static readonly Action<LogLevel, string, Exception> Logger = LogManager.CreateLogger(typeof(RemoteConfigRepository));
         private static readonly TaskFactory ExecutorService = new TaskFactory(new LimitedConcurrencyLevelTaskScheduler(5));
 
         private readonly ConfigServiceLocator _serviceLocator;

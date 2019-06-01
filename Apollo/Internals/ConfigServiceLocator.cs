@@ -13,7 +13,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 {
     public class ConfigServiceLocator : IDisposable
     {
-        private static readonly ILogger Logger = LogManager.CreateLogger(typeof(ConfigServiceLocator));
+        private static readonly Action<LogLevel, string, Exception> Logger = LogManager.CreateLogger(typeof(ConfigServiceLocator));
 
         private readonly HttpUtil _httpUtil;
 

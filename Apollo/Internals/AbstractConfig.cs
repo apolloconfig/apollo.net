@@ -14,14 +14,11 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 {
     public abstract class AbstractConfig : IConfig
     {
-        private static readonly ILogger Logger = LogManager.CreateLogger(typeof(AbstractConfig));
+        private static readonly Action<LogLevel, string, Exception> Logger = LogManager.CreateLogger(typeof(AbstractConfig));
         public virtual event ConfigChangeEvent ConfigChanged;
         private static readonly TaskFactory ExecutorService;
 
-        static AbstractConfig()
-        {
-            ExecutorService = new TaskFactory(new LimitedConcurrencyLevelTaskScheduler(5));
-        }
+        static AbstractConfig() => ExecutorService = new TaskFactory(new LimitedConcurrencyLevelTaskScheduler(5));
 
         public abstract string GetProperty(string key, string defaultValue);
 

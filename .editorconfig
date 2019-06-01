@@ -1,0 +1,37 @@
+﻿root = true
+
+[*]
+charset = utf-8-bom
+end_of_line = crlf
+indent_size = 4
+indent_style = space
+insert_final_newline = true
+tab_width = 4
+trim_trailing_whitespace = true
+
+[.bowerrc|*.yml]
+charset = utf-8
+
+# Xml project files
+[*.*proj]
+indent_size = 2
+
+# Xml build files
+[*.builds]
+indent_size = 2
+
+# Xml files
+[*.{xml,stylecop,resx,ruleset,xsd}]
+indent_size = 2
+
+# Xml config files
+[*.{props,targets,config,nuspec,vsixmanifest,vsct}]
+indent_size = 2
+
+# JSON files
+[*.json]
+indent_size = 2
+
+# Shell scripts
+[*.sh]
+end_of_line = lf

@@ -2,9 +2,9 @@
 using Com.Ctrip.Framework.Apollo.Enums;
 using Com.Ctrip.Framework.Apollo.Foundation;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
-using System.Text;
 
 namespace Com.Ctrip.Framework.Apollo
 {
@@ -15,6 +15,9 @@ namespace Com.Ctrip.Framework.Apollo
         /// </summary>
         /// <returns> the app id or ConfigConsts.NO_APPID_PLACEHOLDER if app id is not available</returns>
         private string _appId;
+        private string _dataCenter;
+        private string _cluster;
+        private string _metaServer;
 
         public string AppId
         {
@@ -32,46 +35,53 @@ namespace Com.Ctrip.Framework.Apollo
         /// Get the data center info for the current application.
         /// </summary>
         /// <returns> the current data center, null if there is no such info. </returns>
-        public virtual string DataCenter { get; set; }
+        public virtual string DataCenter
+        {
+            get => _dataCenter;
+            set
+            {
+                _dataCenter = value;
+
+                if (string.IsNullOrEmpty(_cluster) && !string.IsNullOrEmpty(_dataCenter))
+                    _cluster = _dataCenter;
+            }
+        }
 
         /// <summary>
         /// Get the cluster name for the current application.
         /// </summary>
         /// <returns> the cluster name, or "default" if not specified </returns>
-        public virtual string Cluster { get; set; }
+        public virtual string Cluster { get => _cluster ?? ConfigConsts.ClusterNameDefault; set => _cluster = value; }
 
         /// <summary>Default Dev</summary>
         public virtual Env Env { get; set; } = Env.Dev;
 
-        public string SubEnv { get; set; }
-
         public virtual string LocalIp { get; set; } = NetworkInterfaceManager.HostIp;
 
         /// <summary>Default http://localhost:8080</summary>
-        public virtual string MetaServer { get; set; } = ConfigConsts.DefaultMetaServerUrl;
+        public virtual string MetaServer
+        {
+            get
+            {
+                if (!string.IsNullOrWhiteSpace(_metaServer)) return _metaServer;
 
+                if (Meta != null && Meta.TryGetValue(Env.ToString(), out var meta)
+                    && !string.IsNullOrWhiteSpace(meta)) return meta;
+
+                return ConfigConsts.DefaultMetaServerUrl;
+            }
+            set => _metaServer = ConfigConsts.DefaultMetaServerUrl == value ? null : value;
+        }
         /// <summary>ms. Default 5000ms</summary>
         public virtual int Timeout { get; set; } = 5000; //5 secondss
-
-        /// <summary>Default "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes("user:")</summary>
-        public string Authorization { get; } = "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes("user:"));
 
         /// <summary>ms. Default 300,000ms</summary>
         public virtual int RefreshInterval { get; set; } = 5 * 60 * 1000; //5 minutes
 
         public string LocalCacheDir { get; set; }
 
+        public IDictionary<string, string> Meta { get; set; } = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
         public Func<HttpMessageHandler> HttpMessageHandlerFactory { get; set; }
-
-        protected internal void InitCluster()
-        {
-            //Use data center as cluster
-            if (string.IsNullOrWhiteSpace(Cluster))
-                Cluster = DataCenter;
-
-            //Use default cluster
-            if (string.IsNullOrWhiteSpace(Cluster))
-                Cluster = ConfigConsts.ClusterNameDefault;
-        }
     }
 }

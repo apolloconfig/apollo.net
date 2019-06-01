@@ -32,10 +32,6 @@ namespace Com.Ctrip.Framework.Apollo.Core.Schedule
             return delayTime;
         }
 
-        public void Success()
-        {
-            _lastDelayTime = 0;
-        }
-
+        public void Success() => _lastDelayTime = 0;
     }
 }

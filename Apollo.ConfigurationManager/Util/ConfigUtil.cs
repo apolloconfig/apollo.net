@@ -17,7 +17,7 @@ namespace Com.Ctrip.Framework.Apollo.Util
         internal static NameValueCollection AppSettings { get; set; }
         private static Func<HttpMessageHandler> _httpMessageHandlerFactory;
 
-        private static readonly ILogger Logger = LogManager.CreateLogger(typeof(ConfigUtil));
+        private static readonly Action<LogLevel, string, Exception> Logger = LogManager.CreateLogger(typeof(ConfigUtil));
         private int _refreshInterval = 5 * 60 * 1000; //5 minutes
         private int _timeout = 5000; //5 seconds, c# has no connectTimeout but response timeout
 

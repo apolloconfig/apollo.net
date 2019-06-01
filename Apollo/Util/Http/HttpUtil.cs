@@ -25,16 +25,11 @@ namespace Com.Ctrip.Framework.Apollo.Util.Http
             HttpResponseMessage response = null;
             try
             {
-                var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
-
-                if (!string.IsNullOrEmpty(_options.Authorization))
-                    httpRequest.Headers.TryAddWithoutValidation(nameof(httpRequest.Headers.Authorization), _options.Authorization);
-
                 using (var cts = new CancellationTokenSource(timeout))
                 {
                     var httpClient = _httpClient.GetOrAdd(timeout > 0 ? timeout : _options.Timeout, t => new HttpClient(_options.HttpMessageHandlerFactory == null ? new HttpClientHandler() : _options.HttpMessageHandlerFactory()) { Timeout = TimeSpan.FromMilliseconds(t) });
 
-                    response = await Timeout(httpClient.SendAsync(httpRequest, cts.Token), timeout, cts).ConfigureAwait(false);
+                    response = await Timeout(httpClient.GetAsync(url, cts.Token), timeout, cts).ConfigureAwait(false);
                 }
 
                 if (response.StatusCode == HttpStatusCode.OK)

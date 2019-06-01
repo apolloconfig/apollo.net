@@ -13,8 +13,7 @@ namespace Com.Ctrip.Framework.Apollo
     /// </summary>
     public static class ApolloConfigurationManager
     {
-        private static readonly IConfigManager Manager = new DefaultConfigManager(
-            new DefaultConfigFactoryManager(new DefaultConfigRegistry(), new ConfigRepositoryFactory(new ConfigUtil())));
+        public static IConfigManager Manager { get; } = new DefaultConfigManager(new DefaultConfigRegistry(), new ConfigRepositoryFactory(new ConfigUtil()));
 
         /// <summary>
         /// Get Application's config instance. </summary>

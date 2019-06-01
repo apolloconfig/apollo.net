@@ -15,6 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Apollo.ConfigurationBuilder
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{52301167-7BBA-48C2-BA36-08270D57D2C4}"
 	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
 		README.md = README.md
 	EndProjectSection
 EndProject
@@ -24,7 +25,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demo", "Demo", "{12417079-E
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.AspNet.Demo", "Apollo.AspNet.Demo\Apollo.AspNet.Demo.csproj", "{E1EF936E-182E-47BD-B658-87C0D872AB0C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Configuration.Json", "Apollo.Configuration.Json\Apollo.Configuration.Json.csproj", "{76019435-B30A-4A23-8C49-F6FD5E3E43D4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Apollo.Configuration.Json", "Apollo.Configuration.Json\Apollo.Configuration.Json.csproj", "{76019435-B30A-4A23-8C49-F6FD5E3E43D4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C9CB5265-6B89-42F1-BA20-2F85427359E7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{24717111-7EE5-4F52-B1BA-328167E51C91}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Configuration.Tests", "Apollo.Configuration.Tests\Apollo.Configuration.Tests.csproj", "{BBD59F3E-FB5A-4972-8195-AC980E9677FD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -130,15 +137,32 @@ Global
 		{76019435-B30A-4A23-8C49-F6FD5E3E43D4}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{76019435-B30A-4A23-8C49-F6FD5E3E43D4}.Release|x86.ActiveCfg = Release|Any CPU
 		{76019435-B30A-4A23-8C49-F6FD5E3E43D4}.Release|x86.Build.0 = Release|Any CPU
+		{BBD59F3E-FB5A-4972-8195-AC980E9677FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBD59F3E-FB5A-4972-8195-AC980E9677FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBD59F3E-FB5A-4972-8195-AC980E9677FD}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{BBD59F3E-FB5A-4972-8195-AC980E9677FD}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{BBD59F3E-FB5A-4972-8195-AC980E9677FD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BBD59F3E-FB5A-4972-8195-AC980E9677FD}.Debug|x86.Build.0 = Debug|Any CPU
+		{BBD59F3E-FB5A-4972-8195-AC980E9677FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBD59F3E-FB5A-4972-8195-AC980E9677FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBD59F3E-FB5A-4972-8195-AC980E9677FD}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{BBD59F3E-FB5A-4972-8195-AC980E9677FD}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{BBD59F3E-FB5A-4972-8195-AC980E9677FD}.Release|x86.ActiveCfg = Release|Any CPU
+		{BBD59F3E-FB5A-4972-8195-AC980E9677FD}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{D78C920D-C96B-4973-BBC8-35E5DB54DF2A} = {12417079-E62C-4F29-ADDE-5EABD77331E2}
+		{B231A39E-9D8A-4F63-9DFF-4FB7B5A900AB} = {C9CB5265-6B89-42F1-BA20-2F85427359E7}
+		{5AE563BF-2E6F-4096-A324-7A5A72B2CBAC} = {C9CB5265-6B89-42F1-BA20-2F85427359E7}
+		{CE700879-20DD-4FAE-B431-884802B99A2D} = {C9CB5265-6B89-42F1-BA20-2F85427359E7}
 		{9BB8FFC6-7E8D-4449-BEFB-BAD8E035564A} = {12417079-E62C-4F29-ADDE-5EABD77331E2}
 		{51A78BF1-4708-45EC-9F2E-59A24D64DB05} = {12417079-E62C-4F29-ADDE-5EABD77331E2}
 		{E1EF936E-182E-47BD-B658-87C0D872AB0C} = {12417079-E62C-4F29-ADDE-5EABD77331E2}
+		{76019435-B30A-4A23-8C49-F6FD5E3E43D4} = {C9CB5265-6B89-42F1-BA20-2F85427359E7}
+		{BBD59F3E-FB5A-4972-8195-AC980E9677FD} = {24717111-7EE5-4F52-B1BA-328167E51C91}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F567DF02-5944-4752-8996-BF7B12DC4DF3}
