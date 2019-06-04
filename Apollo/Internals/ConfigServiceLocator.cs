@@ -1,4 +1,5 @@
-﻿using Com.Ctrip.Framework.Apollo.Core.Dto;
+﻿using Com.Ctrip.Framework.Apollo.Core;
+using Com.Ctrip.Framework.Apollo.Core.Dto;
 using Com.Ctrip.Framework.Apollo.Core.Utils;
 using Com.Ctrip.Framework.Apollo.Exceptions;
 using Com.Ctrip.Framework.Apollo.Logging;
@@ -28,7 +29,34 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             _options = configUtil;
             _configServices = new ThreadSafe.AtomicReference<IList<ServiceDto>>(new List<ServiceDto>());
 
-            _timer = new Timer(SchedulePeriodicRefresh, null, 0, _options.RefreshInterval);
+            var serviceDtos = getCustomizedConfigService(configUtil);
+
+            if (serviceDtos == null)
+                _timer = new Timer(SchedulePeriodicRefresh, null, 0, _options.RefreshInterval);
+            else
+                _configServices.WriteFullFence(serviceDtos);
+        }
+
+        private List<ServiceDto> getCustomizedConfigService(IApolloOptions configUtil)
+        {
+            if (configUtil.ConfigServer == null || configUtil.ConfigServer.Count < 1) return null;
+
+            var serviceDtos = new List<ServiceDto>(configUtil.ConfigServer.Count);
+
+            foreach (var configServiceUrl in configUtil.ConfigServer)
+            {
+                var serviceDTO = new ServiceDto
+                {
+                    HomepageUrl = configServiceUrl.Trim(),
+                    AppName = ConfigConsts.ConfigService
+                };
+
+                serviceDTO.InstanceId = serviceDTO.HomepageUrl;
+
+                serviceDtos.Add(serviceDTO);
+            }
+
+            return serviceDtos;
         }
 
         /// <summary>
@@ -123,9 +151,6 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             return uriBuilder.ToString();
         }
 
-        public void Dispose()
-        {
-            _timer?.Dispose();
-        }
+        public void Dispose() => _timer?.Dispose();
     }
 }
