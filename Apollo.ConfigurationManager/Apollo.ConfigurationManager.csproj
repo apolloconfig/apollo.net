@@ -19,7 +19,7 @@
         <RepositoryUrl>https://github.com/ctripcorp/apollo.net/tree/dotnet-core</RepositoryUrl>
         <PackageProjectUrl>$(RepositoryUrl)/Apollo.ConfigurationManager</PackageProjectUrl>
         <IncludeSymbols>True</IncludeSymbols>
-        <Version>1.5.4.0</Version>
+        <Version>1.5.5.0</Version>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>..\Apollo.snk</AssemblyOriginatorKeyFile>
         <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
@@ -33,7 +33,8 @@
 1.5.1: ApolloConfigurationManager和ApolloConfigurationBuilder支持多namespaces
 1.5.2: 修复Env大小写敏感的问题，感觉@LabelZhou
 1.5.3: Apollo内部HttpClient允许使用自定义HttpMessageHandler，比如配置代理
-1.5.4: 添加缺少的.ConfigureAwait(false)</PackageReleaseNotes>
+1.5.4: 添加缺少的.ConfigureAwait(false)
+1.5.5: 支持配置ConfigServer来跳过meta service的服务发现</PackageReleaseNotes>
     </PropertyGroup>
 
     <ItemGroup>

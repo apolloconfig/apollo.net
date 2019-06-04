@@ -3,6 +3,7 @@ using Com.Ctrip.Framework.Apollo.Enums;
 using Com.Ctrip.Framework.Apollo.Foundation;
 using Com.Ctrip.Framework.Apollo.Logging;
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Configuration;
 using System.IO;
@@ -98,6 +99,8 @@ namespace Com.Ctrip.Framework.Apollo.Util
         public string LocalIp { get; set; } = NetworkInterfaceManager.HostIp;
 
         public string MetaServer => GetAppConfig("MetaServer") ?? MetaDomainConsts.GetDomain(Env);
+
+        public IReadOnlyCollection<string> ConfigServer => GetAppConfig("ConfigServer")?.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries);
 
         private void InitTimeout()
         {

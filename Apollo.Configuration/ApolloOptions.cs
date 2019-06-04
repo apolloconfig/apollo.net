@@ -2,6 +2,7 @@
 using Com.Ctrip.Framework.Apollo.Enums;
 using Com.Ctrip.Framework.Apollo.Foundation;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Text;
@@ -49,6 +50,8 @@ namespace Com.Ctrip.Framework.Apollo
 
         /// <summary>Default http://localhost:8080</summary>
         public virtual string MetaServer { get; set; } = ConfigConsts.DefaultMetaServerUrl;
+
+        public IReadOnlyCollection<string> ConfigServer { get; set; }
 
         /// <summary>ms. Default 5000ms</summary>
         public virtual int Timeout { get; set; } = 5000; //5 secondss
