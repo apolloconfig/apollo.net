@@ -18,7 +18,8 @@
 1.5.0: 使用.ConfigureAwait(false)替代AsyncHelper来解决同步调用异步方法出现的死锁问题
 1.5.1: ApolloConfigurationManager支持多namespaces
 1.5.2: Apollo内部HttpClient允许使用自定义HttpMessageHandler，比如配置代理
-1.5.3: 添加缺少的.ConfigureAwait(false)</PackageReleaseNotes>
+1.5.3: 添加缺少的.ConfigureAwait(false)
+1.5.4: 支持配置ConfigServer来跳过meta service的服务发现</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

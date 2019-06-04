@@ -72,6 +72,9 @@ namespace Com.Ctrip.Framework.Apollo
             }
             set => _metaServer = ConfigConsts.DefaultMetaServerUrl == value ? null : value;
         }
+
+        public IReadOnlyCollection<string> ConfigServer { get; set; }
+
         /// <summary>ms. Default 5000ms</summary>
         public virtual int Timeout { get; set; } = 5000; //5 secondss
 
