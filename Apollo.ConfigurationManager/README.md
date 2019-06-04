@@ -229,6 +229,6 @@ ConfigUtil.UseHttpMessageHandlerFactory(() => new HttpClientHandler
 
 ``` diff
 <appSettings>
-+   <add key="Apollo.ConfigServer" value="多个值可以使用,或者.连接" />
++   <add key="Apollo.ConfigServer" value="多个值可以使用,或者;连接" />
 </appSettings>
 ```
