@@ -1,7 +1,9 @@
 ﻿using Com.Ctrip.Framework.Apollo.Core.Utils;
+using Com.Ctrip.Framework.Apollo.Enums;
 using Com.Ctrip.Framework.Apollo.Logging;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Com.Ctrip.Framework.Apollo.Internals
@@ -12,12 +14,28 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
         private readonly List<IRepositoryChangeListener> _listeners = new List<IRepositoryChangeListener>();
         public string Namespace { get; }
+        public ConfigFileFormat Format { get; } = ConfigFileFormat.Properties;
 
-        protected AbstractConfigRepository(string @namespace) => Namespace = @namespace;
+        protected AbstractConfigRepository(string @namespace)
+        {
+            Namespace = @namespace;
 
-        public abstract Properties GetConfig();
+            var ext = Path.GetExtension(@namespace);
+            if (ext.Length > 1 && Enum.TryParse(ext.Substring(1), true, out ConfigFileFormat format)) Format = format;
+        }
+
+        public abstract Properties GetRawConfig();
 
         public abstract Task Initialize();
+
+        public Properties GetConfig()
+        {
+            var properties = GetRawConfig();
+
+            return Format != ConfigFileFormat.Properties && ConfigAdapterRegister.TryGetAdapter(Format, out var adapter)
+                ? adapter.GetProperties(properties)
+                : properties;
+        }
 
         public void AddChangeListener(IRepositoryChangeListener listener)
         {
@@ -49,6 +67,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                     }
                 }
         }
+
         #region Dispose
         public void Dispose()
         {

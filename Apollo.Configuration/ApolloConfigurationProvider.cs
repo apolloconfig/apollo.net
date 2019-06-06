@@ -11,7 +11,7 @@ namespace Com.Ctrip.Framework.Apollo
     {
         protected readonly string _sectionKey;
         private readonly IConfigRepository _configRepository;
-        private readonly Task _initializeTask;
+        private Task _initializeTask;
 
         public ApolloConfigurationProvider(string sectionKey, IConfigRepository configRepository)
         {
@@ -22,7 +22,9 @@ namespace Com.Ctrip.Framework.Apollo
 
         public override void Load()
         {
-            _initializeTask.ConfigureAwait(false).GetAwaiter().GetResult();
+            _initializeTask?.ConfigureAwait(false).GetAwaiter().GetResult();
+
+            _initializeTask = null;
 
             _configRepository.AddChangeListener(this);
 

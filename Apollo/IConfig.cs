@@ -1,4 +1,5 @@
-﻿using Com.Ctrip.Framework.Apollo.Model;
+﻿using System;
+using Com.Ctrip.Framework.Apollo.Model;
 using System.Collections.Generic;
 
 namespace Com.Ctrip.Framework.Apollo

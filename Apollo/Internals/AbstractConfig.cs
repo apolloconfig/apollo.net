@@ -22,32 +22,22 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
         public abstract IEnumerable<string> GetPropertyNames();
 
-        protected void FireConfigChange(ConfigChangeEventArgs changeEventCopy)
+        protected void FireConfigChange(string @namespace, IReadOnlyDictionary<string, ConfigChange> actualChanges)
         {
             if (ConfigChanged != null)
             {
                 foreach (var @delegate in ConfigChanged.GetInvocationList())
                 {
-                    var handlerCopy = (ConfigChangeEvent) @delegate;
+                    var handlerCopy = (Action<string, IReadOnlyDictionary<string, ConfigChange>>) @delegate;
                     ExecutorService.StartNew(() =>
                     {
-                        string methodName;
-                        if (handlerCopy.Target == null)
-                        {
-                            methodName = handlerCopy.Method.Name;
-                        }
-                        else
-                        {
-                            methodName = $"{handlerCopy.Target.GetType()}.{handlerCopy.Method.Name}";
-                        }
-
                         try
                         {
-                            handlerCopy(this, changeEventCopy);
+                            handlerCopy(@namespace, actualChanges);
                         }
                         catch (Exception ex)
                         {
-                            Logger.Error($"Failed to invoke config change handler {methodName}", ex);
+                            Logger.Error($"Failed to invoke config change handler {(handlerCopy.Target == null ? handlerCopy.Method.Name : $"{handlerCopy.Target.GetType()}.{handlerCopy.Method.Name}")}", ex);
                         }
                     });
                 }

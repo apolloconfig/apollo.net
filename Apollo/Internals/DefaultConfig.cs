@@ -50,7 +50,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             if (value == null)
                 Logger.Warn($"Could not load config for namespace {_namespace} from Apollo, please check whether the configs are released in Apollo! Return default value now!");
 
-            return value == null;
+            return value != null;
         }
 
         public void OnRepositoryChange(string namespaceName, Properties newProperties)
@@ -67,7 +67,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                     return;
                 }
 
-                FireConfigChange(new ConfigChangeEventArgs(_namespace, actualChanges));
+                FireConfigChange(_namespace, actualChanges);
             }
         }
 

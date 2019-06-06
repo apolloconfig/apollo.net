@@ -10,6 +10,7 @@ using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -28,7 +29,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
         private volatile ThreadSafe.AtomicReference<ApolloConfig> _configCache = new ThreadSafe.AtomicReference<ApolloConfig>(null);
         private readonly ThreadSafe.AtomicReference<ServiceDto> _longPollServiceDto = new ThreadSafe.AtomicReference<ServiceDto>(null);
         private readonly ThreadSafe.AtomicReference<ApolloNotificationMessages> _remoteMessages = new ThreadSafe.AtomicReference<ApolloNotificationMessages>(null);
-        private Exception _syncException;
+        private ExceptionDispatchInfo _syncException;
         private readonly Timer _timer;
 
         public RemoteConfigRepository(string @namespace,
@@ -54,10 +55,9 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             ScheduleLongPollingRefresh();
         }
 
-        public override Properties GetConfig()
+        public override Properties GetRawConfig()
         {
-            if (_syncException != null)
-                throw _syncException;
+            if (_syncException != null) _syncException.Throw();
 
             return TransformApolloConfigToProperties(_configCache.ReadFullFence());
         }
@@ -76,7 +76,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             }
             catch (Exception ex)
             {
-                _syncException = ex;
+                _syncException = ExceptionDispatchInfo.Capture(ex);
 
                 Logger.Warn($"refresh config error for namespace: {Namespace}", ex);
             }

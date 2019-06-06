@@ -1,4 +1,4 @@
-using Com.Ctrip.Framework.Apollo;
+﻿using Com.Ctrip.Framework.Apollo;
 using Com.Ctrip.Framework.Apollo.Core;
 using Com.Ctrip.Framework.Apollo.Enums;
 using Microsoft.Extensions.Configuration;
@@ -8,7 +8,7 @@ using Xunit;
 namespace Apollo.Configuration.Tests
 {
     public class ApolloOptionsTest
-    {        
+    {
         [Fact]
         public void BasicTest()
         {
@@ -21,7 +21,7 @@ namespace Apollo.Configuration.Tests
                 .Build()
                 .GetSection("Apollo")
                 .Get<ApolloOptions>();
-            
+
             Assert.Equal("apollo-client", options.AppId);
             Assert.Equal(Env.Pro, options.Env);
             Assert.Equal(ConfigConsts.ClusterNameDefault, options.Cluster);
@@ -38,7 +38,7 @@ namespace Apollo.Configuration.Tests
                 .Build()
                 .GetSection("Apollo")
                 .Get<ApolloOptions>();
-            
+
             Assert.Equal("Test", options.DataCenter);
             Assert.Equal(options.DataCenter, options.Cluster);
         }
@@ -54,7 +54,7 @@ namespace Apollo.Configuration.Tests
                 .Build()
                 .GetSection("Apollo")
                 .Get<ApolloOptions>();
-            
+
             Assert.Equal(ConfigConsts.DefaultMetaServerUrl, options.MetaServer);
 
              options = new ConfigurationBuilder()
@@ -65,7 +65,7 @@ namespace Apollo.Configuration.Tests
                 .Build()
                 .GetSection("Apollo")
                 .Get<ApolloOptions>();
-            
+
             Assert.Equal("https://abc:1234", options.MetaServer);
 
              options = new ConfigurationBuilder()
@@ -78,7 +78,7 @@ namespace Apollo.Configuration.Tests
                 .Build()
                 .GetSection("Apollo")
                 .Get<ApolloOptions>();
-            
+
             Assert.Equal("https://pro:1234", options.MetaServer);
         }
     }

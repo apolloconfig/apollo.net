@@ -1,15 +1,14 @@
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
-namespace Com.Ctrip.Framework.Apollo
+namespace Com.Ctrip.Framework.Apollo.ConfigAdapter
 {
-    public class JsonConfigurationParser
+    internal class JsonConfigurationParser
     {
         private JsonConfigurationParser() { }
 
@@ -19,18 +18,15 @@ namespace Com.Ctrip.Framework.Apollo
 
         private JsonTextReader _reader;
 
-        public static IDictionary<string, string> Parse(string input, string startPath = null)
-            => new JsonConfigurationParser().ParseString(input, startPath);
+        public static IDictionary<string, string> Parse(string input) => new JsonConfigurationParser().ParseString(input);
 
-        private IDictionary<string, string> ParseString(string input, string startPath)
+        private IDictionary<string, string> ParseString(string input)
         {
             _data.Clear();
             _reader = new JsonTextReader(new StringReader(input))
             {
                 DateParseHandling = DateParseHandling.None
             };
-            if(!string.IsNullOrEmpty(startPath))
-                _context.Push(startPath);
 
             var jsonConfig = JObject.Load(_reader);
 

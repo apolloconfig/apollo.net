@@ -53,7 +53,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             }
         }
 
-        public override Properties GetConfig() => new Properties(_fileProperties);
+        public override Properties GetRawConfig() => new Properties(_fileProperties);
 
         bool _disposed;
         protected override void Dispose(bool disposing)

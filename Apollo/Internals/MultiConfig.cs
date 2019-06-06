@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using Com.Ctrip.Framework.Apollo.Model;
+using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
