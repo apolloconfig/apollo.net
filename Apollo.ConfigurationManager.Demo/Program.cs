@@ -7,7 +7,7 @@ namespace Apollo.ConfigurationManager.Demo
     {
         private static void Main()
         {
-            LogManager.Provider = new ConsoleLoggerProvider(LogLevel.Trace);
+            LogManager.UseConsoleLogging(LogLevel.Trace);
 
             var demo = new ConfigurationManagerDemo();
 

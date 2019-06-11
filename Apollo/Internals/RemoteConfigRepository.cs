@@ -10,6 +10,7 @@ using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,7 +18,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 {
     public class RemoteConfigRepository : AbstractConfigRepository
     {
-        private static readonly ILogger Logger = LogManager.CreateLogger(typeof(RemoteConfigRepository));
+        private static readonly Action<LogLevel, string, Exception> Logger = LogManager.CreateLogger(typeof(RemoteConfigRepository));
         private static readonly TaskFactory ExecutorService = new TaskFactory(new LimitedConcurrencyLevelTaskScheduler(5));
 
         private readonly ConfigServiceLocator _serviceLocator;
@@ -28,7 +29,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
         private volatile ApolloConfig _configCache;
         private volatile ServiceDto _longPollServiceDto;
         private volatile ApolloNotificationMessages _remoteMessages;
-        private Exception _syncException;
+        private ExceptionDispatchInfo _syncException;
         private readonly Timer _timer;
 
         public RemoteConfigRepository(string @namespace,
@@ -54,10 +55,9 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             ScheduleLongPollingRefresh();
         }
 
-        public override Properties GetConfig()
+        public override Properties GetRawConfig()
         {
-            if (_syncException != null)
-                throw _syncException;
+            if (_syncException != null) _syncException.Throw();
 
             return TransformApolloConfigToProperties(_configCache);
         }
@@ -76,7 +76,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             }
             catch (Exception ex)
             {
-                _syncException = ex;
+                _syncException = ExceptionDispatchInfo.Capture(ex);
 
                 Logger.Warn($"refresh config error for namespace: {Namespace}", ex);
             }

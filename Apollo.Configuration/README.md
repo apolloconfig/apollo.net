@@ -172,3 +172,15 @@ services.ConfigureJsonValue<Options>(/*name, */config.GetSection("somePrefix:Jso
 +       })
         .UseStartup<Startup>()
 ```
+
+## 4.3 如何跳过meta service的服务发现
+
+在读取任何配置之前执行如下代码
+
+``` diff
+{
+    "apollo": {
++       "ConfigServer": ["http://106.12.25.204:8080/"]
+    }
+}
+```

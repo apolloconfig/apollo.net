@@ -11,7 +11,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 {
     public class LocalFileConfigRepository : AbstractConfigRepository, IRepositoryChangeListener
     {
-        private static readonly ILogger Logger = LogManager.CreateLogger(typeof(LocalFileConfigRepository));
+        private static readonly Action<LogLevel, string, Exception> Logger = LogManager.CreateLogger(typeof(LocalFileConfigRepository));
         private const string ConfigDir = "config-cache";
 
         private string _baseDir;
@@ -53,7 +53,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             }
         }
 
-        public override Properties GetConfig() => new Properties(_fileProperties);
+        public override Properties GetRawConfig() => new Properties(_fileProperties);
 
         bool _disposed;
         protected override void Dispose(bool disposing)
@@ -121,20 +121,19 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             }
 
             var file = AssembleLocalCacheFile(baseDir, namespaceName);
-            var properties = new Properties();
 
             try
             {
-                properties.Load(file);
+                var properties = new Properties(file);
 
                 Logger.Debug($"Loading local config file {file} successfully!");
+
+                return properties;
             }
             catch (Exception ex)
             {
                 throw new ApolloConfigException($"Loading config from local cache file {file} failed", ex);
             }
-
-            return properties;
         }
 
         private void PersistLocalCacheFile(string baseDir, string namespaceName)

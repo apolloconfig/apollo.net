@@ -2,35 +2,12 @@
 {
     public class ServiceDto
     {
-        private string _appName;
+        public string AppName { get; set; }
 
-        private string _instanceId;
+        public string HomepageUrl { get; set; }
 
-        private string _homepageUrl;
+        public string InstanceId { get; set; }
 
-        public string AppName
-        {
-            get => _appName;
-            set => _appName = value;
-        }
-
-        public string HomepageUrl
-        {
-            get => _homepageUrl;
-            set => _homepageUrl = value;
-        }
-
-        public string InstanceId
-        {
-            get => _instanceId;
-            set => _instanceId = value;
-        }
-
-        public override string ToString()
-        {
-            return "ServiceDTO{" + "appName='" + _appName + '\'' + ", instanceId='" + _instanceId + 
-                '\'' + ", homepageUrl='" + _homepageUrl + '\'' + '}';
-        }
-
+        public override string ToString() => $"ServiceDTO{{appName='{AppName}{'\''}, instanceId='{InstanceId}{'\''}, homepageUrl='{HomepageUrl}{'\''}{'}'}";
     }
 }

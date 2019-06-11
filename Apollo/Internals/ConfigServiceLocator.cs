@@ -1,4 +1,5 @@
-﻿using Com.Ctrip.Framework.Apollo.Core.Dto;
+﻿using Com.Ctrip.Framework.Apollo.Core;
+using Com.Ctrip.Framework.Apollo.Core.Dto;
 using Com.Ctrip.Framework.Apollo.Exceptions;
 using Com.Ctrip.Framework.Apollo.Logging;
 using Com.Ctrip.Framework.Apollo.Util;
@@ -12,7 +13,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 {
     public class ConfigServiceLocator : IDisposable
     {
-        private static readonly ILogger Logger = LogManager.CreateLogger(typeof(ConfigServiceLocator));
+        private static readonly Action<LogLevel, string, Exception> Logger = LogManager.CreateLogger(typeof(ConfigServiceLocator));
 
         private readonly HttpUtil _httpUtil;
 
@@ -26,7 +27,34 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             _httpUtil = httpUtil;
             _options = configUtil;
 
-            _timer = new Timer(SchedulePeriodicRefresh, null, 0, _options.RefreshInterval);
+            var serviceDtos = getCustomizedConfigService(configUtil);
+
+            if (serviceDtos == null)
+                _timer = new Timer(SchedulePeriodicRefresh, null, 0, _options.RefreshInterval);
+            else
+                _configServices = serviceDtos;
+        }
+
+        private List<ServiceDto> getCustomizedConfigService(IApolloOptions configUtil)
+        {
+            if (configUtil.ConfigServer == null || configUtil.ConfigServer.Count < 1) return null;
+
+            var serviceDtos = new List<ServiceDto>(configUtil.ConfigServer.Count);
+
+            foreach (var configServiceUrl in configUtil.ConfigServer)
+            {
+                var serviceDTO = new ServiceDto
+                {
+                    HomepageUrl = configServiceUrl.Trim(),
+                    AppName = ConfigConsts.ConfigService
+                };
+
+                serviceDTO.InstanceId = serviceDTO.HomepageUrl;
+
+                serviceDtos.Add(serviceDTO);
+            }
+
+            return serviceDtos;
         }
 
         /// <summary>
@@ -121,9 +149,6 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             return uriBuilder.ToString();
         }
 
-        public void Dispose()
-        {
-            _timer?.Dispose();
-        }
+        public void Dispose() => _timer?.Dispose();
     }
 }

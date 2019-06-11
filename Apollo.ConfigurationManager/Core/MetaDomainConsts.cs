@@ -10,15 +10,15 @@ namespace Com.Ctrip.Framework.Apollo.Core
             switch(env)
             {
                 case Env.Dev:
-                    return GetAppSetting("DEV.Meta", ConfigConsts.DefaultLocalCacheDir);
+                    return GetAppSetting("DEV.Meta", ConfigConsts.DefaultMetaServerUrl);
                 case Env.Fat:
-                    return GetAppSetting("FAT.Meta", ConfigConsts.DefaultLocalCacheDir);
+                    return GetAppSetting("FAT.Meta", ConfigConsts.DefaultMetaServerUrl);
                 case Env.Uat:
-                    return GetAppSetting("UAT.Meta", ConfigConsts.DefaultLocalCacheDir);
+                    return GetAppSetting("UAT.Meta", ConfigConsts.DefaultMetaServerUrl);
                 case Env.Pro:
-                    return GetAppSetting("PRO.Meta", ConfigConsts.DefaultLocalCacheDir);
+                    return GetAppSetting("PRO.Meta", ConfigConsts.DefaultMetaServerUrl);
                 default:
-                    return ConfigConsts.DefaultLocalCacheDir;
+                    return ConfigConsts.DefaultMetaServerUrl;
             }
         }
 

@@ -2,39 +2,17 @@
 {
     public class ApolloConfigNotification
     {
-        private string _namespaceName;
-        private long _notificationId;
         private volatile ApolloNotificationMessages _messages;
 
-        //for json converter
-        public ApolloConfigNotification()
-        {
-        }
+        public string NamespaceName { get; set; }
 
-        public ApolloConfigNotification(string namespaceName, long notificationId)
-        {
-            _namespaceName = namespaceName;
-            _notificationId = notificationId;
-        }
-
-        public string NamespaceName
-        {
-            get => _namespaceName;
-            set => _namespaceName = value;
-        }
-
-        public long NotificationId
-        {
-            get => _notificationId;
-            set => _notificationId = value;
-        }
+        public long NotificationId { get; set; }
 
         public ApolloNotificationMessages Messages
         {
             get => _messages;
             set => _messages = value;
         }
-
 
         public void AddMessage(string key, long notificationId)
         {
@@ -51,11 +29,6 @@
             _messages.Put(key, notificationId);
         }
 
-
-        public override string ToString()
-        {
-            return "ApolloConfigNotification{" + "namespaceName='" + _namespaceName + '\'' + ", notificationId=" + _notificationId + '}';
-        }
-
+        public override string ToString() => $"ApolloConfigNotification{{namespaceName='{NamespaceName}{'\''}, notificationId={NotificationId}{'}'}";
     }
 }

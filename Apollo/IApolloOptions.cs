@@ -1,6 +1,7 @@
-﻿using System;
+﻿using Com.Ctrip.Framework.Apollo.Enums;
+using System;
+using System.Collections.Generic;
 using System.Net.Http;
-using Com.Ctrip.Framework.Apollo.Enums;
 
 namespace Com.Ctrip.Framework.Apollo
 {
@@ -25,17 +26,14 @@ namespace Com.Ctrip.Framework.Apollo
         /// <returns> the env </returns>
         Env Env { get; }
 
-        string SubEnv { get; }
-
         string LocalIp { get; }
 
         string MetaServer { get; }
 
+        IReadOnlyCollection<string> ConfigServer { get; }
+
         /// <summary>ms</summary>
         int Timeout { get; }
-
-        /// <summary>Http Authorization header value</summary>
-        string Authorization { get; }
 
         /// <summary>ms</summary>
         int RefreshInterval { get; }

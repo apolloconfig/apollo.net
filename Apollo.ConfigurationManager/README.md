@@ -222,3 +222,13 @@ ConfigUtil.UseHttpMessageHandlerFactory(() => new HttpClientHandler
     Proxy = new WebProxy(new Uri("http://代理地址"))
 });
 ```
+
+## 4.2 如何跳过meta service的服务发现
+
+在配置文件中添加Apollo.ConfigServer
+
+``` diff
+<appSettings>
++   <add key="Apollo.ConfigServer" value="多个值可以使用,或者;连接" />
+</appSettings>
+```

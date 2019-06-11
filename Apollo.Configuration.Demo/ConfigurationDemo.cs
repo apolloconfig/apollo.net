@@ -26,7 +26,7 @@ namespace Apollo.Configuration.Demo
             //    Proxy = new WebProxy(new Uri("http://127.0.0.1:8888"))
             //};
 
-            builder.AddApollo(builder.Build().GetSection("apollo")).AddDefault();
+            builder.AddApollo(builder.Build().GetSection("apollo")).AddDefault().AddNamespace("application.json").AddNamespace("application.xml");
 
             Configuration = builder.Build();
         }
