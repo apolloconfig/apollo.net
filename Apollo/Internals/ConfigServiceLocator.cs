@@ -1,5 +1,4 @@
 ﻿using Com.Ctrip.Framework.Apollo.Core.Dto;
-using Com.Ctrip.Framework.Apollo.Core.Utils;
 using Com.Ctrip.Framework.Apollo.Exceptions;
 using Com.Ctrip.Framework.Apollo.Logging;
 using Com.Ctrip.Framework.Apollo.Util;
@@ -18,7 +17,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
         private readonly HttpUtil _httpUtil;
 
         private readonly IApolloOptions _options;
-        private readonly ThreadSafe.AtomicReference<IList<ServiceDto>> _configServices;
+        private volatile IList<ServiceDto> _configServices = new List<ServiceDto>();
         private Task _updateConfigServicesTask;
         private readonly Timer _timer;
 
@@ -26,7 +25,6 @@ namespace Com.Ctrip.Framework.Apollo.Internals
         {
             _httpUtil = httpUtil;
             _options = configUtil;
-            _configServices = new ThreadSafe.AtomicReference<IList<ServiceDto>>(new List<ServiceDto>());
 
             _timer = new Timer(SchedulePeriodicRefresh, null, 0, _options.RefreshInterval);
         }
@@ -37,11 +35,11 @@ namespace Com.Ctrip.Framework.Apollo.Internals
         /// <returns> the services dto </returns>
         public async Task<IList<ServiceDto>> GetConfigServices()
         {
-            var services = _configServices.ReadFullFence();
+            var services = _configServices;
             if (services.Count == 0)
                 await UpdateConfigServices().ConfigureAwait(false);
 
-            services = _configServices.ReadFullFence();
+            services = _configServices;
             if (services.Count == 0)
                 throw new ApolloConfigException("No available config service");
 
@@ -90,7 +88,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                         continue;
                     }
 
-                    _configServices.WriteFullFence(services);
+                    _configServices = services;
                     return;
                 }
                 catch (Exception ex)

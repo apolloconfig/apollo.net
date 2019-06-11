@@ -1,7 +1,6 @@
 ﻿using Com.Ctrip.Framework.Apollo.Core;
 using Com.Ctrip.Framework.Apollo.Core.Dto;
 using Com.Ctrip.Framework.Apollo.Core.Schedule;
-using Com.Ctrip.Framework.Apollo.Core.Utils;
 using Com.Ctrip.Framework.Apollo.Enums;
 using Com.Ctrip.Framework.Apollo.Exceptions;
 using Com.Ctrip.Framework.Apollo.Logging;
@@ -14,19 +13,19 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Com.Ctrip.Framework.Apollo.Internals
 {
-    public class RemoteConfigLongPollService
+    public class RemoteConfigLongPollService : IDisposable
     {
         private static readonly ILogger Logger = LogManager.CreateLogger(typeof(RemoteConfigLongPollService));
         private static readonly long InitNotificationId = -1;
         private readonly ConfigServiceLocator _serviceLocator;
         private readonly HttpUtil _httpUtil;
         private readonly IApolloOptions _options;
-        private readonly ThreadSafe.Boolean _longPollingStarted;
-        private readonly ThreadSafe.Boolean _longPollingStopped;
+        private CancellationTokenSource _cts;
         private readonly ISchedulePolicy _longPollFailSchedulePolicyInSecond;
         private readonly ISchedulePolicy _longPollSuccessSchedulePolicyInMs;
         private readonly ConcurrentDictionary<string, ISet<RemoteConfigRepository>> _longPollNamespaces;
@@ -40,8 +39,6 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             _options = configUtil;
             _longPollFailSchedulePolicyInSecond = new ExponentialSchedulePolicy(1, 120); //in second
             _longPollSuccessSchedulePolicyInMs = new ExponentialSchedulePolicy(100, 1000); //in millisecond
-            _longPollingStarted = new ThreadSafe.Boolean(false);
-            _longPollingStopped = new ThreadSafe.Boolean(false);
             _longPollNamespaces = new ConcurrentDictionary<string, ISet<RemoteConfigRepository>>();
             _notifications = new ConcurrentDictionary<string, long?>();
             _remoteNotificationMessages = new ConcurrentDictionary<string, ApolloNotificationMessages>();
@@ -55,25 +52,26 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
             _notifications.TryAdd(namespaceName, InitNotificationId);
 
-            if (!_longPollingStarted.ReadFullFence())
+            if (_cts == null)
                 StartLongPolling();
         }
 
 
         private void StartLongPolling()
         {
-            if (!_longPollingStarted.CompareAndSet(false, true))
+            if (Interlocked.CompareExchange(ref _cts, new CancellationTokenSource(), null) != null)
             {
                 //already started
                 return;
             }
+
             try
             {
                 var appId = _options.AppId;
                 var cluster = _options.Cluster;
                 var dataCenter = _options.DataCenter;
 
-                var unused = DoLongPollingRefresh(appId, cluster, dataCenter);
+                var unused = DoLongPollingRefresh(appId, cluster, dataCenter, _cts.Token);
             }
             catch (Exception ex)
             {
@@ -82,12 +80,12 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             }
         }
 
-        private async Task DoLongPollingRefresh(string appId, string cluster, string dataCenter)
+        private async Task DoLongPollingRefresh(string appId, string cluster, string dataCenter, CancellationToken cancellationToken)
         {
             var random = new Random();
             ServiceDto lastServiceDto = null;
 
-            while (!_longPollingStopped.ReadFullFence())
+            while (!cancellationToken.IsCancellationRequested)
             {
                 var sleepTime = 50; //default 50 ms
                 string url = null;
@@ -139,7 +137,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                 }
                 finally
                 {
-                    await Task.Delay(sleepTime).ConfigureAwait(false);
+                    await Task.Delay(sleepTime, cancellationToken).ConfigureAwait(false);
                 }
             }
         }
@@ -267,6 +265,14 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                     NamespaceName = kvp.Key,
                     NotificationId = kvp.Value.GetValueOrDefault(InitNotificationId)
                 }), JsonSettings);
+        }
+
+        public void Dispose()
+        {
+            if (_cts == null) return;
+
+            _cts.Cancel();
+            _cts.Dispose();
         }
     }
 }

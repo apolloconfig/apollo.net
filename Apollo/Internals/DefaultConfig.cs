@@ -13,7 +13,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
     {
         private static readonly ILogger Logger = LogManager.CreateLogger(typeof(DefaultConfig));
         private readonly string _namespace;
-        private readonly ThreadSafe.AtomicReference<Properties> _configProperties = new ThreadSafe.AtomicReference<Properties>(null);
+        private volatile Properties _configProperties;
         private readonly IConfigRepository _configRepository;
         private readonly SemaphoreSlim _waitHandle = new SemaphoreSlim(1, 1);
 
@@ -29,7 +29,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
             try
             {
-                _configProperties.WriteFullFence(_configRepository.GetConfig());
+                _configProperties = _configRepository.GetConfig();
             }
             catch (Exception ex)
             {
@@ -50,9 +50,10 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             string value = null;
 
             // step 2: check local cached properties file
-            if (_configProperties.ReadFullFence() != null)
+            var properties = _configProperties;
+            if (properties != null)
             {
-                value = _configProperties.ReadFullFence().GetProperty(key);
+                value = properties.GetProperty(key);
             }
 
             // step 3: check env variable, i.e. PATH=...
@@ -66,7 +67,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             //TODO step 4: check properties file from classpath
 
 
-            if (value == null && _configProperties.ReadFullFence() == null)
+            if (value == null && properties == null)
             {
                 Logger.Warn($"Could not load config for namespace {_namespace} from Apollo, please check whether the configs are released in Apollo! Return default value now!");
             }
@@ -94,7 +95,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
         private IReadOnlyDictionary<string, ConfigChange> UpdateAndCalcConfigChanges(Properties newConfigProperties)
         {
-            var configChanges = CalcPropertyChanges(_namespace, _configProperties.ReadFullFence(), newConfigProperties);
+            var configChanges = CalcPropertyChanges(_namespace, _configProperties, newConfigProperties);
 
             var actualChanges = new Dictionary<string, ConfigChange>();
 
@@ -105,7 +106,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             }
 
             //2. update _configProperties
-            _configProperties.WriteFullFence(newConfigProperties);
+            _configProperties = newConfigProperties;
 
             //3. use getProperty to update configChange's new value and calc the final changes
             foreach (var change in configChanges)
@@ -148,7 +149,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
         public override ISet<string> GetPropertyNames()
         {
-            var properties = _configProperties.ReadFullFence();
+            var properties = _configProperties;
             return properties == null ? new HashSet<string>() : properties.GetPropertyNames();
         }
 

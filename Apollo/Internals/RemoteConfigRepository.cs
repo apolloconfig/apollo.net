@@ -25,9 +25,9 @@ namespace Com.Ctrip.Framework.Apollo.Internals
         private readonly IApolloOptions _options;
         private readonly RemoteConfigLongPollService _remoteConfigLongPollService;
 
-        private volatile ThreadSafe.AtomicReference<ApolloConfig> _configCache = new ThreadSafe.AtomicReference<ApolloConfig>(null);
-        private readonly ThreadSafe.AtomicReference<ServiceDto> _longPollServiceDto = new ThreadSafe.AtomicReference<ServiceDto>(null);
-        private readonly ThreadSafe.AtomicReference<ApolloNotificationMessages> _remoteMessages = new ThreadSafe.AtomicReference<ApolloNotificationMessages>(null);
+        private volatile ApolloConfig _configCache;
+        private volatile ServiceDto _longPollServiceDto;
+        private volatile ApolloNotificationMessages _remoteMessages;
         private Exception _syncException;
         private readonly Timer _timer;
 
@@ -59,7 +59,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             if (_syncException != null)
                 throw _syncException;
 
-            return TransformApolloConfigToProperties(_configCache.ReadFullFence());
+            return TransformApolloConfigToProperties(_configCache);
         }
 
         private async void SchedulePeriodicRefresh(object _) => await SchedulePeriodicRefresh(false).ConfigureAwait(false);
@@ -84,14 +84,14 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
         private async Task Sync(bool isFirst)
         {
-            var previous = _configCache.ReadFullFence();
+            var previous = _configCache;
             var current = await LoadApolloConfig(isFirst).ConfigureAwait(false);
 
             //reference equals means HTTP 304
             if (!ReferenceEquals(previous, current))
             {
                 Logger.Debug("Remote Config refreshed!");
-                _configCache.WriteFullFence(current);
+                _configCache = current;
                 FireRepositoryChange(Namespace, GetConfig());
             }
         }
@@ -112,15 +112,17 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             {
                 IList<ServiceDto> randomConfigServices = new List<ServiceDto>(configServices);
                 randomConfigServices.Shuffle();
+
                 //Access the server which notifies the client first
-                if (_longPollServiceDto.ReadFullFence() != null)
+                var longPollServiceDto = Interlocked.Exchange(ref _longPollServiceDto, null);
+                if (longPollServiceDto != null)
                 {
-                    randomConfigServices.Insert(0, _longPollServiceDto.AtomicExchange(null));
+                    randomConfigServices.Insert(0, longPollServiceDto);
                 }
 
                 foreach (var configService in randomConfigServices)
                 {
-                    url = AssembleQueryConfigUrl(configService.HomepageUrl, appId, cluster, Namespace, dataCenter, _remoteMessages.ReadFullFence(), _configCache.ReadFullFence());
+                    url = AssembleQueryConfigUrl(configService.HomepageUrl, appId, cluster, Namespace, dataCenter, _remoteMessages, _configCache);
 
                     Logger.Debug($"Loading config from {url}");
 
@@ -131,7 +133,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                         if (response.StatusCode == HttpStatusCode.NotModified)
                         {
                             Logger.Debug("Config server responds with 304 HTTP status code.");
-                            return _configCache.ReadFullFence();
+                            return _configCache;
                         }
 
                         var result = response.Body;
@@ -235,8 +237,8 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
         public void OnLongPollNotified(ServiceDto longPollNotifiedServiceDto, ApolloNotificationMessages remoteMessages)
         {
-            _longPollServiceDto.WriteFullFence(longPollNotifiedServiceDto);
-            _remoteMessages.WriteFullFence(remoteMessages);
+            _longPollServiceDto = longPollNotifiedServiceDto;
+            _remoteMessages = remoteMessages;
 
             ExecutorService.StartNew(async () =>
             {
@@ -259,6 +261,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
             if (disposing)
             {
+                _remoteConfigLongPollService.Dispose();
             }
 
             //释放非托管资源
