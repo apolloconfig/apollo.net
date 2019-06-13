@@ -7,7 +7,7 @@
 ## 1.2 必选设置
 Apollo客户端依赖于`AppId`，`Environment`等环境信息来工作，所以请确保阅读下面的说明并且做正确的配置：
 
-> 默认配置依赖于Microsoft.Extensions.Configuration包，文档和Demo使用Json作为配置源，自定义配置源请参考[微软官方文档](https://docs.microsoft.com/zh-cn/aspnet/core/fundamentals/configuration)
+> 默认配置依赖于[Microsoft.Extensions.Configuration](https://docs.microsoft.com/zh-cn/aspnet/core/fundamentals/configuration/)包，文档和Demo使用Json作为配置源，自定义配置源请参考[微软官方文档](https://docs.microsoft.com/zh-cn/aspnet/core/fundamentals/configuration)
 
 ### 1.2.1 AppId
 
