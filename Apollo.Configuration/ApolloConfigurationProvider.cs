@@ -17,6 +17,7 @@ namespace Com.Ctrip.Framework.Apollo
         {
             _sectionKey = sectionKey;
             _configRepository = configRepository;
+            _configRepository.AddChangeListener(this);
             _initializeTask = _configRepository.Initialize();
         }
 
@@ -25,8 +26,6 @@ namespace Com.Ctrip.Framework.Apollo
             _initializeTask?.ConfigureAwait(false).GetAwaiter().GetResult();
 
             _initializeTask = null;
-
-            _configRepository.AddChangeListener(this);
 
             SetData(_configRepository.GetConfig());
         }

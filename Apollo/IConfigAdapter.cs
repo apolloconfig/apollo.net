@@ -49,7 +49,7 @@ namespace Com.Ctrip.Framework.Apollo
         public static void AddAdapter(ConfigFileFormat format, [NotNull]IConfigAdapter adapter) =>
             Dic[format] = adapter ?? throw new ArgumentNullException(nameof(adapter));
 
-        public static bool TryGetAdapter(ConfigFileFormat format, out IConfigAdapter adapter) =>
+        internal static bool TryGetAdapter(ConfigFileFormat format, out IConfigAdapter adapter) =>
             Dic.TryGetValue(format, out adapter);
     }
 }

@@ -66,13 +66,12 @@ Apollo客户端针对不同的环境会从不同的服务器获取配置，所�
 </configuration>
 ```
 
-或者直接Apollo.MetaServer(优先级高于上面)
+或者直接Apollo.MetaServer(优先级高于上面，该方式不需要配置Apollo.Env)
 
 ```xml
 <?xml version="1.0"?>
 <configuration>
     <appSettings>
-        <!-- Should change the apollo config service url for each environment -->
         <add key="Apollo.MetaServer" value="http://localhost:8080" />
     </appSettings>
 </configuration>
@@ -93,22 +92,22 @@ Apollo支持配置按照集群划分，也就是说对于一个appId和一个环
 * 例如，下面的截图配置指定了运行时的集群为SomeCluster
 * ![apollo-net-apollo-cluster](https://raw.githubusercontent.com/ctripcorp/apollo/master/doc/images/apollo-net-apollo-cluster.png)
 
-**Cluster Precedence**（集群顺序，idc暂时不支持）
+**Cluster Precedence**（集群顺序）
 
-1. 如果`Apollo.Cluster`和`idc`同时指定：
+1. 如果`Apollo.Cluster`和`Apollo.DataCenter`同时指定：
     * 我们会首先尝试从`Apollo.Cluster`指定的集群加载配置
-    * 如果没找到任何配置，会尝试从`idc`指定的集群加载配置
+    * 如果没找到任何配置，会尝试从`Apollo.DataCenter`指定的集群加载配置
     * 如果还是没找到，会从默认的集群（`default`）加载
 
 2. 如果只指定了`Apollo.Cluster`：
     * 我们会首先尝试从`Apollo.Cluster`指定的集群加载配置
     * 如果没找到，会从默认的集群（`default`）加载
 
-3. 如果只指定了`idc`：
-    * 我们会首先尝试从`idc`指定的集群加载配置
+3. 如果只指定了`Apollo.DataCenter`：
+    * 我们会首先尝试从`Apollo.DataCenter`指定的集群加载配置
     * 如果没找到，会从默认的集群（`default`）加载
 
-4. 如果`Apollo.Cluster`和`idc`都没有指定：
+4. 如果`Apollo.Cluster`和`Apollo.DataCenter`都没有指定：
     * 我们会从默认的集群（`default`）加载配置
 
 # 二、引入方式

@@ -68,8 +68,6 @@ namespace Com.Ctrip.Framework.Apollo.Util
         /// <returns> the current data center, null if there is no such info. </returns>
         public string DataCenter => GetAppConfig("DataCenter");
 
-        public string SubEnv => GetAppConfig("SubEnv");
-
         private void InitCluster()
         {
             //Load data center from app.config

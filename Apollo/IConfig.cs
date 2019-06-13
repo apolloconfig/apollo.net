@@ -1,5 +1,4 @@
-﻿using System;
-using Com.Ctrip.Framework.Apollo.Model;
+﻿using Com.Ctrip.Framework.Apollo.Model;
 using System.Collections.Generic;
 
 namespace Com.Ctrip.Framework.Apollo
@@ -13,12 +12,10 @@ namespace Com.Ctrip.Framework.Apollo
 
     public interface IConfig
     {
-        /// <summary>
-        /// Return the property value with the given key, or
-        /// {@code defaultValue} if the key doesn't exist. </summary>
+        /// <summary>Return the property value with the given key. </summary>
         /// <param name="key"> the property name </param>
-        /// <param name="value"> the default value when key is not found or any error occurred </param>
-        /// <returns> the property value </returns>
+        /// <param name="value"> the value </param>
+        /// <returns> true: the key is found; false the key is not found </returns>
         bool TryGetProperty(string key, out string value);
 
         /// <summary>
