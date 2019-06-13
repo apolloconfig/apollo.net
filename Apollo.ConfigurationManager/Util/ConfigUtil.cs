@@ -15,7 +15,7 @@ namespace Com.Ctrip.Framework.Apollo.Util
 {
     public class ConfigUtil : IApolloOptions
     {
-        internal static NameValueCollection AppSettings { get; set; }
+        public static NameValueCollection AppSettings { get; set; }
         private static Func<HttpMessageHandler> _httpMessageHandlerFactory;
 
         private static readonly Action<LogLevel, string, Exception> Logger = LogManager.CreateLogger(typeof(ConfigUtil));
