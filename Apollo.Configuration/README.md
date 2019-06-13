@@ -17,9 +17,9 @@ AppId是应用的身份信息，是从服务端获取配置的一个重要信息
 
 ``` json
 {
-    "apollo": {
-        "AppId": "SampleApp"
-    }
+  "apollo": {
+    "AppId": "SampleApp"
+  }
 }
 ```
 
@@ -164,7 +164,11 @@ apollo.net项目中有一个样例客户端的项目：[Apollo.Configuration.Dem
 
 # 四、FAQ
 
-## 4.1 如何将配置的JSON或者XML值直接绑定到Options？（已超出Apollo范畴）
+## 4.1 如何将配置的JSON或者XML值直接绑定到Options？
+
+### 4.1.1 使用1.3指定的方式
+
+### 4.1.2 使用ValueBinder
 
 ``` PS
 Install-Package Tuhu.Extensions.Configuration.ValueBinder.Json
