@@ -111,6 +111,13 @@ Apollo支持配置按照集群划分，也就是说对于一个appId和一个环
 4. 如果`Apollo.Cluster`和`Apollo.DataCenter`都没有指定：
     * 我们会从默认的集群（`default`）加载配置
 
+## 1.3 使用非Properies格式的namespace
+
+内部使用namespace的后缀来判断namespace类型，比如application.json时，会使用json格式来解析数据，内部默认实现了json和xml两种格式，可覆盖，其他格式需要自行实现。
+
+1. 实现IConfigAdapter或者继承ContentConfigAdapter
+2. 使用`ConfigAdapterRegister.AddAdapter`注册实现的类的实例（Properties不能被覆盖）
+
 # 二、引入方式
 
 安装包Com.Ctrip.Framework.Apollo.ConfigurationManager

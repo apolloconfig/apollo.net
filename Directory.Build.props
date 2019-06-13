@@ -9,13 +9,11 @@
     <IncludeSymbols>True</IncludeSymbols>
     <LangVersion>latest</LangVersion>
     <NoWarn>1591</NoWarn>
-    <PackageProjectUrl>$(RepositoryUrl)/$(AssemblyName)</PackageProjectUrl>
     <PackageTags>apollo configcenter ctrip</PackageTags>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/ctripcorp/apollo.net/tree/dotnet-core</RepositoryUrl>
     <RootNamespace>Com.Ctrip.Framework.Apollo</RootNamespace>
     <SignAssembly>true</SignAssembly>
-    <Version>2.0.0-beta1</Version>
   </PropertyGroup>
 
   <ItemGroup>

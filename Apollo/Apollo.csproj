@@ -1,26 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
     <AssemblyName>Com.Ctrip.Framework.Apollo</AssemblyName>
-    <Description>1.2.0: 重构日志功能，支持自定义日志输出
-1.2.1: 修复HttpClient默认超时错误的问题
-1.3.0: 优化初始化时不能连接上metaserver的等待时间
-1.3.1: 修复QueryString连接错误
-1.4.0: 修复issure #18、添加SourceLink、更新包
-1.5.0: 使用.ConfigureAwait(false)替代AsyncHelper来解决同步调用异步方法出现的死锁问题
-1.5.1: 添加MultiConfig，支持合并多个IConfig
-1.5.2: Apollo内部HttpClient允许使用自定义HttpMessageHandler，比如配置代理
-1.5.3: 支持配置ConfigServer来跳过meta service的服务发现</Description>
-    <PackageReleaseNotes>1.2.0: 重构日志功能，支持自定义日志输出
-1.2.1: 修复HttpClient默认超时错误的问题
-1.3.0: 优化初始化时不能连接上metaserver的等待时间
-1.3.1: 修复QueryString连接错误
-1.4.0: 修复issure #18、添加SourceLink、更新包
-1.5.0: 使用.ConfigureAwait(false)替代AsyncHelper来解决同步调用异步方法出现的死锁问题
-1.5.1: 添加MultiConfig，支持合并多个IConfig
-1.5.2: Apollo内部HttpClient允许使用自定义HttpMessageHandler，比如配置代理
-1.5.3: 支持配置ConfigServer来跳过meta service的服务发现</PackageReleaseNotes>
+    <Description>2.0.0:
+    1. 添加json、xml等格式的namespace的支持
+    2. 重新设计IConfig，通过扩展方法实现更多功能
+    3. 重构日志，直接通过委托而不需要实现接口</Description>
+    <PackageProjectUrl>$(RepositoryUrl)/$(AssemblyName)</PackageProjectUrl>
+    <PackageReleaseNotes>2.0.0:
+    1. 添加json、xml等格式的namespace的支持
+    2. 重新设计IConfig，通过扩展方法实现更多功能
+    3. 重构日志，直接通过委托而不需要实现接口</PackageReleaseNotes>
+    <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
+    <Version>2.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>

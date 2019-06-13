@@ -1,24 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net471;net45;netstandard2.0</TargetFrameworks>
     <AssemblyName>Com.Ctrip.Framework.Apollo.ConfigurationManager</AssemblyName>
     <Description>携程Apollo客户端
 
 　　与Microsoft.Extensions.Configuration集成请使用Com.Ctrip.Framework.Apollo.Configuration包
 　　与System.Configuration.ConfigurationManager集成(.net 4.7.1及以后版本)请使用Com.Ctrip.Framework.Apollo.ConfigurationManager包
 　　直接使用ApolloConfigurationManager请使用Com.Ctrip.Framework.Apollo.Configuration或者Com.Ctrip.Framework.Apollo.ConfigurationManager</Description>
-    <PackageReleaseNotes>1.2.0: 更灵活的配置
-1.2.1: ConnectionStringsSectionBuilder去除json支持，添加ConnectionStrings:{connectionName}:ConnectionString和ConnectionStrings:{connectionName}:ProviderName；AppSettingsSectionBuilder默认不添加namespace前缀
-1.3.0: 优化初始化时不能连接上metaserver的等待时间
-1.3.1: 修复QueryString连接错误
-1.4.0: 添加SourceLink、更新包
-1.5.0: 使用.ConfigureAwait(false)替代AsyncHelper来解决同步调用异步方法出现的死锁问题
-1.5.1: ApolloConfigurationManager和ApolloConfigurationBuilder支持多namespaces
-1.5.2: 修复Env大小写敏感的问题，感觉@LabelZhou
-1.5.3: Apollo内部HttpClient允许使用自定义HttpMessageHandler，比如配置代理
-1.5.4: 添加缺少的.ConfigureAwait(false)
-1.5.5: 支持配置ConfigServer来跳过meta service的服务发现</PackageReleaseNotes>
+    <PackageProjectUrl>$(RepositoryUrl)/$(AssemblyName)</PackageProjectUrl>
+    <PackageReleaseNotes>2.0.0: 更新支持Com.Ctrip.Framework.Apollo</PackageReleaseNotes>
+    <TargetFrameworks>net471;net45;netstandard2.0</TargetFrameworks>
+    <Version>2.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
