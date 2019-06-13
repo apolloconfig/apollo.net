@@ -3,7 +3,7 @@
 ## 1.1 环境要求
     
 * NETFramework 4.5+
-* NETFramework 4.7.1+（支持ConfigurationBuilder）
+* NETFramework 4.7.1+（支持[ConfigurationBuilder](https://docs.microsoft.com/zh-cn/dotnet/api/system.configuration.configurationbuilder)）
 
 ## 1.2 必选设置
 Apollo客户端依赖于`AppId`，`Environment`等环境信息来工作，所以请确保阅读下面的说明并且做正确的配置：
