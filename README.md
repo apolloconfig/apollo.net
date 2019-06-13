@@ -2,7 +2,7 @@
 
 # 一、准备工作
 
-1. 与Microsoft.Extensions.Configuration集成请参考[Apollo.Configuration](https://github.com/ctripcorp/apollo.net/blob/dotnet-core/Apollo.Configuration/README.md)
+1. 与[Microsoft.Extensions.Configuration](https://docs.microsoft.com/zh-cn/aspnet/core/fundamentals/configuration/)集成请参考[Apollo.Configuration](https://github.com/ctripcorp/apollo.net/blob/dotnet-core/Apollo.Configuration/README.md)
 2. 与[System.Configuration.ConfigurationManager](https://docs.microsoft.com/zh-cn/dotnet/api/system.configuration.configurationbuilder)集成(.net 4.7.1及以后版本)或直接使用ApolloConfigManagerManager请参考[Apollo.ConfigurationManager](https://github.com/ctripcorp/apollo.net/blob/dotnet-core/Apollo.ConfigurationManager/README.md)
 
 # 二、日志输出
