@@ -17,7 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Apollo\Apollo.csproj" />
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" Condition="'$(TargetFramework)' == 'netstandard2.0'" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.*" Condition="'$(TargetFramework)' == 'netstandard2.0'" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">

@@ -38,7 +38,8 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
 
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="6.*" Condition="'$(TargetFramework)' == 'net45'" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.*" Condition="'$(TargetFramework)' != 'net45'" />
 
     <Reference Include="System.Net.Http" Condition="'$(TargetFramework)' == 'net45'" />
   </ItemGroup>
