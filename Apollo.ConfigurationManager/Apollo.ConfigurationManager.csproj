@@ -6,9 +6,11 @@
 
 　　与Microsoft.Extensions.Configuration集成请使用Com.Ctrip.Framework.Apollo.Configuration包
 　　与System.Configuration.ConfigurationManager集成(.net 4.7.1及以后版本)请使用Com.Ctrip.Framework.Apollo.ConfigurationManager包
-　　直接使用ApolloConfigurationManager请使用Com.Ctrip.Framework.Apollo.Configuration或者Com.Ctrip.Framework.Apollo.ConfigurationManager</Description>
+　　直接使用ApolloConfigurationManager请使用Com.Ctrip.Framework.Apollo.Configuration或者Com.Ctrip.Framework.Apollo.ConfigurationManager
+
+2.0.0: 允许从环境变量读取apollo配置值、添加对.net core风格key支持，优先级低于原来的key</Description>
     <PackageProjectUrl>$(RepositoryUrl)/$(AssemblyName)</PackageProjectUrl>
-    <PackageReleaseNotes>2.0.0: 更新支持Com.Ctrip.Framework.Apollo</PackageReleaseNotes>
+    <PackageReleaseNotes>2.0.0: 允许从环境变量读取apollo配置值、添加对.net core风格key支持，优先级低于原来的key</PackageReleaseNotes>
     <TargetFrameworks>net471;net45;netstandard2.0</TargetFrameworks>
     <Version>2.0.0</Version>
   </PropertyGroup>

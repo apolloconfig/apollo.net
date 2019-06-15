@@ -11,7 +11,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 {
     public class DefaultConfig : AbstractConfig, IRepositoryChangeListener, IDisposable
     {
-        private static readonly Action<LogLevel, string, Exception> Logger = LogManager.CreateLogger(typeof(DefaultConfig));
+        private static readonly Func<Action<LogLevel, string, Exception>> Logger = () => LogManager.CreateLogger(typeof(DefaultConfig));
         private readonly string _namespace;
         private volatile Properties _configProperties;
         private readonly IConfigRepository _configRepository;
@@ -33,7 +33,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             }
             catch (Exception ex)
             {
-                Logger.Warn($"Init Apollo Local Config failed - namespace: {_namespace}", ex);
+                Logger().Warn($"Init Apollo Local Config failed - namespace: {_namespace}", ex);
             }
             finally
             {
@@ -48,7 +48,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             value = _configProperties?.GetProperty(key);
 
             if (value == null)
-                Logger.Warn($"Could not load config for namespace {_namespace} from Apollo, please check whether the configs are released in Apollo! Return default value now!");
+                Logger().Warn($"Could not load config for namespace {_namespace} from Apollo, please check whether the configs are released in Apollo! Return default value now!");
 
             return value != null;
         }

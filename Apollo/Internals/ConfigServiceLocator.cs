@@ -13,7 +13,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 {
     public class ConfigServiceLocator : IDisposable
     {
-        private static readonly Action<LogLevel, string, Exception> Logger = LogManager.CreateLogger(typeof(ConfigServiceLocator));
+        private static readonly Func<Action<LogLevel, string, Exception>> Logger = () => LogManager.CreateLogger(typeof(ConfigServiceLocator));
 
         private readonly HttpUtil _httpUtil;
 
@@ -78,13 +78,13 @@ namespace Com.Ctrip.Framework.Apollo.Internals
         {
             try
             {
-                Logger.Debug("refresh config services");
+                Logger().Debug("refresh config services");
 
                 await UpdateConfigServices().ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-                Logger.Warn(ex);
+                Logger().Warn(ex);
             }
         }
 
@@ -121,7 +121,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                 }
                 catch (Exception ex)
                 {
-                    Logger.Warn(ex);
+                    Logger().Warn(ex);
                     exception = ex;
                 }
             }

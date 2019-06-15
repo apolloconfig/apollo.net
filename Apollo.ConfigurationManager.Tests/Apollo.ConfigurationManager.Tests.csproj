@@ -11,7 +11,7 @@
     <PackageReference Include="xunit" Version="2.*" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.*" />
 
-    <ProjectReference Include="..\Apollo.Configuration\Apollo.Configuration.csproj" />
+    <ProjectReference Include="..\Apollo.ConfigurationManager\Apollo.ConfigurationManager.csproj" />
   </ItemGroup>
 
 </Project>

@@ -18,7 +18,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 {
     public class RemoteConfigRepository : AbstractConfigRepository
     {
-        private static readonly Action<LogLevel, string, Exception> Logger = LogManager.CreateLogger(typeof(RemoteConfigRepository));
+        private static readonly Func<Action<LogLevel, string, Exception>> Logger = () => LogManager.CreateLogger(typeof(RemoteConfigRepository));
         private static readonly TaskFactory ExecutorService = new TaskFactory(new LimitedConcurrencyLevelTaskScheduler(5));
 
         private readonly ConfigServiceLocator _serviceLocator;
@@ -68,7 +68,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
         {
             try
             {
-                Logger.Debug($"refresh config for namespace: {Namespace}");
+                Logger().Debug($"refresh config for namespace: {Namespace}");
 
                 await Sync(isFirst).ConfigureAwait(false);
 
@@ -78,7 +78,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             {
                 _syncException = ExceptionDispatchInfo.Capture(ex);
 
-                Logger.Warn($"refresh config error for namespace: {Namespace}", ex);
+                Logger().Warn($"refresh config error for namespace: {Namespace}", ex);
             }
         }
 
@@ -90,7 +90,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             //reference equals means HTTP 304
             if (!ReferenceEquals(previous, current))
             {
-                Logger.Debug("Remote Config refreshed!");
+                Logger().Debug("Remote Config refreshed!");
                 _configCache = current;
                 FireRepositoryChange(Namespace, GetConfig());
             }
@@ -124,7 +124,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                 {
                     url = AssembleQueryConfigUrl(configService.HomepageUrl, appId, cluster, Namespace, dataCenter, _remoteMessages, _configCache);
 
-                    Logger.Debug($"Loading config from {url}");
+                    Logger().Debug($"Loading config from {url}");
 
                     try
                     {
@@ -132,13 +132,13 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
                         if (response.StatusCode == HttpStatusCode.NotModified)
                         {
-                            Logger.Debug("Config server responds with 304 HTTP status code.");
+                            Logger().Debug("Config server responds with 304 HTTP status code.");
                             return _configCache;
                         }
 
                         var result = response.Body;
 
-                        Logger.Debug(
+                        Logger().Debug(
                             $"Loaded config for {Namespace}: {result?.Configurations?.Count ?? 0}");
 
                         return result;
@@ -155,12 +155,12 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                             statusCodeException = new ApolloConfigStatusCodeException(ex.StatusCode, message);
                         }
 
-                        Logger.Warn(statusCodeException);
+                        Logger().Warn(statusCodeException);
                         exception = statusCodeException;
                     }
                     catch (Exception ex)
                     {
-                        Logger.Warn(ex);
+                        Logger().Warn(ex);
                         exception = ex;
                     }
                 }
@@ -248,7 +248,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                 }
                 catch (Exception ex)
                 {
-                    Logger.Warn($"Sync config failed, will retry. Repository {GetType()}, reason: {ex.GetDetailMessage()}");
+                    Logger().Warn($"Sync config failed, will retry. Repository {GetType()}, reason: {ex.GetDetailMessage()}");
                 }
             });
         }

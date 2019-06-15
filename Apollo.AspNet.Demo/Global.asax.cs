@@ -1,4 +1,5 @@
 ﻿using Com.Ctrip.Framework.Apollo;
+using Com.Ctrip.Framework.Apollo.Enums;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Configuration;
@@ -13,8 +14,11 @@ namespace Apollo.AspNet.Demo
         protected void Application_Start(object sender, EventArgs e)
         {
             Configuration = new Microsoft.Extensions.Configuration.ConfigurationBuilder()
-                .AddApollo(ConfigurationManager.AppSettings["Apollo.AppId"], ConfigurationManager.AppSettings["Apollo.MetaServer"]).AddNamespace("application.xml")
-                .AddNamespace("application.json").AddDefault().Build();
+                .AddApollo(ConfigurationManager.AppSettings["Apollo.AppId"], ConfigurationManager.AppSettings["Apollo.MetaServer"])
+                .AddDefault(ConfigFileFormat.Xml)
+                .AddDefault(ConfigFileFormat.Json)
+                .AddDefault()
+                .Build();
         }
     }
 }

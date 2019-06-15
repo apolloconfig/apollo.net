@@ -12,7 +12,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 {
     public abstract class AbstractConfig : IConfig
     {
-        private static readonly Action<LogLevel, string, Exception> Logger = LogManager.CreateLogger(typeof(AbstractConfig));
+        private static readonly Func<Action<LogLevel, string, Exception>> Logger = () => LogManager.CreateLogger(typeof(AbstractConfig));
         public virtual event ConfigChangeEvent ConfigChanged;
         private static readonly TaskFactory ExecutorService;
 
@@ -28,7 +28,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             {
                 foreach (var @delegate in ConfigChanged.GetInvocationList())
                 {
-                    var handlerCopy = (Action<string, IReadOnlyDictionary<string, ConfigChange>>) @delegate;
+                    var handlerCopy = (Action<string, IReadOnlyDictionary<string, ConfigChange>>)@delegate;
                     ExecutorService.StartNew(() =>
                     {
                         try
@@ -37,7 +37,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                         }
                         catch (Exception ex)
                         {
-                            Logger.Error($"Failed to invoke config change handler {(handlerCopy.Target == null ? handlerCopy.Method.Name : $"{handlerCopy.Target.GetType()}.{handlerCopy.Method.Name}")}", ex);
+                            Logger().Error($"Failed to invoke config change handler {(handlerCopy.Target == null ? handlerCopy.Method.Name : $"{handlerCopy.Target.GetType()}.{handlerCopy.Method.Name}")}", ex);
                         }
                     });
                 }

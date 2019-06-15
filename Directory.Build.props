@@ -9,7 +9,7 @@
     <IncludeSymbols>True</IncludeSymbols>
     <LangVersion>latest</LangVersion>
     <NoWarn>1591</NoWarn>
-    <PackageTags>apollo configcenter ctrip</PackageTags>
+    <PackageTags>apollo configcenter configuration ctrip</PackageTags>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/ctripcorp/apollo.net/tree/dotnet-core</RepositoryUrl>
     <RootNamespace>Com.Ctrip.Framework.Apollo</RootNamespace>
@@ -17,7 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ConfigureAwaitChecker.Analyzer" Version="3.*" PrivateAssets="All" />
+    <PackageReference Include="ConfigureAwaitChecker.Analyzer" Version="4.*" PrivateAssets="All" />
     <PackageReference Include="JetBrains.Annotations" Version="2019.*" PrivateAssets="All" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-*" PrivateAssets="All" />
   </ItemGroup>

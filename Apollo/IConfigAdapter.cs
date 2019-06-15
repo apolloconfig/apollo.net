@@ -16,14 +16,14 @@ namespace Com.Ctrip.Framework.Apollo
 
     public abstract class ContentConfigAdapter : IConfigAdapter
     {
-        private static readonly Action<LogLevel, string, Exception> Logger = LogManager.CreateLogger(typeof(ContentConfigAdapter));
+        private static readonly Func<Action<LogLevel, string, Exception>> Logger = () => LogManager.CreateLogger(typeof(ContentConfigAdapter));
 
         public Properties GetProperties(Properties properties)
         {
             var content = properties.GetProperty(ConfigConsts.ConfigFileContentKey);
             if (string.IsNullOrWhiteSpace(content))
             {
-                Logger.Warn("找不到" + ConfigConsts.ConfigFileContentKey);
+                Logger().Warn("找不到" + ConfigConsts.ConfigFileContentKey);
 
                 return properties;
             }

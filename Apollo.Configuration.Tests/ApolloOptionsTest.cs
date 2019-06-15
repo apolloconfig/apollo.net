@@ -57,18 +57,22 @@ namespace Apollo.Configuration.Tests
 
             Assert.Equal(ConfigConsts.DefaultMetaServerUrl, options.MetaServer);
 
-             options = new ConfigurationBuilder()
-                .AddInMemoryCollection(new Dictionary<string, string>
-                {
+            options = new ConfigurationBuilder()
+               .AddInMemoryCollection(new Dictionary<string, string>
+               {
                     {"Apollo:MetaServer", "https://abc:1234" },
-                })
-                .Build()
-                .GetSection("Apollo")
-                .Get<ApolloOptions>();
+               })
+               .Build()
+               .GetSection("Apollo")
+               .Get<ApolloOptions>();
 
             Assert.Equal("https://abc:1234", options.MetaServer);
+        }
 
-             options = new ConfigurationBuilder()
+        [Fact]
+        public void MetaServerEnvTest()
+        {
+            var options = new ConfigurationBuilder()
                 .AddInMemoryCollection(new Dictionary<string, string>
                 {
                     {"Apollo:Env", "Pro" },

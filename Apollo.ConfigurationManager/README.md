@@ -118,6 +118,13 @@ Apollo支持配置按照集群划分，也就是说对于一个appId和一个环
 1. 实现IConfigAdapter或者继承ContentConfigAdapter
 2. 使用`ConfigAdapterRegister.AddAdapter`注册实现的类的实例（Properties不能被覆盖）
 
+## 1.4 .net core风格key支持
+
+1. Apollo.XXX => Apollo:XXX
+2. Apollo.{ENV}.Meta => Apollo:Meta:{ENV}
+
+> 优先级低于原来的方式，具体可以参考[Demo](https://github.com/ctripcorp/apollo.net/tree/dotnet-core/Apollo.ConfigurationManager.Demo)或者[Tests](https://github.com/ctripcorp/apollo.net/tree/dotnet-core/Apollo.ConfigurationManager.Tests)
+
 # 二、引入方式
 
 安装包Com.Ctrip.Framework.Apollo.ConfigurationManager
@@ -180,9 +187,8 @@ string value = config.GetProperty(someKey, someDefaultValue);
 ## 3.4 Demo
 
 apollo.net项目中有多个样例客户端的项目：
-* [Apollo.AspNet.Demo](https://github.com/ctripcorp/apollo.net/tree/dotnet-core/Apollo.AspNet.Demo)
-* [Apollo.ConfigurationBuilder.Demo](https://github.com/ctripcorp/apollo.net/tree/dotnet-core/Apollo.ConfigurationBuilder.Demo)
-* [Apollo.ConfigurationManager.Demo](https://github.com/ctripcorp/apollo.net/tree/dotnet-core/Apollo.ConfigurationManager.Demo)
+* [Apollo.AspNet.Demo](https://github.com/ctripcorp/apollo.net/tree/dotnet-core/Apollo.AspNet.Demo)（通过Web.config配置）
+* [Apollo.ConfigurationManager.Demo](https://github.com/ctripcorp/apollo.net/tree/dotnet-core/Apollo.ConfigurationManager.Demo)（通过环境变量配置）
 
 # 四、NETFramework 4.7.1+ ConfigurationBuilder支持
 

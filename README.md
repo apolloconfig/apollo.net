@@ -29,3 +29,7 @@
 当开发环境无法连接Apollo服务器的时候，会降级为读取本地配置文件，请先在普通模式下使用Apollo，这样Apollo会自动创建该目录并在目录下生成配置文件。
 
 > Apollo不会实时监测文件内容是否有变化，所以如果修改了配置，需要重启应用生效。
+
+# 五、v2更新日志
+
+[v2](https://github.com/ctripcorp/apollo.net/releases/tag/v2.0.0)

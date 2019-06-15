@@ -20,7 +20,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 {
     public class RemoteConfigLongPollService : IDisposable
     {
-        private static readonly Action<LogLevel, string, Exception> Logger = LogManager.CreateLogger(typeof(RemoteConfigLongPollService));
+        private static readonly Func<Action<LogLevel, string, Exception>> Logger = () => LogManager.CreateLogger(typeof(RemoteConfigLongPollService));
         private static readonly long InitNotificationId = -1;
         private readonly ConfigServiceLocator _serviceLocator;
         private readonly HttpUtil _httpUtil;
@@ -76,7 +76,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             catch (Exception ex)
             {
                 var exception = new ApolloConfigException("Schedule long polling refresh failed", ex);
-                Logger.Warn(exception.GetDetailMessage());
+                Logger().Warn(exception.GetDetailMessage());
             }
         }
 
@@ -99,11 +99,11 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
                     url = AssembleLongPollRefreshUrl(lastServiceDto.HomepageUrl, appId, cluster, dataCenter);
 
-                    Logger.Debug($"Long polling from {url}");
+                    Logger().Debug($"Long polling from {url}");
 
                     var response = await _httpUtil.DoGetAsync<IList<ApolloConfigNotification>>(url, 600000).ConfigureAwait(false);
 
-                    Logger.Debug(
+                    Logger().Debug(
                         $"Long polling response: {response.StatusCode}, url: {url}");
                     if (response.StatusCode == HttpStatusCode.OK && response.Body != null)
                     {
@@ -130,7 +130,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                     lastServiceDto = null;
 
                     var sleepTimeInSecond = _longPollFailSchedulePolicyInSecond.Fail();
-                    Logger.Warn(
+                    Logger().Warn(
                         $"Long polling failed, will retry in {sleepTimeInSecond} seconds. appId: {appId}, cluster: {cluster}, namespace: {AssembleNamespaces()}, long polling url: {url}, reason: {ex.GetDetailMessage()}");
 
                     sleepTime = sleepTimeInSecond * 1000;
@@ -171,7 +171,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                     }
                     catch (Exception ex)
                     {
-                        Logger.Warn(ex);
+                        Logger().Warn(ex);
                     }
                 }
             }

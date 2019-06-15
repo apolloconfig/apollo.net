@@ -1,4 +1,5 @@
 ﻿using Com.Ctrip.Framework.Apollo;
+using Com.Ctrip.Framework.Apollo.Core;
 using Com.Ctrip.Framework.Apollo.Model;
 using System;
 
@@ -6,25 +7,18 @@ namespace Apollo.ConfigurationManager.Demo
 {
     class ConfigurationManagerDemo
     {
-        private string DEFAULT_VALUE = "undefined";
-        private IConfig config;
-        private IConfig anotherConfig;
+        private readonly string DEFAULT_VALUE = "undefined";
+        private readonly IConfig config;
 
         public ConfigurationManagerDemo()
         {
-            config = ApolloConfigurationManager.GetAppConfig().Result;
-            anotherConfig = ApolloConfigurationManager.GetConfig("TEST1.test").Result;
+            config = ApolloConfigurationManager.GetConfig(ConfigConsts.NamespaceApplication + ".json", ConfigConsts.NamespaceApplication + ".xml", ConfigConsts.NamespaceApplication).GetAwaiter().GetResult();
             config.ConfigChanged += OnChanged;
-            anotherConfig.ConfigChanged += OnChanged;
         }
 
         public string GetConfig(string key)
         {
-            string result = config.GetProperty(key, DEFAULT_VALUE);
-            if (result.Equals(DEFAULT_VALUE))
-            {
-                result = anotherConfig.GetProperty(key, DEFAULT_VALUE);
-            }
+            var result = config.GetProperty(key, DEFAULT_VALUE);
             var color = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("Loading key: {0} with value: {1}", key, result);

@@ -9,7 +9,7 @@ namespace Com.Ctrip.Framework.Apollo
 {
     public static class ConfigExtensions
     {
-        private static readonly Action<LogLevel, string, Exception> Logger = LogManager.CreateLogger(typeof(ConfigExtensions));
+        private static readonly Func<Action<LogLevel, string, Exception>> Logger = () => LogManager.CreateLogger(typeof(ConfigExtensions));
 
         /// <summary>
         /// Return the property value with the given key, or
@@ -39,7 +39,7 @@ namespace Com.Ctrip.Framework.Apollo
             if (!config.TryGetProperty(key, out var str) || str == null) return defaultValue;
 
             if (!int.TryParse(str, out var value))
-                Logger.Error(new ApolloConfigException($"GetIntProperty for {key} failed, return default value {defaultValue:D}"));
+                Logger().Error(new ApolloConfigException($"GetIntProperty for {key} failed, return default value {defaultValue:D}"));
 
             return defaultValue;
         }
@@ -58,7 +58,7 @@ namespace Com.Ctrip.Framework.Apollo
             if (!config.TryGetProperty(key, out var str) || str == null) return defaultValue;
 
             if (!long.TryParse(str, out var value))
-                Logger.Error(new ApolloConfigException($"GetLongProperty for {key} failed, return default value {defaultValue:D}"));
+                Logger().Error(new ApolloConfigException($"GetLongProperty for {key} failed, return default value {defaultValue:D}"));
 
             return defaultValue;
         }
@@ -77,7 +77,7 @@ namespace Com.Ctrip.Framework.Apollo
             if (!config.TryGetProperty(key, out var str) || str == null) return defaultValue;
 
             if (!short.TryParse(str, out var value))
-                Logger.Error(new ApolloConfigException($"GetShortProperty for {key} failed, return default value {defaultValue:D}"));
+                Logger().Error(new ApolloConfigException($"GetShortProperty for {key} failed, return default value {defaultValue:D}"));
 
             return defaultValue;
         }
@@ -96,7 +96,7 @@ namespace Com.Ctrip.Framework.Apollo
             if (!config.TryGetProperty(key, out var str) || str == null) return defaultValue;
 
             if (!float.TryParse(str, out var value))
-                Logger.Error(new ApolloConfigException($"GetFloatProperty for {key} failed, return default value {defaultValue:F}"));
+                Logger().Error(new ApolloConfigException($"GetFloatProperty for {key} failed, return default value {defaultValue:F}"));
 
             return defaultValue;
         }
@@ -115,7 +115,7 @@ namespace Com.Ctrip.Framework.Apollo
             if (!config.TryGetProperty(key, out var str) || str == null) return defaultValue;
 
             if (!double.TryParse(str, out var value))
-                Logger.Error(new ApolloConfigException($"GetDoubleProperty for {key} failed, return default value {defaultValue:F}"));
+                Logger().Error(new ApolloConfigException($"GetDoubleProperty for {key} failed, return default value {defaultValue:F}"));
 
             return defaultValue;
         }
@@ -134,7 +134,7 @@ namespace Com.Ctrip.Framework.Apollo
             if (!config.TryGetProperty(key, out var str) || str == null) return defaultValue;
 
             if (!sbyte.TryParse(str, out var value))
-                Logger.Error(new ApolloConfigException($"GetByteProperty for {key} failed, return default value {defaultValue:G}"));
+                Logger().Error(new ApolloConfigException($"GetByteProperty for {key} failed, return default value {defaultValue:G}"));
 
             return defaultValue;
         }
@@ -153,7 +153,7 @@ namespace Com.Ctrip.Framework.Apollo
             if (!config.TryGetProperty(key, out var str) || str == null) return defaultValue;
 
             if (!bool.TryParse(str, out var value))
-                Logger.Error(new ApolloConfigException($"GetBooleanProperty for {key} failed, return default value {defaultValue}"));
+                Logger().Error(new ApolloConfigException($"GetBooleanProperty for {key} failed, return default value {defaultValue}"));
 
             return defaultValue;
         }
@@ -179,7 +179,7 @@ namespace Com.Ctrip.Framework.Apollo
             }
             catch (Exception ex)
             {
-                Logger.Error(new ApolloConfigException($"GetArrayProperty for {key} failed, return default value", ex));
+                Logger().Error(new ApolloConfigException($"GetArrayProperty for {key} failed, return default value", ex));
             }
 
             return defaultValue;

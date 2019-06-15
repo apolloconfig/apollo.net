@@ -1,6 +1,7 @@
 ﻿using Com.Ctrip.Framework.Apollo.Core;
 using Com.Ctrip.Framework.Apollo.Internals;
 using Com.Ctrip.Framework.Apollo.Spi;
+using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,14 +31,34 @@ namespace Com.Ctrip.Framework.Apollo
         /// Get the config instance for the namespace. </summary>
         /// <param name="namespaceName"> the namespace of the config </param>
         /// <returns> config instance </returns>
-        public Task<IConfig> GetConfig(string namespaceName) => _manager.GetConfig(namespaceName);
+        public Task<IConfig> GetConfig([NotNull]string namespaceName)
+        {
+            if (string.IsNullOrEmpty(namespaceName)) throw new ArgumentException("message", nameof(namespaceName));
+
+            return _manager.GetConfig(namespaceName);
+        }
 
         /// <summary>
         /// Get the config instance for the namespace. </summary>
         /// <param name="namespaces"> the namespaces of the config, order desc. </param>
         /// <returns> config instance </returns>
-        public async Task<IConfig> GetConfig(IEnumerable<string> namespaces) =>
-            new MultiConfig(await Task.WhenAll(namespaces.Select(GetConfig)).ConfigureAwait(false));
+        public async Task<IConfig> GetConfig([NotNull]params string[] namespaces)
+        {
+            if (namespaces == null) throw new ArgumentNullException(nameof(namespaces));
+
+            return new MultiConfig(await Task.WhenAll(namespaces.Select(GetConfig)).ConfigureAwait(false));
+        }
+
+        /// <summary>
+        /// Get the config instance for the namespace. </summary>
+        /// <param name="namespaces"> the namespaces of the config, order desc. </param>
+        /// <returns> config instance </returns>
+        public async Task<IConfig> GetConfig([NotNull]IEnumerable<string> namespaces)
+        {
+            if (namespaces == null) throw new ArgumentNullException(nameof(namespaces));
+
+            return new MultiConfig(await Task.WhenAll(namespaces.Select(GetConfig)).ConfigureAwait(false));
+        }
     }
 }
 

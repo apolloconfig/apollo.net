@@ -20,7 +20,7 @@ namespace Apollo.AspNet.Demo
                 if (string.IsNullOrWhiteSpace(key))
                     return Task.CompletedTask;
 
-                var value = DateTime.Now.Second % 2 == 1 ? ConfigurationManager.AppSettings[key] : Global.Configuration[key];
+                var value = DateTime.Now.Second % 2 == 1 ? "ConfigurationManager: " + ConfigurationManager.AppSettings[key] : "Configuration: " + Global.Configuration[key];
                 return value == null ? Task.CompletedTask : context.Response.WriteAsync(value);
             });
         }

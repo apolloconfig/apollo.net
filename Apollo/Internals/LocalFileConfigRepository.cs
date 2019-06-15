@@ -11,7 +11,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 {
     public class LocalFileConfigRepository : AbstractConfigRepository, IRepositoryChangeListener
     {
-        private static readonly Action<LogLevel, string, Exception> Logger = LogManager.CreateLogger(typeof(LocalFileConfigRepository));
+        private static readonly Func<Action<LogLevel, string, Exception>> Logger = () => LogManager.CreateLogger(typeof(LocalFileConfigRepository));
         private const string ConfigDir = "config-cache";
 
         private string _baseDir;
@@ -49,7 +49,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             }
             catch (Exception ex)
             {
-                Logger.Warn(ex);
+                Logger().Warn(ex);
             }
         }
 
@@ -86,7 +86,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             }
             catch (Exception ex)
             {
-                Logger.Warn(
+                Logger().Warn(
                     $"Sync config from upstream repository {_upstream.GetType()} failed, reason: {ex.GetDetailMessage()}");
             }
 
@@ -126,7 +126,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             {
                 var properties = new Properties(file);
 
-                Logger.Debug($"Loading local config file {file} successfully!");
+                Logger().Debug($"Loading local config file {file} successfully!");
 
                 return properties;
             }
@@ -150,7 +150,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             }
             catch (Exception ex)
             {
-                Logger.Warn(
+                Logger().Warn(
                     $"Persist local cache file {file} failed, reason: {ex.GetDetailMessage()}.", ex);
             }
         }
@@ -163,7 +163,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             }
             catch (Exception ex)
             {
-                Logger.Warn(new ApolloConfigException("Prepare config cache dir failed", ex));
+                Logger().Warn(new ApolloConfigException("Prepare config cache dir failed", ex));
                 return;
             }
             CheckLocalConfigCacheDir(_baseDir);
@@ -180,7 +180,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             }
             catch (Exception ex)
             {
-                Logger.Warn(
+                Logger().Warn(
                     $"Unable to create local config cache directory {baseDir}, reason: {ex.GetDetailMessage()}. Will not able to cache config file.", ex);
             }
         }

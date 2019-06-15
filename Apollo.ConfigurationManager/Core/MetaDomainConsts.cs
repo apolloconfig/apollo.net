@@ -10,13 +10,13 @@ namespace Com.Ctrip.Framework.Apollo.Core
             switch(env)
             {
                 case Env.Dev:
-                    return GetAppSetting("DEV.Meta", ConfigConsts.DefaultMetaServerUrl);
+                    return GetAppSetting("DEV.Meta", GetAppSetting("Meta:DEV", ConfigConsts.DefaultMetaServerUrl));
                 case Env.Fat:
-                    return GetAppSetting("FAT.Meta", ConfigConsts.DefaultMetaServerUrl);
+                    return GetAppSetting("FAT.Meta", GetAppSetting("Meta:FAT", ConfigConsts.DefaultMetaServerUrl));
                 case Env.Uat:
-                    return GetAppSetting("UAT.Meta", ConfigConsts.DefaultMetaServerUrl);
+                    return GetAppSetting("UAT.Meta", GetAppSetting("Meta:UAT", ConfigConsts.DefaultMetaServerUrl));
                 case Env.Pro:
-                    return GetAppSetting("PRO.Meta", ConfigConsts.DefaultMetaServerUrl);
+                    return GetAppSetting("PRO.Meta", GetAppSetting("Meta:PRO", ConfigConsts.DefaultMetaServerUrl));
                 default:
                     return ConfigConsts.DefaultMetaServerUrl;
             }
