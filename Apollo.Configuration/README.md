@@ -1,4 +1,4 @@
-# 一、准备工作
+﻿# 一、准备工作
 
 ## 1.1 环境要求
     
@@ -7,7 +7,7 @@
 ## 1.2 必选设置
 Apollo客户端依赖于`AppId`，`Environment`等环境信息来工作，所以请确保阅读下面的说明并且做正确的配置：
 
-> 默认配置依赖于Microsoft.Extensions.Configuration包，文档和Demo使用Json作为配置源，自定义配置源请参考[微软官方文档](https://docs.microsoft.com/zh-cn/aspnet/core/fundamentals/configuration)
+> 默认配置依赖于[Microsoft.Extensions.Configuration](https://docs.microsoft.com/zh-cn/aspnet/core/fundamentals/configuration/)包，文档和Demo使用Json作为配置源，自定义配置源请参考[微软官方文档](https://docs.microsoft.com/zh-cn/aspnet/core/fundamentals/configuration)
 
 ### 1.2.1 AppId
 
@@ -17,9 +17,9 @@ AppId是应用的身份信息，是从服务端获取配置的一个重要信息
 
 ``` json
 {
-    "apollo": {
-        "AppId": "SampleApp"
-    }
+  "apollo": {
+    "AppId": "SampleApp"
+  }
 }
 ```
 
@@ -50,7 +50,7 @@ Apollo支持应用在不同的环境有不同的配置，所以Environment是另
   * Production environment
 
 ### 1.2.3 服务地址
-Apollo客户端针对不同的环境会从不同的服务器获取配置，所以请确保在appsettings.json正确配置了服务器地址(MetaServer)，其中内容形如：
+Apollo客户端针对不同的环境会从不同的服务器获取配置，所以请确保在appsettings.json正确配置了服务器地址(MetaServer，不需要配置Env)，其中内容形如：
 
 ``` json
 {
@@ -65,10 +65,25 @@ Apollo客户端针对不同的环境会从不同的服务器获取配置，所�
 ``` json
 {
   "apollo": {
-    "Env": "DEV",
     "MetaServer": "http://localhost:8080"
   }
 }
+```
+
+当然也可以支持将所有的环境对应的meta server地址配置
+
+``` json
+{
+  "apollo": {
+    "Meta": {
+      "DEV": "http://106.12.25.204:8080/",
+      "FAT": "http://106.12.25.204:8080/",
+      "UAT": "http://106.12.25.204:8080/",
+      "PRO": "http://106.12.25.204:8080/"
+    }
+  }
+}
+
 ```
 
 ### 1.2.4 本地缓存路径
@@ -97,23 +112,31 @@ Apollo支持配置按照集群划分，也就是说对于一个appId和一个环
 * 例如，下面的截图配置指定了运行时的集群为SomeCluster
 * ![apollo-net-apollo-cluster](https://raw.githubusercontent.com/ctripcorp/apollo/master/doc/images/apollo-net-apollo-cluster.png)
 
-**Cluster Precedence**（集群顺序，idc暂不支持）
+**Cluster Precedence**（集群顺序）
 
-1. 如果`Apollo.Cluster`和`idc`同时指定：
-    * 我们会首先尝试从`Apollo.Cluster`指定的集群加载配置
-    * 如果没找到任何配置，会尝试从`idc`指定的集群加载配置
+1. 如果`Cluster`和`DataCenter`同时指定：
+    * 我们会首先尝试从`Cluster`指定的集群加载配置
+    * 如果没找到任何配置，会尝试从`DataCenter`指定的集群加载配置
     * 如果还是没找到，会从默认的集群（`default`）加载
 
-2. 如果只指定了`Apollo.Cluster`：
-    * 我们会首先尝试从`Apollo.Cluster`指定的集群加载配置
+2. 如果只指定了`Cluster`：
+    * 我们会首先尝试从`Cluster`指定的集群加载配置
     * 如果没找到，会从默认的集群（`default`）加载
 
-3. 如果只指定了`idc`：
-    * 我们会首先尝试从`idc`指定的集群加载配置
+3. 如果只指定了`DataCenter`：
+    * 我们会首先尝试从`DataCenter`指定的集群加载配置
     * 如果没找到，会从默认的集群（`default`）加载
 
-4. 如果`Apollo.Cluster`和`idc`都没有指定：
+4. 如果`Cluster`和`DataCenter`都没有指定：
     * 我们会从默认的集群（`default`）加载配置
+
+## 1.3 使用非Properies格式的namespace
+
+内部使用namespace的后缀来判断namespace类型，比如application.json时，会使用json格式来解析数据，内部默认实现了json和xml两种格式，可覆盖，其他格式需要自行实现。
+
+1. 实现IConfigAdapter或者继承ContentConfigAdapter
+2. 使用`ConfigAdapterRegister.AddAdapter`注册实现的类的实例（Properties不能被覆盖）
+
 
 # 二、引入方式
 
@@ -122,6 +145,8 @@ Apollo支持配置按照集群划分，也就是说对于一个appId和一个环
 # 三、客户端用法
 
 ## 3.1 修改Program.cs文件
+
+### 3.1.1 配置在appsettings.json中
 
 ``` diff
     WebHost.CreateDefaultBuilder(args)
@@ -132,16 +157,34 @@ Apollo支持配置按照集群划分，也就是说对于一个appId和一个环
         .UseStartup<Startup>()
 ```
 
+### 3.1.2 配置在环境变量或者参数中
+
+``` diff
+    WebHost.CreateDefaultBuilder(args)
++       .ConfigureAppConfiguration((cotnext, builder) => builder
++           .AddApollo(cotnext.Configuration.GetSection("apollo"))
++           .AddNamespace("Some namespace")
++           .AddDefault())
+        .UseStartup<Startup>()
+```
+
 ## 3.2 监听配置变化事件
 
 sdk已经完美支持Microsoft.Extensions.Configuration，请参考[IOptionsMonitor](https://docs.microsoft.com/zh-cn/aspnet/core/fundamentals/configuration/options#options-factory-monitoring-and-cache)或者[Demo](https://github.com/ctripcorp/apollo.net/blob/dotnet-core/Apollo.Configuration.Demo/ConfigurationDemo.cs#L46)
 
 ## 3.3 Demo
-apollo.net项目中有一个样例客户端的项目：[Apollo.Configuration.Demo](https://github.com/ctripcorp/apollo.net/tree/dotnet-core/Apollo.Configuration.Demo)
+
+apollo.net项目中有多个样例客户端的项目：
+* [Apollo.AspNetCore.Demo](https://github.com/ctripcorp/apollo.net/tree/dotnet-core/Apollo.AspNetCore.Demo)
+* [Apollo.Configuration.Demo](https://github.com/ctripcorp/apollo.net/tree/dotnet-core/Apollo.Configuration.Demo)
 
 # 四、FAQ
 
-## 4.1 如何将配置的JSON或者XML值直接绑定到Options？（已超出Apollo范畴）
+## 4.1 如何将配置的JSON或者XML值直接绑定到Options？
+
+### 4.1.1 使用1.3指定的方式
+
+### 4.1.2 使用ValueBinder
 
 ``` PS
 Install-Package Tuhu.Extensions.Configuration.ValueBinder.Json

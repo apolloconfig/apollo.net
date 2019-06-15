@@ -9,6 +9,7 @@
         Uat,
         Lpt,
         Pro,
-        Tools
+        Tools,
+        Unknown
     }
 }

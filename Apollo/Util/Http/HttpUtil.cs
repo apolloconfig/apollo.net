@@ -1,7 +1,6 @@
 ﻿using Com.Ctrip.Framework.Apollo.Exceptions;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Concurrent;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -13,10 +12,15 @@ namespace Com.Ctrip.Framework.Apollo.Util.Http
 {
     public class HttpUtil : IDisposable
     {
-        private readonly ConcurrentDictionary<int, HttpClient> _httpClient = new ConcurrentDictionary<int, HttpClient>();
+        private readonly HttpMessageHandler _httpMessageHandler;
         private readonly IApolloOptions _options;
 
-        public HttpUtil(IApolloOptions options) => _options = options;
+        public HttpUtil(IApolloOptions options)
+        {
+            _options = options;
+
+            _httpMessageHandler = _options.HttpMessageHandlerFactory == null ? new HttpClientHandler() : _options.HttpMessageHandlerFactory();
+        }
 
         public Task<HttpResponse<T>> DoGetAsync<T>(string url) => DoGetAsync<T>(url, _options.Timeout);
 
@@ -25,18 +29,18 @@ namespace Com.Ctrip.Framework.Apollo.Util.Http
             HttpResponseMessage response = null;
             try
             {
-                var httpRequest = new HttpRequestMessage(HttpMethod.Get, url);
+#if DEBUG
+                var httpClient = new HttpClient(_httpMessageHandler, false) { Timeout = TimeSpan.FromMilliseconds(timeout > 0 ? timeout : _options.Timeout) };
 
-                if (!string.IsNullOrEmpty(_options.Authorization))
-                    httpRequest.Headers.TryAddWithoutValidation(nameof(httpRequest.Headers.Authorization), _options.Authorization);
-
+                response = await httpClient.GetAsync(url).ConfigureAwait(false);
+#else
                 using (var cts = new CancellationTokenSource(timeout))
                 {
-                    var httpClient = _httpClient.GetOrAdd(timeout > 0 ? timeout : _options.Timeout, t => new HttpClient(_options.HttpMessageHandlerFactory == null ? new HttpClientHandler() : _options.HttpMessageHandlerFactory()) { Timeout = TimeSpan.FromMilliseconds(t) });
+                    var httpClient = new HttpClient(_httpMessageHandler, false) { Timeout = TimeSpan.FromMilliseconds(timeout > 0 ? timeout : _options.Timeout) };
 
-                    response = await Timeout(httpClient.SendAsync(httpRequest, cts.Token), timeout, cts).ConfigureAwait(false);
+                    response = await Timeout(httpClient.GetAsync(url, cts.Token), timeout, cts).ConfigureAwait(false);
                 }
-
+#endif
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
                     using (var s = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
@@ -62,23 +66,7 @@ namespace Com.Ctrip.Framework.Apollo.Util.Http
             throw new ApolloConfigStatusCodeException(response.StatusCode, $"Get operation failed for {url}");
         }
 
-        public void Dispose()
-        {
-            if (_httpClient == null)
-                return;
-
-            foreach (var httpClient in _httpClient.Values)
-            {
-                try
-                {
-                    httpClient.Dispose();
-                }
-                catch
-                {
-                    // ignored
-                }
-            }
-        }
+        public void Dispose() => _httpMessageHandler.Dispose();
 
         private static async Task<T> Timeout<T>(Task<T> task, int millisecondsDelay, CancellationTokenSource cts)
         {

@@ -1,6 +1,8 @@
 ﻿using Com.Ctrip.Framework.Apollo;
+using Com.Ctrip.Framework.Apollo.Enums;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.Configuration;
 using System.Web;
 
 namespace Apollo.AspNet.Demo
@@ -11,11 +13,12 @@ namespace Apollo.AspNet.Demo
 
         protected void Application_Start(object sender, EventArgs e)
         {
-            var builder = new ConfigurationBuilder().AddJsonFile(@"App_Data\appsettings.json");
-
-            builder.AddApollo(builder.Build().GetSection("apollo")).AddNamespace("TEST1.test").AddDefault();
-
-            Configuration = builder.Build();
+            Configuration = new Microsoft.Extensions.Configuration.ConfigurationBuilder()
+                .AddApollo(ConfigurationManager.AppSettings["Apollo.AppId"], ConfigurationManager.AppSettings["Apollo.MetaServer"])
+                .AddDefault(ConfigFileFormat.Xml)
+                .AddDefault(ConfigFileFormat.Json)
+                .AddDefault()
+                .Build();
         }
     }
 }

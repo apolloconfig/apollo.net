@@ -3,6 +3,7 @@
 ## 1.1 环境要求
     
 * NETFramework 4.5+
+* NETFramework 4.7.1+（支持[ConfigurationBuilder](https://docs.microsoft.com/zh-cn/dotnet/api/system.configuration.configurationbuilder)）
 
 ## 1.2 必选设置
 Apollo客户端依赖于`AppId`，`Environment`等环境信息来工作，所以请确保阅读下面的说明并且做正确的配置：
@@ -66,13 +67,12 @@ Apollo客户端针对不同的环境会从不同的服务器获取配置，所�
 </configuration>
 ```
 
-或者直接Apollo.MetaServer(优先级高于上面)
+或者直接Apollo.MetaServer(优先级高于上面，该方式不需要配置Apollo.Env)
 
 ```xml
 <?xml version="1.0"?>
 <configuration>
     <appSettings>
-        <!-- Should change the apollo config service url for each environment -->
         <add key="Apollo.MetaServer" value="http://localhost:8080" />
     </appSettings>
 </configuration>
@@ -93,23 +93,37 @@ Apollo支持配置按照集群划分，也就是说对于一个appId和一个环
 * 例如，下面的截图配置指定了运行时的集群为SomeCluster
 * ![apollo-net-apollo-cluster](https://raw.githubusercontent.com/ctripcorp/apollo/master/doc/images/apollo-net-apollo-cluster.png)
 
-**Cluster Precedence**（集群顺序，idc暂时不支持）
+**Cluster Precedence**（集群顺序）
 
-1. 如果`Apollo.Cluster`和`idc`同时指定：
+1. 如果`Apollo.Cluster`和`Apollo.DataCenter`同时指定：
     * 我们会首先尝试从`Apollo.Cluster`指定的集群加载配置
-    * 如果没找到任何配置，会尝试从`idc`指定的集群加载配置
+    * 如果没找到任何配置，会尝试从`Apollo.DataCenter`指定的集群加载配置
     * 如果还是没找到，会从默认的集群（`default`）加载
 
 2. 如果只指定了`Apollo.Cluster`：
     * 我们会首先尝试从`Apollo.Cluster`指定的集群加载配置
     * 如果没找到，会从默认的集群（`default`）加载
 
-3. 如果只指定了`idc`：
-    * 我们会首先尝试从`idc`指定的集群加载配置
+3. 如果只指定了`Apollo.DataCenter`：
+    * 我们会首先尝试从`Apollo.DataCenter`指定的集群加载配置
     * 如果没找到，会从默认的集群（`default`）加载
 
-4. 如果`Apollo.Cluster`和`idc`都没有指定：
+4. 如果`Apollo.Cluster`和`Apollo.DataCenter`都没有指定：
     * 我们会从默认的集群（`default`）加载配置
+
+## 1.3 使用非Properies格式的namespace
+
+内部使用namespace的后缀来判断namespace类型，比如application.json时，会使用json格式来解析数据，内部默认实现了json和xml两种格式，可覆盖，其他格式需要自行实现。
+
+1. 实现IConfigAdapter或者继承ContentConfigAdapter
+2. 使用`ConfigAdapterRegister.AddAdapter`注册实现的类的实例（Properties不能被覆盖）
+
+## 1.4 .net core风格key支持
+
+1. Apollo.XXX => Apollo:XXX
+2. Apollo.{ENV}.Meta => Apollo:Meta:{ENV}
+
+> 优先级低于原来的方式，具体可以参考[Demo](https://github.com/ctripcorp/apollo.net/tree/dotnet-core/Apollo.ConfigurationManager.Demo)或者[Tests](https://github.com/ctripcorp/apollo.net/tree/dotnet-core/Apollo.ConfigurationManager.Tests)
 
 # 二、引入方式
 
@@ -173,9 +187,8 @@ string value = config.GetProperty(someKey, someDefaultValue);
 ## 3.4 Demo
 
 apollo.net项目中有多个样例客户端的项目：
-* [Apollo.AspNet.Demo](https://github.com/ctripcorp/apollo.net/tree/dotnet-core/Apollo.AspNet.Demo)
-* [Apollo.ConfigurationBuilder.Demo](https://github.com/ctripcorp/apollo.net/tree/dotnet-core/Apollo.ConfigurationBuilder.Demo)
-* [Apollo.ConfigurationManager.Demo](https://github.com/ctripcorp/apollo.net/tree/dotnet-core/Apollo.ConfigurationManager.Demo)
+* [Apollo.AspNet.Demo](https://github.com/ctripcorp/apollo.net/tree/dotnet-core/Apollo.AspNet.Demo)（通过Web.config配置）
+* [Apollo.ConfigurationManager.Demo](https://github.com/ctripcorp/apollo.net/tree/dotnet-core/Apollo.ConfigurationManager.Demo)（通过环境变量配置）
 
 # 四、NETFramework 4.7.1+ ConfigurationBuilder支持
 

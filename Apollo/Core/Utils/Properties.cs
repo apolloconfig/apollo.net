@@ -1,46 +1,47 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
-using Newtonsoft.Json;
+using System.Text;
 
 namespace Com.Ctrip.Framework.Apollo.Core.Utils
 {
     public class Properties
     {
-        private Dictionary<string, string> _dict;
+        private readonly ConcurrentDictionary<string, string> _dict;
 
-        public Properties()
-        {
-            _dict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-        }
+        public Properties() => _dict = new ConcurrentDictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
         public Properties(IDictionary<string, string> dictionary)
         {
             if (dictionary == null)
-            {
-                _dict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-                return;
-            }
-            _dict = new Dictionary<string, string>(dictionary, StringComparer.OrdinalIgnoreCase);
+                _dict = new ConcurrentDictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            else
+                _dict = new ConcurrentDictionary<string, string>(dictionary, StringComparer.OrdinalIgnoreCase);
         }
 
         public Properties(Properties source)
         {
             if (source?._dict == null)
+                _dict = new ConcurrentDictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            else
+                _dict = new ConcurrentDictionary<string, string>(source._dict, StringComparer.OrdinalIgnoreCase);
+        }
+
+        public Properties(string filePath)
+        {
+            using (var file = new StreamReader(filePath, Encoding.UTF8))
+            using (var reader = new JsonTextReader(file))
             {
-                _dict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-                return;
+                _dict = new ConcurrentDictionary<string, string>(new JsonSerializer().Deserialize<IDictionary<string, string>>(reader), StringComparer.OrdinalIgnoreCase);
             }
-            _dict = new Dictionary<string, string>(source._dict, StringComparer.OrdinalIgnoreCase);
         }
 
         /// <summary>Key忽略大小写。StringComparer.OrdinalIgnoreCase</summary>
         public IDictionary<string, string> Source => _dict;
 
-        public bool ContainsKey(string key)
-        {
-            return _dict.ContainsKey(key);
-        }
+        public bool ContainsKey(string key) => _dict.ContainsKey(key);
 
         public string GetProperty(string key)
         {
@@ -48,41 +49,7 @@ namespace Com.Ctrip.Framework.Apollo.Core.Utils
             return result;
         }
 
-        public string GetProperty(string key, string defaultValue)
-        {
-            if (ContainsKey(key))
-            {
-                return GetProperty(key);
-            }
-            else
-            {
-                return defaultValue;
-            }
-        }
-
-        public void SetProperty(string key, string value)
-        {
-            if (!string.IsNullOrEmpty(key))
-            {
-                _dict[key] = value;
-            }
-        }
-
-        public ISet<string> GetPropertyNames()
-        {
-            return new HashSet<string>(_dict.Keys);
-        }
-
-        public void Load(string filePath)
-        {
-            using (var file = new StreamReader(filePath, System.Text.Encoding.UTF8))
-            using (var reader = new JsonTextReader(file))
-            {
-                var serializer = new JsonSerializer();
-                _dict = new Dictionary<string, string>(serializer.Deserialize<IDictionary<string, string>>(reader), StringComparer.OrdinalIgnoreCase);
-            }
-        }
-
+        public ISet<string> GetPropertyNames() => new HashSet<string>(_dict.Keys);
 
         public void Store(string filePath)
         {
@@ -130,6 +97,5 @@ namespace Com.Ctrip.Framework.Apollo.Core.Utils
         {
             return _dict.GetHashCode();
         }
-
     }
 }

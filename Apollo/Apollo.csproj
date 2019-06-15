@@ -1,53 +1,45 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
     <AssemblyName>Com.Ctrip.Framework.Apollo</AssemblyName>
-    <RootNamespace>Com.Ctrip.Framework.Apollo</RootNamespace>
+    <Description>携程Apollo客户端
 
-    <DebugType Condition="'$(TargetFramework)' != 'netstandard2.0'">full</DebugType>
-    <DebugType Condition="'$(TargetFramework)' == 'netstandard2.0'">portable</DebugType>
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <NoWarn>1591</NoWarn>
-    <GeneratePackageOnBuild Condition="'$(Configuration)'=='Release'">True</GeneratePackageOnBuild>
-    <Description>1.2.0: 重构日志功能，支持自定义日志输出
-1.2.1: 修复HttpClient默认超时错误的问题
-1.3.0: 优化初始化时不能连接上metaserver的等待时间
-1.3.1: 修复QueryString连接错误
-1.4.0: 修复issure #18、添加SourceLink、更新包
-1.5.0: 使用.ConfigureAwait(false)替代AsyncHelper来解决同步调用异步方法出现的死锁问题
-1.5.1: 添加MultiConfig，支持合并多个IConfig
-1.5.2: Apollo内部HttpClient允许使用自定义HttpMessageHandler，比如配置代理
-1.5.3: 支持配置ConfigServer来跳过meta service的服务发现</Description>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/ctripcorp/apollo.net/tree/dotnet-core</RepositoryUrl>
-    <PackageProjectUrl>$(RepositoryUrl)/Apollo</PackageProjectUrl>
-    <IncludeSymbols>True</IncludeSymbols>
-    <Version>1.5.3.0</Version>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\Apollo.snk</AssemblyOriginatorKeyFile>
-    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-    <PackageTags>apollo configcenter ctrip</PackageTags>
-    <PackageReleaseNotes>1.2.0: 添加ApolloConfigurationManager、key与apollo服务端一致，忽略大小写
-1.2.1: 修复ApolloOptions的Cluster未设置的情况下值错误的bug
-1.2.2: AddtNamespace应为AddNamespace
-1.2.3: AddNamespace方法默认不添加namespcace前缀
-1.3.0: 优化初始化时不能连接上metaserver的等待时间
-1.3.1: 修复QueryString连接错误
-1.4.0: 添加SourceLink、更新包
-1.5.0: 使用.ConfigureAwait(false)替代AsyncHelper来解决同步调用异步方法出现的死锁问题
-1.5.1: ApolloConfigurationManager支持多namespaces
-1.5.2: Apollo内部HttpClient允许使用自定义HttpMessageHandler，比如配置代理
-1.5.3: 添加缺少的.ConfigureAwait(false)
-1.5.4: 支持配置ConfigServer来跳过meta service的服务发现</PackageReleaseNotes>
+　　与Microsoft.Extensions.Configuration集成请使用Com.Ctrip.Framework.Apollo.Configuration包
+　　与System.Configuration.ConfigurationManager集成(.net 4.7.1及以后版本)请使用Com.Ctrip.Framework.Apollo.ConfigurationManager包
+　　直接使用ApolloConfigurationManager请使用Com.Ctrip.Framework.Apollo.Configuration或者Com.Ctrip.Framework.Apollo.ConfigurationManager
+
+2.0.0:
+    1. 添加json、xml等格式的namespace的支持
+    2. 重新设计IConfig，通过扩展方法实现更多功能
+    3. 重构日志，直接通过委托而不需要实现接口</Description>
+    <PackageProjectUrl>$(RepositoryUrl)/$(AssemblyName)</PackageProjectUrl>
+    <PackageReleaseNotes>2.0.0:
+    1. 添加json、xml等格式的namespace的支持
+    2. 重新设计IConfig，通过扩展方法实现更多功能
+    3. 重构日志，直接通过委托而不需要实现接口</PackageReleaseNotes>
+    <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
+    <Version>2.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ConfigureAwaitChecker.Analyzer" Version="3.*" Condition="'$(Configuration)' != 'Release'" PrivateAssets="All" />
-    <PackageReference Include="JetBrains.Annotations" Version="2018.*" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.DotNet.Analyzers.Compatibility" Version="0.2.12-alpha" Condition="'$(TargetFramework)' == 'netstandard2.0'" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-*" PrivateAssets="All" />
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>Com.Ctrip.Framework.Apollo.Configuration, PublicKey=002400000480000094000000060200000024000052534131000400000100010031b198cb1742fb12c699a60d820e6582ca8a8dbbd9383812f82bed299e06eab18931798fb14cc6ab80cda818032d15704f0e1c4aa5641b428f8a0decbfa1a30ab8d92efc7ec9cbd801f60c4b88b91c6acb704c20c6a061a7dae86601981164fb27be0c0beb3e6d5dbec1b83962a6d0b845ca09a52723237bd7083359b17830c0</_Parameter1>
+    </AssemblyAttribute>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>Com.Ctrip.Framework.Apollo.ConfigurationManager, PublicKey=002400000480000094000000060200000024000052534131000400000100010031b198cb1742fb12c699a60d820e6582ca8a8dbbd9383812f82bed299e06eab18931798fb14cc6ab80cda818032d15704f0e1c4aa5641b428f8a0decbfa1a30ab8d92efc7ec9cbd801f60c4b88b91c6acb704c20c6a061a7dae86601981164fb27be0c0beb3e6d5dbec1b83962a6d0b845ca09a52723237bd7083359b17830c0</_Parameter1>
+    </AssemblyAttribute>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>Apollo.Tests, PublicKey=002400000480000094000000060200000024000052534131000400000100010031b198cb1742fb12c699a60d820e6582ca8a8dbbd9383812f82bed299e06eab18931798fb14cc6ab80cda818032d15704f0e1c4aa5641b428f8a0decbfa1a30ab8d92efc7ec9cbd801f60c4b88b91c6acb704c20c6a061a7dae86601981164fb27be0c0beb3e6d5dbec1b83962a6d0b845ca09a52723237bd7083359b17830c0</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+
+    <PackageReference Include="Newtonsoft.Json" Version="6.*" Condition="'$(TargetFramework)' == 'net45'" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.*" Condition="'$(TargetFramework)' != 'net45'" />
 
     <Reference Include="System.Net.Http" Condition="'$(TargetFramework)' == 'net45'" />
   </ItemGroup>

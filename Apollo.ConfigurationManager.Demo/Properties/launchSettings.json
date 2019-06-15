@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "Apollo.ConfigurationManager.Demo": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "Apollo:AppId": "apollo-client",
+        "Apollo:MetaServer": "http://106.12.25.204:8080/"
+      }
+    }
+  }
+}

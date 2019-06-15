@@ -1,9 +1,9 @@
-[Apollo配置中心](https://github.com/ctripcorp/apollo)的.Net客户端，更多关于Apollo配置中心的介绍，可以查看[Apollo配置中心Wiki](https://github.com/ctripcorp/apollo/wiki)。
+﻿[Apollo配置中心](https://github.com/ctripcorp/apollo)的.Net客户端，更多关于Apollo配置中心的介绍，可以查看[Apollo配置中心Wiki](https://github.com/ctripcorp/apollo/wiki)。
 
 # 一、准备工作
 
-1. 与Microsoft.Extensions.Configuration集成请参考[Apollo.Configuration](https://github.com/ctripcorp/apollo.net/blob/dotnet-core/Apollo.Configuration/README.md)
-2. 与System.Configuration.ConfigurationManager集成(.net 4.7.1及以后版本)或直接使用ApolloConfigManagerManager请参考[Apollo.ConfigurationManager](https://github.com/ctripcorp/apollo.net/blob/dotnet-core/Apollo.ConfigurationManager/README.md)
+1. 与[Microsoft.Extensions.Configuration](https://docs.microsoft.com/zh-cn/aspnet/core/fundamentals/configuration/)集成请参考[Apollo.Configuration](https://github.com/ctripcorp/apollo.net/blob/dotnet-core/Apollo.Configuration/README.md)
+2. 与[System.Configuration.ConfigurationManager](https://docs.microsoft.com/zh-cn/dotnet/api/system.configuration.configurationbuilder)集成(.net 4.7.1及以后版本)或直接使用ApolloConfigManagerManager请参考[Apollo.ConfigurationManager](https://github.com/ctripcorp/apollo.net/blob/dotnet-core/Apollo.ConfigurationManager/README.md)
 
 # 二、日志输出
 
@@ -29,3 +29,7 @@
 当开发环境无法连接Apollo服务器的时候，会降级为读取本地配置文件，请先在普通模式下使用Apollo，这样Apollo会自动创建该目录并在目录下生成配置文件。
 
 > Apollo不会实时监测文件内容是否有变化，所以如果修改了配置，需要重启应用生效。
+
+# 五、v2更新日志
+
+[v2](https://github.com/ctripcorp/apollo.net/releases/tag/v2.0.0)
