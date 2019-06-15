@@ -55,7 +55,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             ScheduleLongPollingRefresh();
         }
 
-        public override Properties GetRawConfig()
+        public override Properties GetConfig()
         {
             if (_syncException != null) _syncException.Throw();
 

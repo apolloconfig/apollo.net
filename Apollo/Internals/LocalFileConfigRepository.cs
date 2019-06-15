@@ -1,5 +1,6 @@
 ﻿using Com.Ctrip.Framework.Apollo.Core;
 using Com.Ctrip.Framework.Apollo.Core.Utils;
+using Com.Ctrip.Framework.Apollo.Enums;
 using Com.Ctrip.Framework.Apollo.Exceptions;
 using Com.Ctrip.Framework.Apollo.Logging;
 using Com.Ctrip.Framework.Apollo.Util;
@@ -20,12 +21,17 @@ namespace Com.Ctrip.Framework.Apollo.Internals
         private readonly IApolloOptions _options;
         private readonly IConfigRepository _upstream;
 
+        public ConfigFileFormat Format { get; } = ConfigFileFormat.Properties;
+
         public LocalFileConfigRepository(string @namespace,
             IApolloOptions configUtil,
             IConfigRepository upstream = null) : base(@namespace)
         {
             _upstream = upstream;
             _options = configUtil;
+
+            var ext = Path.GetExtension(@namespace);
+            if (ext.Length > 1 && Enum.TryParse(ext.Substring(1), true, out ConfigFileFormat format)) Format = format;
 
             PrepareConfigCacheDir();
         }
@@ -53,7 +59,14 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             }
         }
 
-        public override Properties GetRawConfig() => new Properties(_fileProperties);
+        public override Properties GetConfig()
+        {
+            var properties = new Properties(_fileProperties);
+
+            return Format != ConfigFileFormat.Properties && ConfigAdapterRegister.TryGetAdapter(Format, out var adapter)
+                ? adapter.GetProperties(properties)
+                : properties;
+        }
 
         bool _disposed;
         protected override void Dispose(bool disposing)
