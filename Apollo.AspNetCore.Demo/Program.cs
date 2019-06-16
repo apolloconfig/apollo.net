@@ -1,4 +1,5 @@
 ﻿using Com.Ctrip.Framework.Apollo;
+using Com.Ctrip.Framework.Apollo.ConfigAdapter;
 using Com.Ctrip.Framework.Apollo.Enums;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
@@ -8,7 +9,12 @@ namespace Apollo.AspNetCore.Demo
 {
     public class Program
     {
-        public static void Main(string[] args) => CreateWebHostBuilder(args).Build().Run();
+        public static void Main(string[] args)
+        {
+            YamlConfigAdapter.Register();
+
+            CreateWebHostBuilder(args).Build().Run();
+        }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
@@ -16,6 +22,8 @@ namespace Apollo.AspNetCore.Demo
                     .AddApollo(cotnext.Configuration.GetSection("apollo"))
                     .AddDefault(ConfigFileFormat.Xml)
                     .AddDefault(ConfigFileFormat.Json)
+                    .AddDefault(ConfigFileFormat.Yml)
+                    .AddDefault(ConfigFileFormat.Yaml)
                     .AddDefault())
                 .UseStartup<Startup>();
     }

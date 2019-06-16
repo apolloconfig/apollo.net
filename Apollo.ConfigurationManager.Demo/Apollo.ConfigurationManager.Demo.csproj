@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Apollo.ConfigAdapter.Yaml\Apollo.ConfigAdapter.Yaml.csproj" />
     <ProjectReference Include="..\Apollo.ConfigurationManager\Apollo.ConfigurationManager.csproj" />
   </ItemGroup>
 

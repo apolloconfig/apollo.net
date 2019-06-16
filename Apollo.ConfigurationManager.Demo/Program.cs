@@ -1,4 +1,5 @@
-﻿using Com.Ctrip.Framework.Apollo.Logging;
+﻿using Com.Ctrip.Framework.Apollo.ConfigAdapter;
+using Com.Ctrip.Framework.Apollo.Logging;
 using System;
 
 namespace Apollo.ConfigurationManager.Demo
@@ -8,6 +9,8 @@ namespace Apollo.ConfigurationManager.Demo
         private static void Main()
         {
             LogManager.UseConsoleLogging(LogLevel.Trace);
+
+            YamlConfigAdapter.Register();
 
             var demo = new ConfigurationManagerDemo();
 

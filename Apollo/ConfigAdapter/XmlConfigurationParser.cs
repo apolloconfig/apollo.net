@@ -75,8 +75,7 @@ namespace Com.Ctrip.Framework.Apollo.ConfigAdapter
                                 var key = ConfigurationPath.Combine(prefixStack.Reverse());
                                 if (data.ContainsKey(key))
                                 {
-                                    throw new FormatException(string.Format("A duplicate key '{0}' was found.{1}", key,
-                                        GetLineInfo(reader)));
+                                    throw new FormatException($"A duplicate key '{key}' was found.{GetLineInfo(reader)}");
                                 }
 
                                 data[key] = reader.Value;
@@ -90,8 +89,7 @@ namespace Com.Ctrip.Framework.Apollo.ConfigAdapter
                             break;
 
                         default:
-                            throw new FormatException(string.Format("Unsupported node type '{0}' was found.{1}", reader.NodeType,
-                                GetLineInfo(reader)));
+                            throw new FormatException($"Unsupported node type '{reader.NodeType}' was found.{GetLineInfo(reader)}");
                     }
                     preNodeType = reader.NodeType;
                     // If this element is a self-closing element,
@@ -122,8 +120,7 @@ namespace Com.Ctrip.Framework.Apollo.ConfigAdapter
         private static string GetLineInfo(XmlReader reader)
         {
             var lineInfo = reader as IXmlLineInfo;
-            return lineInfo == null ? string.Empty :
-                string.Format("Line {0}, position {1}.", lineInfo.LineNumber, lineInfo.LinePosition);
+            return lineInfo == null ? string.Empty : $"Line {lineInfo.LineNumber}, position {lineInfo.LinePosition}.";
         }
 
         private static void ProcessAttributes(XmlReader reader, Stack<string> prefixStack, IDictionary<string, string> data,
@@ -136,7 +133,7 @@ namespace Com.Ctrip.Framework.Apollo.ConfigAdapter
                 // If there is a namespace attached to current attribute
                 if (!string.IsNullOrEmpty(reader.NamespaceURI))
                 {
-                    throw new FormatException(string.Format("XML namespaces are not supported.{0}", GetLineInfo(reader)));
+                    throw new FormatException($"XML namespaces are not supported.{GetLineInfo(reader)}");
                 }
 
                 act(reader, prefixStack, data, writer);
@@ -177,7 +174,7 @@ namespace Com.Ctrip.Framework.Apollo.ConfigAdapter
             var key = ConfigurationPath.Combine(prefixStack.Reverse());
             if (data.ContainsKey(key))
             {
-                throw new FormatException(string.Format("A duplicate key '{0}' was found.{1}", key, GetLineInfo(reader)));
+                throw new FormatException($"A duplicate key '{key}' was found.{GetLineInfo(reader)}");
             }
 
             data[key] = reader.Value;

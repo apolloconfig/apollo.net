@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Com.Ctrip.Framework.Apollo.Core.Utils
 {
-    public class Properties
+    public class Properties : IEquatable<Properties>
     {
         private readonly ConcurrentDictionary<string, string> _dict;
 
@@ -60,15 +60,14 @@ namespace Com.Ctrip.Framework.Apollo.Core.Utils
             }
         }
 
-        public override bool Equals(object o)
+        public override bool Equals(object o) => o is Properties other ? Equals(other) : false;
+
+        public bool Equals(Properties other)
         {
-            if (o == null || !(o is Properties))
-            {
-                return false;
-            }
+            if (other == null) return false;
 
             IDictionary<string, string> source = _dict;
-            IDictionary<string, string> target = ((Properties)o)._dict;
+            IDictionary<string, string> target = other._dict;
 
             // early-exit checks
             if (null == target)
@@ -93,9 +92,6 @@ namespace Com.Ctrip.Framework.Apollo.Core.Utils
             return true;
         }
 
-        public override int GetHashCode()
-        {
-            return _dict.GetHashCode();
-        }
+        public override int GetHashCode() => _dict.GetHashCode();
     }
 }

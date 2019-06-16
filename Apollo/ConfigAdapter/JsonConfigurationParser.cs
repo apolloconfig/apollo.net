@@ -73,11 +73,7 @@ namespace Com.Ctrip.Framework.Apollo.ConfigAdapter
                     break;
 
                 default:
-                    throw new FormatException(string.Format("Unsupported JSON token '{0}' was found. Path '{1}', line {2} position {3}.",
-                        _reader.TokenType,
-                        _reader.Path,
-                        _reader.LineNumber,
-                        _reader.LinePosition));
+                    throw new FormatException($"Unsupported JSON token '{_reader.TokenType}' was found. Path '{_reader.Path}', line {_reader.LineNumber} position {_reader.LinePosition}.");
             }
         }
 
@@ -97,7 +93,7 @@ namespace Com.Ctrip.Framework.Apollo.ConfigAdapter
 
             if (_data.ContainsKey(key))
             {
-                throw new FormatException(string.Format("A duplicate key '{0}' was found.", key));
+                throw new FormatException($"A duplicate key '{key}' was found.");
             }
             _data[key] = data.ToString(CultureInfo.InvariantCulture);
         }

@@ -31,7 +31,7 @@ namespace Com.Ctrip.Framework.Apollo
             return GetProperties(content);
         }
 
-        public abstract Properties GetProperties(string content);
+        public abstract Properties GetProperties([NotNull]string content);
     }
 
     public static class ConfigAdapterRegister

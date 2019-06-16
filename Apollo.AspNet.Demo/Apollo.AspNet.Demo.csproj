@@ -63,6 +63,10 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Apollo.ConfigAdapter.Yaml\Apollo.ConfigAdapter.Yaml.csproj">
+      <Project>{da39fff7-0fc5-4f5b-8224-aa8e3026bbc0}</Project>
+      <Name>Apollo.ConfigAdapter.Yaml</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Apollo.ConfigurationManager\Apollo.ConfigurationManager.csproj">
       <Project>{ce700879-20dd-4fae-b431-884802b99a2d}</Project>
       <Name>Apollo.ConfigurationManager</Name>
