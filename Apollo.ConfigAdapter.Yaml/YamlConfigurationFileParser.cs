@@ -22,7 +22,10 @@ namespace Com.Ctrip.Framework.Apollo.ConfigAdapter
 
             if (yamlStream.Documents.Count > 0 && yamlStream.Documents[0].RootNode is YamlMappingNode mappingNode)
                 foreach (var node in mappingNode.Children)
-                    if (node.Key is YamlScalarNode ysn) VisitYamlNode(ysn.Value, node.Value);
+                    if (node.Key is YamlScalarNode ysn)
+                        VisitYamlNode(ysn.Value, node.Value);
+                    else
+                        throw UnsupportedKeyType(node.Key, _currentPath);
 
             return _data;
         }
@@ -41,9 +44,18 @@ namespace Com.Ctrip.Framework.Apollo.ConfigAdapter
                     VisitYamlSequenceNode(context, sequenceNode);
                     break;
                 default:
-                    throw new FormatException($"Unsupported YAML node type '{node.GetType().Name} was found. Path '{_currentPath}', line {node.Start.Line} position {node.Start.Column}.");
+                    throw UnsupportedNodeType(node, _currentPath);
             }
         }
+
+        private static Exception UnsupportedKeyType(YamlNode node, string path) =>
+            new FormatException($"Unsupported YAML key type '{node.GetType().Name} was found. Path '{path}', line {node.Start.Line} position {node.Start.Column}.");
+
+        private static Exception UnsupportedNodeType(YamlNode node, string path) =>
+            new FormatException($"Unsupported YAML node type '{node.GetType().Name} was found. Path '{path}', line {node.Start.Line} position {node.Start.Column}.");
+
+        private static Exception UnsupportedMergeKeys(YamlNode node, YamlNode parent, string path) =>
+            new FormatException($"Unsupported YAML merge keys '{node.GetType().Name} was found. Path '{path}', line {parent.Start.Line} position {parent.Start.Column}.");
 
         private void VisitYamlScalarNode(string context, YamlScalarNode scalarNode)
         {
@@ -60,8 +72,38 @@ namespace Com.Ctrip.Framework.Apollo.ConfigAdapter
         {
             EnterContext(context);
 
-            foreach (var node in mappingNode.Children)
-                if (node.Key is YamlScalarNode ysn) VisitYamlNode(ysn.Value, node.Value);
+            var dic = new Dictionary<string, YamlNode>();
+
+            void VisitMergeKeys(YamlMappingNode refer)
+            {
+                foreach (var node in refer.Children)
+                {
+                    if (!(node.Key is YamlScalarNode ysn)) throw UnsupportedKeyType(node.Key, _currentPath);
+
+                    if (ysn.Value == "<<")
+                        switch (node.Value)
+                        {
+                            case YamlMappingNode ymn:
+                                VisitMergeKeys(ymn);
+                                break;
+                            case YamlSequenceNode sequenceNode:
+                                foreach (var item in sequenceNode.Children)
+                                    if (item is YamlMappingNode ymn)
+                                        VisitMergeKeys(ymn);
+                                    else
+                                        throw UnsupportedMergeKeys(item, sequenceNode, _currentPath);
+                                break;
+                            default:
+                                throw UnsupportedMergeKeys(node.Value, node.Value, _currentPath);
+                        }
+                    else
+                        dic[ysn.Value] = node.Value;
+                }
+            }
+
+            VisitMergeKeys(mappingNode);
+
+            foreach (var node in dic) VisitYamlNode(node.Key, node.Value);
 
             ExitContext();
         }

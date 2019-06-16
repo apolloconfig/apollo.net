@@ -75,5 +75,33 @@ my:
             Assert.Equal("`", properties.Source["environments:dev:url5"]);
             Assert.Equal("", properties.Source["environments:dev:name"]);
         }
+
+        [Fact]
+        public void MergeKeysTest()
+        {
+            var properties = new YamlConfigAdapter().GetProperties(@"merge:
+  - &CENTER { x: 1, y: 2 }
+  - &LEFT { x: 0, y: 2 }
+  - &BIG { r: 10 }
+  - &SMALL { r: 1 }
+
+sample1:
+    <<: *CENTER
+    r: 10
+
+sample2:
+    << : [ *CENTER, *BIG ]
+    other: haha
+
+sample3:
+    << : [ *CENTER, *BIG ]
+    r: 100");
+
+            Assert.NotNull(properties);
+
+            Assert.Equal("1", properties.GetProperty("sample1:x"));
+            Assert.Equal("10", properties.GetProperty("sample2:r"));
+            Assert.Equal("100", properties.GetProperty("sample3:r"));
+        }
     }
 }
