@@ -12,7 +12,11 @@ namespace Apollo.ConfigurationManager.Demo
 
         public ConfigurationManagerDemo()
         {
-            config = ApolloConfigurationManager.GetConfig(ConfigConsts.NamespaceApplication + ".json", ConfigConsts.NamespaceApplication + ".xml", ConfigConsts.NamespaceApplication).GetAwaiter().GetResult();
+            config = ApolloConfigurationManager.GetConfig(ConfigConsts.NamespaceApplication + ".json",
+                ConfigConsts.NamespaceApplication + ".xml",
+                ConfigConsts.NamespaceApplication + ".yml",
+                ConfigConsts.NamespaceApplication + ".yaml",
+                ConfigConsts.NamespaceApplication).GetAwaiter().GetResult();
             config.ConfigChanged += OnChanged;
         }
 

@@ -12,6 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Apollo.ConfigAdapter.Yaml\Apollo.ConfigAdapter.Yaml.csproj" />
       <ProjectReference Include="..\Apollo.Configuration\Apollo.Configuration.csproj" />
     </ItemGroup>
 
