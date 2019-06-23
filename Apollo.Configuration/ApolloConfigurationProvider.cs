@@ -3,6 +3,7 @@ using Com.Ctrip.Framework.Apollo.Internals;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Com.Ctrip.Framework.Apollo
@@ -23,9 +24,7 @@ namespace Com.Ctrip.Framework.Apollo
 
         public override void Load()
         {
-            _initializeTask?.ConfigureAwait(false).GetAwaiter().GetResult();
-
-            _initializeTask = null;
+            Interlocked.Exchange(ref _initializeTask, null)?.ConfigureAwait(false).GetAwaiter().GetResult();
 
             SetData(_configRepository.GetConfig());
         }
