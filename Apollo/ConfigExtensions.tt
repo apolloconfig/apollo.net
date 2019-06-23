@@ -1,0 +1,35 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ output extension=".generated.cs" #>
+using Com.Ctrip.Framework.Apollo.Exceptions;
+using Com.Ctrip.Framework.Apollo.Logging;
+using JetBrains.Annotations;
+using System;
+
+namespace Com.Ctrip.Framework.Apollo
+{
+    public static partial class ConfigExtensions
+    {
+    <# foreach (var type in new [] { "int", "long", "short", "float", "double", "sbyte", "bool" })
+    { #>
+        /// <summary>
+        /// Return the property value with the given key, or
+        /// {@code defaultValue} if the key doesn't exist. </summary>
+        /// <param name="config"></param>
+        /// <param name="key"> the property name </param>
+        /// <param name="defaultValue"> the default value when key is not found or any error occurred </param>
+        /// <returns> the property value as <#= type #> </returns>
+        public static <#= type #>? GetProperty([NotNull]this IConfig config, string key, <#= type #>? defaultValue)
+        {
+            if (config == null) throw new ArgumentNullException(nameof(config));
+
+            if (!config.TryGetProperty(key, out var str) || str == null) return defaultValue;
+
+            if (<#= type #>.TryParse(str, out var value)) return value;
+
+            Logger().Warn(new ApolloConfigException($"GetProperty for {key} failed, raw value is '{str}', return default value {defaultValue}"));
+
+            return defaultValue;
+        }
+    <# } #>
+    }
+}

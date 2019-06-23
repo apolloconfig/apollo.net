@@ -10,9 +10,11 @@
 
 2.0.0: 支持通过Env读取metaserver</Description>
     <PackageProjectUrl>$(RepositoryUrl)/$(AssemblyName)</PackageProjectUrl>
-    <PackageReleaseNotes>2.0.0: 支持通过Env读取metaserver</PackageReleaseNotes>
+    <PackageReleaseNotes>2.0.0:
+    1. 支添加json、xml等格式的namespace的支持，通过扩展名识别格式
+    2. 支持通过Env读取metaserver</PackageReleaseNotes>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>2.0.0</Version>
+    <Version>2.0.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>

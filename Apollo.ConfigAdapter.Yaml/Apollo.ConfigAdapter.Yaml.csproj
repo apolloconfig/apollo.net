@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <AssemblyName>Com.Ctrip.Framework.Apollo.ConfigAdapter.Yaml</AssemblyName>
-    <Description>添加对yml和yaml格式的namespace支持，调用YamlConfigAdapter.Register()添加支持。</Description>
+    <Description>添加对yml和yaml格式的namespace支持，使用YamlConfigAdapter.Register()添加支持。</Description>
     <PackageProjectUrl>$(RepositoryUrl)/$(AssemblyName)</PackageProjectUrl>
-    <PackageReleaseNotes>添加对yml和yaml格式的namespace支持，调用YamlConfigAdapter.Register()添加支持。</PackageReleaseNotes>
+    <PackageReleaseNotes>添加对yml和yaml格式的namespace支持，使用YamlConfigAdapter.Register()添加支持。</PackageReleaseNotes>
     <PackageTags>$(PackageTags) yml yaml</PackageTags>
     <RootNamespace>Com.Ctrip.Framework.Apollo.ConfigAdapter</RootNamespace>
     <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
