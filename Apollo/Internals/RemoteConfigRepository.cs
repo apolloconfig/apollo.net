@@ -10,6 +10,7 @@ using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,7 +18,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 {
     public class RemoteConfigRepository : AbstractConfigRepository
     {
-        private static readonly ILogger Logger = LogManager.CreateLogger(typeof(RemoteConfigRepository));
+        private static readonly Func<Action<LogLevel, string, Exception>> Logger = () => LogManager.CreateLogger(typeof(RemoteConfigRepository));
         private static readonly TaskFactory ExecutorService = new TaskFactory(new LimitedConcurrencyLevelTaskScheduler(5));
 
         private readonly ConfigServiceLocator _serviceLocator;
@@ -25,10 +26,10 @@ namespace Com.Ctrip.Framework.Apollo.Internals
         private readonly IApolloOptions _options;
         private readonly RemoteConfigLongPollService _remoteConfigLongPollService;
 
-        private volatile ThreadSafe.AtomicReference<ApolloConfig> _configCache = new ThreadSafe.AtomicReference<ApolloConfig>(null);
-        private readonly ThreadSafe.AtomicReference<ServiceDto> _longPollServiceDto = new ThreadSafe.AtomicReference<ServiceDto>(null);
-        private readonly ThreadSafe.AtomicReference<ApolloNotificationMessages> _remoteMessages = new ThreadSafe.AtomicReference<ApolloNotificationMessages>(null);
-        private Exception _syncException;
+        private volatile ApolloConfig _configCache;
+        private volatile ServiceDto _longPollServiceDto;
+        private volatile ApolloNotificationMessages _remoteMessages;
+        private ExceptionDispatchInfo _syncException;
         private readonly Timer _timer;
 
         public RemoteConfigRepository(string @namespace,
@@ -56,10 +57,9 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
         public override Properties GetConfig()
         {
-            if (_syncException != null)
-                throw _syncException;
+            if (_syncException != null) _syncException.Throw();
 
-            return TransformApolloConfigToProperties(_configCache.ReadFullFence());
+            return TransformApolloConfigToProperties(_configCache);
         }
 
         private async void SchedulePeriodicRefresh(object _) => await SchedulePeriodicRefresh(false).ConfigureAwait(false);
@@ -68,7 +68,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
         {
             try
             {
-                Logger.Debug($"refresh config for namespace: {Namespace}");
+                Logger().Debug($"refresh config for namespace: {Namespace}");
 
                 await Sync(isFirst).ConfigureAwait(false);
 
@@ -76,22 +76,22 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             }
             catch (Exception ex)
             {
-                _syncException = ex;
+                _syncException = ExceptionDispatchInfo.Capture(ex);
 
-                Logger.Warn($"refresh config error for namespace: {Namespace}", ex);
+                Logger().Warn($"refresh config error for namespace: {Namespace}", ex);
             }
         }
 
         private async Task Sync(bool isFirst)
         {
-            var previous = _configCache.ReadFullFence();
+            var previous = _configCache;
             var current = await LoadApolloConfig(isFirst).ConfigureAwait(false);
 
             //reference equals means HTTP 304
             if (!ReferenceEquals(previous, current))
             {
-                Logger.Debug("Remote Config refreshed!");
-                _configCache.WriteFullFence(current);
+                Logger().Debug("Remote Config refreshed!");
+                _configCache = current;
                 FireRepositoryChange(Namespace, GetConfig());
             }
         }
@@ -112,17 +112,19 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             {
                 IList<ServiceDto> randomConfigServices = new List<ServiceDto>(configServices);
                 randomConfigServices.Shuffle();
+
                 //Access the server which notifies the client first
-                if (_longPollServiceDto.ReadFullFence() != null)
+                var longPollServiceDto = Interlocked.Exchange(ref _longPollServiceDto, null);
+                if (longPollServiceDto != null)
                 {
-                    randomConfigServices.Insert(0, _longPollServiceDto.AtomicExchange(null));
+                    randomConfigServices.Insert(0, longPollServiceDto);
                 }
 
                 foreach (var configService in randomConfigServices)
                 {
-                    url = AssembleQueryConfigUrl(configService.HomepageUrl, appId, cluster, Namespace, dataCenter, _remoteMessages.ReadFullFence(), _configCache.ReadFullFence());
+                    url = AssembleQueryConfigUrl(configService.HomepageUrl, appId, cluster, Namespace, dataCenter, _remoteMessages, _configCache);
 
-                    Logger.Debug($"Loading config from {url}");
+                    Logger().Debug($"Loading config from {url}");
 
                     try
                     {
@@ -130,13 +132,13 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
                         if (response.StatusCode == HttpStatusCode.NotModified)
                         {
-                            Logger.Debug("Config server responds with 304 HTTP status code.");
-                            return _configCache.ReadFullFence();
+                            Logger().Debug("Config server responds with 304 HTTP status code.");
+                            return _configCache;
                         }
 
                         var result = response.Body;
 
-                        Logger.Debug(
+                        Logger().Debug(
                             $"Loaded config for {Namespace}: {result?.Configurations?.Count ?? 0}");
 
                         return result;
@@ -153,12 +155,12 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                             statusCodeException = new ApolloConfigStatusCodeException(ex.StatusCode, message);
                         }
 
-                        Logger.Warn(statusCodeException);
+                        Logger().Warn(statusCodeException);
                         exception = statusCodeException;
                     }
                     catch (Exception ex)
                     {
-                        Logger.Warn(ex);
+                        Logger().Warn(ex);
                         exception = ex;
                     }
                 }
@@ -235,8 +237,8 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
         public void OnLongPollNotified(ServiceDto longPollNotifiedServiceDto, ApolloNotificationMessages remoteMessages)
         {
-            _longPollServiceDto.WriteFullFence(longPollNotifiedServiceDto);
-            _remoteMessages.WriteFullFence(remoteMessages);
+            _longPollServiceDto = longPollNotifiedServiceDto;
+            _remoteMessages = remoteMessages;
 
             ExecutorService.StartNew(async () =>
             {
@@ -246,7 +248,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                 }
                 catch (Exception ex)
                 {
-                    Logger.Warn($"Sync config failed, will retry. Repository {GetType()}, reason: {ex.GetDetailMessage()}");
+                    Logger().Warn($"Sync config failed, will retry. Repository {GetType()}, reason: {ex.GetDetailMessage()}");
                 }
             });
         }
@@ -259,6 +261,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
             if (disposing)
             {
+                _remoteConfigLongPollService.Dispose();
             }
 
             //释放非托管资源

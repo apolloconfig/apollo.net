@@ -1,11 +1,10 @@
 ﻿using Com.Ctrip.Framework.Apollo;
+using Com.Ctrip.Framework.Apollo.Enums;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
-using System.Net;
-using System.Net.Http;
 
 namespace Apollo.Configuration.Demo
 {
@@ -26,7 +25,12 @@ namespace Apollo.Configuration.Demo
             //    Proxy = new WebProxy(new Uri("http://127.0.0.1:8888"))
             //};
 
-            builder.AddApollo(builder.Build().GetSection("apollo")).AddDefault();
+            builder.AddApollo(builder.Build().GetSection("apollo"))
+                .AddDefault(ConfigFileFormat.Xml)
+                .AddDefault(ConfigFileFormat.Json)
+                .AddDefault(ConfigFileFormat.Yml)
+                .AddDefault(ConfigFileFormat.Yaml)
+                .AddDefault();
 
             Configuration = builder.Build();
         }

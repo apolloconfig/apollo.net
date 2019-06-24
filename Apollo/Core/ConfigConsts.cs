@@ -7,6 +7,7 @@ namespace Com.Ctrip.Framework.Apollo.Core
         public const string NamespaceApplication = "application";
         public const string ClusterNameDefault = "default";
         public const string ClusterNamespaceSeparator = "+";
+        public const string ConfigFileContentKey = "content";
         public const string NoAppidPlaceholder = "ApolloNoAppIdPlaceHolder";
         public const string DefaultMetaServerUrl = "http://localhost:8080";
 

@@ -1,14 +1,16 @@
 ﻿using Com.Ctrip.Framework.Apollo.Core.Utils;
+using Com.Ctrip.Framework.Apollo.Enums;
 using Com.Ctrip.Framework.Apollo.Logging;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Com.Ctrip.Framework.Apollo.Internals
 {
     public abstract class AbstractConfigRepository : IConfigRepository
     {
-        private static readonly ILogger Logger = LogManager.CreateLogger(typeof(AbstractConfigRepository));
+        private static readonly Func<Action<LogLevel, string, Exception>> Logger = () => LogManager.CreateLogger(typeof(AbstractConfigRepository));
 
         private readonly List<IRepositoryChangeListener> _listeners = new List<IRepositoryChangeListener>();
         public string Namespace { get; }
@@ -45,10 +47,11 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                     }
                     catch (Exception ex)
                     {
-                        Logger.Error($"Failed to invoke repository change listener {listener.GetType()}", ex);
+                        Logger().Error($"Failed to invoke repository change listener {listener.GetType()}", ex);
                     }
                 }
         }
+
         #region Dispose
         public void Dispose()
         {

@@ -3,6 +3,7 @@ using Com.Ctrip.Framework.Apollo.Internals;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Com.Ctrip.Framework.Apollo
@@ -11,20 +12,19 @@ namespace Com.Ctrip.Framework.Apollo
     {
         protected readonly string _sectionKey;
         private readonly IConfigRepository _configRepository;
-        private readonly Task _initializeTask;
+        private Task _initializeTask;
 
         public ApolloConfigurationProvider(string sectionKey, IConfigRepository configRepository)
         {
             _sectionKey = sectionKey;
             _configRepository = configRepository;
+            _configRepository.AddChangeListener(this);
             _initializeTask = _configRepository.Initialize();
         }
 
         public override void Load()
         {
-            _initializeTask.ConfigureAwait(false).GetAwaiter().GetResult();
-
-            _configRepository.AddChangeListener(this);
+            Interlocked.Exchange(ref _initializeTask, null)?.ConfigureAwait(false).GetAwaiter().GetResult();
 
             SetData(_configRepository.GetConfig());
         }

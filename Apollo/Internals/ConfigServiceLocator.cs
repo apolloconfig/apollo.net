@@ -1,6 +1,5 @@
 ﻿using Com.Ctrip.Framework.Apollo.Core;
 using Com.Ctrip.Framework.Apollo.Core.Dto;
-using Com.Ctrip.Framework.Apollo.Core.Utils;
 using Com.Ctrip.Framework.Apollo.Exceptions;
 using Com.Ctrip.Framework.Apollo.Logging;
 using Com.Ctrip.Framework.Apollo.Util;
@@ -14,12 +13,12 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 {
     public class ConfigServiceLocator : IDisposable
     {
-        private static readonly ILogger Logger = LogManager.CreateLogger(typeof(ConfigServiceLocator));
+        private static readonly Func<Action<LogLevel, string, Exception>> Logger = () => LogManager.CreateLogger(typeof(ConfigServiceLocator));
 
         private readonly HttpUtil _httpUtil;
 
         private readonly IApolloOptions _options;
-        private readonly ThreadSafe.AtomicReference<IList<ServiceDto>> _configServices;
+        private volatile IList<ServiceDto> _configServices = new List<ServiceDto>();
         private Task _updateConfigServicesTask;
         private readonly Timer _timer;
 
@@ -27,14 +26,13 @@ namespace Com.Ctrip.Framework.Apollo.Internals
         {
             _httpUtil = httpUtil;
             _options = configUtil;
-            _configServices = new ThreadSafe.AtomicReference<IList<ServiceDto>>(new List<ServiceDto>());
 
             var serviceDtos = getCustomizedConfigService(configUtil);
 
             if (serviceDtos == null)
                 _timer = new Timer(SchedulePeriodicRefresh, null, 0, _options.RefreshInterval);
             else
-                _configServices.WriteFullFence(serviceDtos);
+                _configServices = serviceDtos;
         }
 
         private List<ServiceDto> getCustomizedConfigService(IApolloOptions configUtil)
@@ -65,11 +63,11 @@ namespace Com.Ctrip.Framework.Apollo.Internals
         /// <returns> the services dto </returns>
         public async Task<IList<ServiceDto>> GetConfigServices()
         {
-            var services = _configServices.ReadFullFence();
+            var services = _configServices;
             if (services.Count == 0)
                 await UpdateConfigServices().ConfigureAwait(false);
 
-            services = _configServices.ReadFullFence();
+            services = _configServices;
             if (services.Count == 0)
                 throw new ApolloConfigException("No available config service");
 
@@ -80,13 +78,13 @@ namespace Com.Ctrip.Framework.Apollo.Internals
         {
             try
             {
-                Logger.Debug("refresh config services");
+                Logger().Debug("refresh config services");
 
                 await UpdateConfigServices().ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-                Logger.Warn(ex);
+                Logger().Warn(ex);
             }
         }
 
@@ -118,12 +116,12 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                         continue;
                     }
 
-                    _configServices.WriteFullFence(services);
+                    _configServices = services;
                     return;
                 }
                 catch (Exception ex)
                 {
-                    Logger.Warn(ex);
+                    Logger().Warn(ex);
                     exception = ex;
                 }
             }

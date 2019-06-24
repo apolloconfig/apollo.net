@@ -15,17 +15,16 @@ namespace Com.Ctrip.Framework.Apollo.Util
 {
     public class ConfigUtil : IApolloOptions
     {
-        internal static NameValueCollection AppSettings { get; set; }
+        public static NameValueCollection AppSettings { get; set; }
         private static Func<HttpMessageHandler> _httpMessageHandlerFactory;
 
-        private static readonly ILogger Logger = LogManager.CreateLogger(typeof(ConfigUtil));
+        private static readonly Func<Action<LogLevel, string, Exception>> Logger = () => LogManager.CreateLogger(typeof(ConfigUtil));
         private int _refreshInterval = 5 * 60 * 1000; //5 minutes
         private int _timeout = 5000; //5 seconds, c# has no connectTimeout but response timeout
 
         public ConfigUtil()
         {
-            if (AppSettings == null)
-                AppSettings = ConfigurationManager.AppSettings;
+            if (AppSettings == null) AppSettings = ConfigurationManager.AppSettings;
 
             InitRefreshInterval();
             InitTimeout();
@@ -38,7 +37,18 @@ namespace Com.Ctrip.Framework.Apollo.Util
         /// <returns> the value or null if not found </returns>
         public static string GetAppConfig(string key)
         {
-            var value = AppSettings["Apollo." + key];
+            var key1 = "Apollo." + key;
+            var key2 = "Apollo:" + key;
+
+            var value = AppSettings[key1];
+            if (string.IsNullOrEmpty(value))
+                value = AppSettings[key2];
+
+            if (string.IsNullOrEmpty(value))
+                value = Environment.GetEnvironmentVariable(key1);
+
+            if (string.IsNullOrEmpty(value))
+                value = Environment.GetEnvironmentVariable(key2);
 
             return string.IsNullOrEmpty(value) ? null : value;
         }
@@ -55,7 +65,7 @@ namespace Com.Ctrip.Framework.Apollo.Util
                 if (string.IsNullOrWhiteSpace(appId))
                 {
                     appId = ConfigConsts.NoAppidPlaceholder;
-                    Logger.Warn("Apollo.AppId is not set, apollo will only load public namespace configurations!");
+                    Logger().Warn("Apollo.AppId is not set, apollo will only load public namespace configurations!");
                 }
 
                 return appId;
@@ -67,8 +77,6 @@ namespace Com.Ctrip.Framework.Apollo.Util
         /// </summary>
         /// <returns> the current data center, null if there is no such info. </returns>
         public string DataCenter => GetAppConfig("DataCenter");
-
-        public string SubEnv => GetAppConfig("SubEnv");
 
         private void InitCluster()
         {
@@ -110,7 +118,7 @@ namespace Com.Ctrip.Framework.Apollo.Util
 
             _timeout = 5000;
 
-            Logger.Error($"Config for Apollo.Timeout is invalid: {customizedTimeout}");
+            Logger().Error($"Config for Apollo.Timeout is invalid: {customizedTimeout}");
         }
 
         public int Timeout => _timeout;
@@ -126,7 +134,7 @@ namespace Com.Ctrip.Framework.Apollo.Util
 
             _refreshInterval = 5 * 60 * 1000;
 
-            Logger.Error($"Config for Apollo.RefreshInterval is invalid: {customizedRefreshInterval}");
+            Logger().Error($"Config for Apollo.RefreshInterval is invalid: {customizedRefreshInterval}");
         }
 
         public int RefreshInterval => _refreshInterval;

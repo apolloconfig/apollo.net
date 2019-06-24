@@ -1,47 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>Com.Ctrip.Framework.Apollo</RootNamespace>
     <AssemblyName>Com.Ctrip.Framework.Apollo.Configuration</AssemblyName>
-
-    <DebugType Condition="'$(TargetFramework)' != 'netstandard2.0'">full</DebugType>
-    <DebugType Condition="'$(TargetFramework)' == 'netstandard2.0'">portable</DebugType>
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <NoWarn>1591</NoWarn>
-    <GeneratePackageOnBuild Condition="'$(Configuration)'=='Release'">True</GeneratePackageOnBuild>
     <Description>携程Apollo客户端
 
 　　与Microsoft.Extensions.Configuration集成请使用Com.Ctrip.Framework.Apollo.Configuration包
 　　与System.Configuration.ConfigurationManager集成(.net 4.7.1及以后版本)请使用Com.Ctrip.Framework.Apollo.ConfigurationManager包
-　　直接使用ApolloConfigurationManager请使用Com.Ctrip.Framework.Apollo.Configuration或者Com.Ctrip.Framework.Apollo.ConfigurationManager</Description>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/ctripcorp/apollo.net/tree/dotnet-core</RepositoryUrl>
-    <PackageProjectUrl>$(RepositoryUrl)/Apollo.Configuration</PackageProjectUrl>
-    <IncludeSymbols>True</IncludeSymbols>
-    <Version>1.5.4.0</Version>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\Apollo.snk</AssemblyOriginatorKeyFile>
-    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-    <PackageTags>apollo configcenter ctrip</PackageTags>
-    <PackageReleaseNotes>1.2.0: 添加ApolloConfigurationManager、key与apollo服务端一致，忽略大小写
-1.2.1: 修复ApolloOptions的Cluster未设置的情况下值错误的bug
-1.2.2: AddtNamespace应为AddNamespace
-1.2.3: AddNamespace方法默认不添加namespcace前缀
-1.3.0: 优化初始化时不能连接上metaserver的等待时间
-1.3.1: 修复QueryString连接错误
-1.4.0: 添加SourceLink、更新包
-1.5.0: 使用.ConfigureAwait(false)替代AsyncHelper来解决同步调用异步方法出现的死锁问题
-1.5.1: ApolloConfigurationManager支持多namespaces
-1.5.2: Apollo内部HttpClient允许使用自定义HttpMessageHandler，比如配置代理
-1.5.3: 添加缺少的.ConfigureAwait(false)</PackageReleaseNotes>
+　　直接使用ApolloConfigurationManager请使用Com.Ctrip.Framework.Apollo.Configuration或者Com.Ctrip.Framework.Apollo.ConfigurationManager
+
+2.0.0: 支持通过Env读取metaserver</Description>
+    <PackageProjectUrl>$(RepositoryUrl)/$(AssemblyName)</PackageProjectUrl>
+    <PackageReleaseNotes>2.0.0:
+    1. 支添加json、xml等格式的namespace的支持，通过扩展名识别格式
+    2. 支持通过Env读取metaserver</PackageReleaseNotes>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Version>2.0.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Apollo\Apollo.csproj" />
-    <PackageReference Include="ConfigureAwaitChecker.Analyzer" Version="3.*" Condition="'$(Configuration)' != 'Release'" PrivateAssets="All" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="2.1.1" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-*" PrivateAssets="All" />
   </ItemGroup>
 
 </Project>
