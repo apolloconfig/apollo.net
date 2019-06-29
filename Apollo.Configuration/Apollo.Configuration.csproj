@@ -11,13 +11,13 @@
 2.0.1:
     1. 过滤重复的Namespace（后面添加的为准）
 2.0.0:
-    1. 支添加json、xml等格式的namespace的支持，通过扩展名识别格式
+    1. 支持添加namespace时指定格式
     2. 支持通过Env读取metaserver</Description>
     <PackageProjectUrl>$(RepositoryUrl)/$(AssemblyName)</PackageProjectUrl>
     <PackageReleaseNotes>2.0.1:
     1. 过滤重复的Namespace（后面添加的为准）
 2.0.0:
-    1. 支添加json、xml等格式的namespace的支持，通过扩展名识别格式
+    1. 支持添加namespace时指定格式
     2. 支持通过Env读取metaserver</PackageReleaseNotes>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Version>2.0.1</Version>
