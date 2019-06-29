@@ -2,27 +2,25 @@
 
   <PropertyGroup>
     <AssemblyName>Com.Ctrip.Framework.Apollo</AssemblyName>
+    <PackageReleaseNotes>2.0.2:
+    1. 修复当配置发布后，非Properties格式的namespace可能不能获取到配置的问题
+    2. IConfig事件触发失败的BUG
+2.0.1:
+    1. 修复并发时的一个NullReferenceException
+2.0.0:
+    1. 添加json、xml等格式的namespace的支持，通过扩展名识别格式
+    2. 重新设计IConfig，通过扩展方法实现更多功能
+    3. 重构日志，直接通过委托而不需要实现接口</PackageReleaseNotes>
     <Description>携程Apollo客户端
 
 　　与Microsoft.Extensions.Configuration集成请使用Com.Ctrip.Framework.Apollo.Configuration包
 　　与System.Configuration.ConfigurationManager集成(.net 4.7.1及以后版本)请使用Com.Ctrip.Framework.Apollo.ConfigurationManager包
 　　直接使用ApolloConfigurationManager请使用Com.Ctrip.Framework.Apollo.Configuration或者Com.Ctrip.Framework.Apollo.ConfigurationManager
 
-2.0.1:
-    1. 修复并发时的一个NullReferenceException
-2.0.0:
-    1. 添加json、xml等格式的namespace的支持，通过扩展名识别格式
-    2. 重新设计IConfig，通过扩展方法实现更多功能
-    3. 重构日志，直接通过委托而不需要实现接口</Description>
+$(PackageReleaseNotes)</Description>
     <PackageProjectUrl>$(RepositoryUrl)/$(AssemblyName)</PackageProjectUrl>
-    <PackageReleaseNotes>2.0.1:
-    1. 修复并发时的一个NullReferenceException
-2.0.0:
-    1. 添加json、xml等格式的namespace的支持，通过扩展名识别格式
-    2. 重新设计IConfig，通过扩展方法实现更多功能
-    3. 重构日志，直接通过委托而不需要实现接口</PackageReleaseNotes>
     <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
-    <Version>2.0.1</Version>
+    <Version>2.0.2</Version>
   </PropertyGroup>
 
   <ItemGroup>

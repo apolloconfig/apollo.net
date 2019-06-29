@@ -31,7 +31,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             _options = configUtil;
 
             var ext = Path.GetExtension(@namespace);
-            if (ext.Length > 1 && Enum.TryParse(ext.Substring(1), true, out ConfigFileFormat format)) Format = format;
+            if (ext != null && ext.Length > 1 && Enum.TryParse(ext.Substring(1), true, out ConfigFileFormat format)) Format = format;
 
             PrepareConfigCacheDir();
         }
@@ -85,8 +85,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
         private bool TrySyncFromUpstream()
         {
-            if (_upstream == null)
-                return false;
+            if (_upstream == null) return false;
 
             try
             {
@@ -109,15 +108,14 @@ namespace Com.Ctrip.Framework.Apollo.Internals
         {
             UpdateFileProperties(new Properties(newProperties));
 
-            FireRepositoryChange(namespaceName, newProperties);
+            FireRepositoryChange(namespaceName, GetConfig());
         }
 
         private void UpdateFileProperties(Properties newProperties)
         {
             lock (this)
             {
-                if (newProperties.Equals(_fileProperties))
-                    return;
+                if (newProperties.Equals(_fileProperties)) return;
 
                 _fileProperties = newProperties;
 

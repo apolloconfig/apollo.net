@@ -1,29 +1,27 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <AssemblyName>Com.Ctrip.Framework.Apollo.ConfigurationManager</AssemblyName>
+    <PackageReleaseNotes>2.0.2:
+    1. ApolloConfigurationManager标记为Obsolete
+2.0.1:
+    1. 过滤重复的Namespace
+2.0.0:
+    1. 添加json、xml等格式的namespace的支持，通过扩展名识别格式
+    2. 支持从环境变量读取apollo配置值
+    3. 添加对.net core风格key支持，优先级低于原来的key</PackageReleaseNotes>
     <Description>携程Apollo客户端
 
 　　与Microsoft.Extensions.Configuration集成请使用Com.Ctrip.Framework.Apollo.Configuration包
 　　与System.Configuration.ConfigurationManager集成(.net 4.7.1及以后版本)请使用Com.Ctrip.Framework.Apollo.ConfigurationManager包
 　　直接使用ApolloConfigurationManager请使用Com.Ctrip.Framework.Apollo.Configuration或者Com.Ctrip.Framework.Apollo.ConfigurationManager
 
-2.0.1:
-    1. 过滤重复的Namespace
-2.0.0:
-    1. 添加json、xml等格式的namespace的支持，通过扩展名识别格式
-    2. 支持从环境变量读取apollo配置值
-    3. 添加对.net core风格key支持，优先级低于原来的key</Description>
+$(PackageReleaseNotes)</Description>
     <PackageProjectUrl>$(RepositoryUrl)/$(AssemblyName)</PackageProjectUrl>
-    <PackageReleaseNotes>2.0.1:
-    1. 过滤重复的Namespace
-2.0.0:
-    1. 添加json、xml等格式的namespace的支持，通过扩展名识别格式
-    2. 支持从环境变量读取apollo配置值
-    3. 添加对.net core风格key支持，优先级低于原来的key</PackageReleaseNotes>
     <PackageTags>$(PackageTags) ConfigurationBuilder ConfigurationManager</PackageTags>
     <TargetFrameworks>net471;net45;netstandard2.0</TargetFrameworks>
-    <Version>2.0.1</Version>
+    <Version>2.0.2</Version>
   </PropertyGroup>
 
   <ItemGroup>

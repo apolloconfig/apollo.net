@@ -34,10 +34,10 @@ namespace Apollo.ConfigurationManager.Demo
         private void OnChanged(object sender, ConfigChangeEventArgs changeEvent)
         {
             Console.WriteLine("Changes for namespace {0}", changeEvent.Namespace);
-            foreach (var change in changeEvent.Changes)
+            foreach (var (key, value) in changeEvent.Changes)
             {
                 Console.WriteLine("Change - key: {0}, oldValue: {1}, newValue: {2}, changeType: {3}",
-                    change.Value.PropertyName, change.Value.OldValue, change.Value.NewValue, change.Value.ChangeType);
+                    value.PropertyName, value.OldValue, value.NewValue, value.ChangeType);
             }
         }
     }

@@ -28,12 +28,12 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             {
                 foreach (var @delegate in ConfigChanged.GetInvocationList())
                 {
-                    var handlerCopy = (Action<string, IReadOnlyDictionary<string, ConfigChange>>)@delegate;
+                    var handlerCopy = (ConfigChangeEvent)@delegate;
                     ExecutorService.StartNew(() =>
                     {
                         try
                         {
-                            handlerCopy(@namespace, actualChanges);
+                            handlerCopy(@namespace, new ConfigChangeEventArgs(@namespace, actualChanges));
                         }
                         catch (Exception ex)
                         {
@@ -59,7 +59,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             var previousKeys = previous.GetPropertyNames();
             var currentKeys = current.GetPropertyNames();
 
-            var commonKeys = previousKeys.Intersect(currentKeys);
+            var commonKeys = previousKeys.Intersect(currentKeys).ToArray();
             var newKeys = currentKeys.Except(commonKeys);
             var removedKeys = previousKeys.Except(commonKeys);
 
