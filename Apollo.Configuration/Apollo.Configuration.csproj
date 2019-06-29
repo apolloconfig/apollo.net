@@ -8,16 +8,26 @@
 　　与System.Configuration.ConfigurationManager集成(.net 4.7.1及以后版本)请使用Com.Ctrip.Framework.Apollo.ConfigurationManager包
 　　直接使用ApolloConfigurationManager请使用Com.Ctrip.Framework.Apollo.Configuration或者Com.Ctrip.Framework.Apollo.ConfigurationManager
 
-2.0.0: 支持通过Env读取metaserver</Description>
+2.0.1:
+    1. 过滤重复的Namespace（后面添加的为准）
+2.0.0:
+    1. 支添加json、xml等格式的namespace的支持，通过扩展名识别格式
+    2. 支持通过Env读取metaserver</Description>
     <PackageProjectUrl>$(RepositoryUrl)/$(AssemblyName)</PackageProjectUrl>
-    <PackageReleaseNotes>2.0.0:
+    <PackageReleaseNotes>2.0.1:
+    1. 过滤重复的Namespace（后面添加的为准）
+2.0.0:
     1. 支添加json、xml等格式的namespace的支持，通过扩展名识别格式
     2. 支持通过Env读取metaserver</PackageReleaseNotes>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>2.0.0.1</Version>
+    <Version>2.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>Apollo.Configuration.Tests, PublicKey=002400000480000094000000060200000024000052534131000400000100010031b198cb1742fb12c699a60d820e6582ca8a8dbbd9383812f82bed299e06eab18931798fb14cc6ab80cda818032d15704f0e1c4aa5641b428f8a0decbfa1a30ab8d92efc7ec9cbd801f60c4b88b91c6acb704c20c6a061a7dae86601981164fb27be0c0beb3e6d5dbec1b83962a6d0b845ca09a52723237bd7083359b17830c0</_Parameter1>
+    </AssemblyAttribute>
+
     <ProjectReference Include="..\Apollo\Apollo.csproj" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="2.1.1" />
   </ItemGroup>

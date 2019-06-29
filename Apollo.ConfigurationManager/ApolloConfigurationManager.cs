@@ -13,6 +13,11 @@ namespace Com.Ctrip.Framework.Apollo
     /// <summary>
     /// Entry point for client config use
     /// </summary>
+#if NET471
+    [Obsolete("不建议使用，推荐使用System.Configuration.ConfigurationBuilder + System.Configuration.ConfigurationManager")]
+#elif NETSTANDARD
+    [Obsolete("不建议使用，推荐安装包Com.Ctrip.Framework.Apollo.Configuration")]
+#endif
     public static class ApolloConfigurationManager
     {
         public static IConfigManager Manager { get; } = new DefaultConfigManager(new DefaultConfigRegistry(), new ConfigRepositoryFactory(new ConfigUtil()));
@@ -37,12 +42,7 @@ namespace Com.Ctrip.Framework.Apollo
         /// Get the config instance for the namespace. </summary>
         /// <param name="namespaces"> the namespaces of the config, order desc. </param>
         /// <returns> config instance </returns>
-        public static async Task<IConfig> GetConfig([NotNull]params string[] namespaces)
-        {
-            if (namespaces == null) throw new ArgumentNullException(nameof(namespaces));
-
-            return new MultiConfig(await Task.WhenAll(namespaces.Select(GetConfig)).ConfigureAwait(false));
-        }
+        public static Task<IConfig> GetConfig([NotNull] params string[] namespaces) => GetConfig((IEnumerable<string>)namespaces);
 
         /// <summary>
         /// Get the config instance for the namespace. </summary>
@@ -52,7 +52,7 @@ namespace Com.Ctrip.Framework.Apollo
         {
             if (namespaces == null) throw new ArgumentNullException(nameof(namespaces));
 
-            return new MultiConfig(await Task.WhenAll(namespaces.Select(GetConfig)).ConfigureAwait(false));
+            return new MultiConfig(await Task.WhenAll(namespaces.Reverse().Distinct().Select(GetConfig)).ConfigureAwait(false));
         }
     }
 }
