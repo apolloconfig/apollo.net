@@ -14,14 +14,19 @@ namespace Apollo.AspNet.Demo
         {
             app.Run(context =>
             {
-                context.Response.Headers["Content-Type"] = "text/html; charset=utf-8";
+                context.Response.StatusCode = 404;
 
                 var key = context.Request.Query["key"];
-                if (string.IsNullOrWhiteSpace(key))
-                    return Task.CompletedTask;
+                if (string.IsNullOrWhiteSpace(key)) return Task.CompletedTask;
 
-                var value = DateTime.Now.Second % 2 == 1 ? "ConfigurationManager: " + ConfigurationManager.AppSettings[key] : "Configuration: " + Global.Configuration[key];
-                return value == null ? Task.CompletedTask : context.Response.WriteAsync(value);
+                var useLegend = DateTime.Now.Second % 2 == 1;
+                var value = useLegend ? ConfigurationManager.AppSettings[key] : Global.Configuration[key];
+                if (string.IsNullOrWhiteSpace(value)) return Task.CompletedTask;
+
+                context.Response.StatusCode = 200;
+                context.Response.Headers["Content-Type"] = "text/html; charset=utf-8";
+
+                return context.Response.WriteAsync((useLegend ? "ConfigurationManager: " : "Configuration: ") + value);
             });
         }
     }

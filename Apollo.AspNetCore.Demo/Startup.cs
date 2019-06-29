@@ -23,12 +23,18 @@ namespace Apollo.AspNetCore.Demo
 
             app.Run((context) =>
             {
-                context.Response.Headers["Content-Type"] = "text/html; charset=utf-8";
+                context.Response.StatusCode = 404;
 
                 var key = context.Request.Query["key"];
-                return string.IsNullOrWhiteSpace(key)
-                    ? Task.CompletedTask
-                    : context.Response.WriteAsync(context.RequestServices.GetRequiredService<IConfiguration>()[key]);
+                if (string.IsNullOrWhiteSpace(key)) return Task.CompletedTask;
+
+                var value = context.RequestServices.GetRequiredService<IConfiguration>()[key];
+                if (string.IsNullOrWhiteSpace(value)) return Task.CompletedTask;
+
+                context.Response.StatusCode = 200;
+                context.Response.Headers["Content-Type"] = "text/html; charset=utf-8";
+
+                return context.Response.WriteAsync(value);
             });
         }
     }

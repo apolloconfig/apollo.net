@@ -157,7 +157,7 @@ Apollo支持配置按照集群划分，也就是说对于一个appId和一个环
         .UseStartup<Startup>()
 ```
 
-### 3.1.2 配置在环境变量或者参数中
+### 3.1.2 配置在环境变量或者参数中（建议运行在Docker中使用此方式）
 
 ``` diff
     WebHost.CreateDefaultBuilder(args)
@@ -175,8 +175,8 @@ sdk已经完美支持Microsoft.Extensions.Configuration，请参考[IOptionsMoni
 ## 3.3 Demo
 
 apollo.net项目中有多个样例客户端的项目：
-* [Apollo.AspNetCore.Demo](https://github.com/ctripcorp/apollo.net/tree/dotnet-core/Apollo.AspNetCore.Demo)
-* [Apollo.Configuration.Demo](https://github.com/ctripcorp/apollo.net/tree/dotnet-core/Apollo.Configuration.Demo)
+* [Apollo.AspNetCore.Demo](https://github.com/ctripcorp/apollo.net/tree/dotnet-core/Apollo.AspNetCore.Demo)（使用appsettings.json配置）
+* [Apollo.Configuration.Demo](https://github.com/ctripcorp/apollo.net/tree/dotnet-core/Apollo.Configuration.Demo)（使用环境变量配置）
 
 # 四、FAQ
 

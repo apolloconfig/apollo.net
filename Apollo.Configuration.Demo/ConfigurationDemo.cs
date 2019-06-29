@@ -15,7 +15,7 @@ namespace Apollo.Configuration.Demo
         {
             var builder = new ConfigurationBuilder();
 
-            builder.AddJsonFile("appsettings.json");
+            builder.AddEnvironmentVariables();
 
             var apollo = builder.Build().GetSection("apollo").Get<ApolloOptions>();
 
