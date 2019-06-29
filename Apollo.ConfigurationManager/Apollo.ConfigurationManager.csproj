@@ -9,7 +9,7 @@
 　　直接使用ApolloConfigurationManager请使用Com.Ctrip.Framework.Apollo.Configuration或者Com.Ctrip.Framework.Apollo.ConfigurationManager
 
 2.0.1:
-    1. 过滤重复的Namespace（后面添加的为准）
+    1. 过滤重复的Namespace
 2.0.0:
     1. 添加json、xml等格式的namespace的支持，通过扩展名识别格式
     2. 支持从环境变量读取apollo配置值
