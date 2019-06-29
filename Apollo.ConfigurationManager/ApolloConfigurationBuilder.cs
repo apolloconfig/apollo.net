@@ -45,12 +45,17 @@ namespace Com.Ctrip.Framework.Apollo
 
                 Task<IConfig> config;
                 if (Namespaces == null || Namespaces.Count == 0)
+#pragma warning disable 618
                     config = ApolloConfigurationManager.GetAppConfig();
+#pragma warning restore 618
                 else if (Namespaces.Count == 1)
+#pragma warning disable 618
                     config = ApolloConfigurationManager.GetConfig(Namespaces[0]);
+#pragma warning restore 618
                 else
+#pragma warning disable 618
                     config = ApolloConfigurationManager.GetConfig(Namespaces);
-
+#pragma warning restore 618
                 _config = config.ConfigureAwait(false).GetAwaiter().GetResult();
 
                 _config.ConfigChanged += Config_ConfigChanged;

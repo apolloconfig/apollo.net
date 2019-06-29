@@ -23,7 +23,7 @@
     3. 添加对.net core风格key支持，优先级低于原来的key</PackageReleaseNotes>
     <PackageTags>$(PackageTags) ConfigurationBuilder ConfigurationManager</PackageTags>
     <TargetFrameworks>net471;net45;netstandard2.0</TargetFrameworks>
-    <Version>2.0.0.1</Version>
+    <Version>2.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
