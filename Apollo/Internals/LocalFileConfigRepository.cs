@@ -45,8 +45,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                 _upstream.AddChangeListener(this);
 
                 //sync with upstream immediately
-                if (TrySyncFromUpstream())
-                    return;
+                if (TrySyncFromUpstream()) return;
             }
 
             try

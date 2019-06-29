@@ -1,5 +1,4 @@
-﻿using Com.Ctrip.Framework.Apollo.Model;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +28,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
         {
             if (configs == null) throw new ArgumentNullException(nameof(configs));
 
-            _configs = configs.Reverse().ToArray();
+            _configs = configs.ToArray();
         }
 
         public override bool TryGetProperty(string key, out string value)

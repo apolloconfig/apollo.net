@@ -13,6 +13,7 @@ using System.Net;
 using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace Com.Ctrip.Framework.Apollo.Internals
 {
@@ -52,12 +53,12 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
             _timer.Change(_options.RefreshInterval, _options.RefreshInterval);
 
-            ScheduleLongPollingRefresh();
+            _remoteConfigLongPollService.Submit(Namespace, this);
         }
 
         public override Properties GetConfig()
         {
-            if (_syncException != null) _syncException.Throw();
+            _syncException?.Throw();
 
             return TransformApolloConfigToProperties(_configCache);
         }
@@ -191,7 +192,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             //Looks like .Net will handle all the url encoding for me...
             var path = $"configs/{appId}/{cluster}/{namespaceName}";
             var uriBuilder = new UriBuilder(uri + path);
-            var query = new Dictionary<string, string>();
+            var query = HttpUtility.ParseQueryString("");
 
             if (previousConfig != null)
             {
@@ -214,7 +215,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                 query["messages"] = JsonConvert.SerializeObject(remoteMessages, JsonSettings);
             }
 
-            uriBuilder.Query = QueryUtils.Build(query);
+            uriBuilder.Query = query.ToString();
 
             return uriBuilder.ToString();
         }
@@ -228,11 +229,6 @@ namespace Com.Ctrip.Framework.Apollo.Internals
         private Properties TransformApolloConfigToProperties(ApolloConfig apolloConfig)
         {
             return apolloConfig == null ? new Properties() : new Properties(apolloConfig.Configurations);
-        }
-
-        private void ScheduleLongPollingRefresh()
-        {
-            _remoteConfigLongPollService.Submit(Namespace, this);
         }
 
         public void OnLongPollNotified(ServiceDto longPollNotifiedServiceDto, ApolloNotificationMessages remoteMessages)

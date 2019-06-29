@@ -2,12 +2,13 @@
 using Com.Ctrip.Framework.Apollo.Core.Dto;
 using Com.Ctrip.Framework.Apollo.Exceptions;
 using Com.Ctrip.Framework.Apollo.Logging;
-using Com.Ctrip.Framework.Apollo.Util;
 using Com.Ctrip.Framework.Apollo.Util.Http;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace Com.Ctrip.Framework.Apollo.Internals
 {
@@ -27,7 +28,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             _httpUtil = httpUtil;
             _options = configUtil;
 
-            var serviceDtos = getCustomizedConfigService(configUtil);
+            var serviceDtos = GetCustomizedConfigService(configUtil);
 
             if (serviceDtos == null)
                 _timer = new Timer(SchedulePeriodicRefresh, null, 0, _options.RefreshInterval);
@@ -35,27 +36,15 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                 _configServices = serviceDtos;
         }
 
-        private List<ServiceDto> getCustomizedConfigService(IApolloOptions configUtil)
-        {
-            if (configUtil.ConfigServer == null || configUtil.ConfigServer.Count < 1) return null;
-
-            var serviceDtos = new List<ServiceDto>(configUtil.ConfigServer.Count);
-
-            foreach (var configServiceUrl in configUtil.ConfigServer)
-            {
-                var serviceDTO = new ServiceDto
+        private IList<ServiceDto> GetCustomizedConfigService(IApolloOptions configUtil) =>
+            configUtil.ConfigServer?
+                .Select(configServiceUrl => new ServiceDto
                 {
                     HomepageUrl = configServiceUrl.Trim(),
+                    InstanceId = configServiceUrl.Trim(),
                     AppName = ConfigConsts.ConfigService
-                };
-
-                serviceDTO.InstanceId = serviceDTO.HomepageUrl;
-
-                serviceDtos.Add(serviceDTO);
-            }
-
-            return serviceDtos;
-        }
+                })
+                .ToArray();
 
         /// <summary>
         /// Get the config service info from remote meta server.
@@ -91,10 +80,11 @@ namespace Com.Ctrip.Framework.Apollo.Internals
         private Task UpdateConfigServices()
         {
             Task task;
-            if ((task = _updateConfigServicesTask) == null)
-                lock (this)
-                    if ((task = _updateConfigServicesTask) == null)
-                        task = _updateConfigServicesTask = UpdateConfigServices(3);
+            if ((task = _updateConfigServicesTask) != null) return task;
+
+            lock (this)
+                if ((task = _updateConfigServicesTask) == null)
+                    task = _updateConfigServicesTask = UpdateConfigServices(3);
 
             return task;
         }
@@ -111,12 +101,10 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                 {
                     var response = await _httpUtil.DoGetAsync<IList<ServiceDto>>(url, 2000).ConfigureAwait(false);
                     var services = response.Body;
-                    if (services == null || services.Count == 0)
-                    {
-                        continue;
-                    }
+                    if (services == null || services.Count == 0) continue;
 
                     _configServices = services;
+
                     return;
                 }
                 catch (Exception ex)
@@ -136,7 +124,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             var localIp = _options.LocalIp;
 
             var uriBuilder = new UriBuilder(domainName + "/services/config");
-            var query = new Dictionary<string, string>();
+            var query = HttpUtility.ParseQueryString("");
 
             query["appId"] = appId;
             if (!string.IsNullOrEmpty(localIp))
@@ -144,7 +132,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                 query["ip"] = localIp;
             }
 
-            uriBuilder.Query = QueryUtils.Build(query);
+            uriBuilder.Query = query.ToString();
 
             return uriBuilder.ToString();
         }
