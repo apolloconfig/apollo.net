@@ -31,17 +31,17 @@ namespace Com.Ctrip.Framework.Apollo
 
         protected virtual void SetData(Properties properties)
         {
-            if (string.IsNullOrEmpty(SectionKey) || properties.Source == null || properties.Source.Count == 0)
-                Data = properties.Source;
-            else
+            var data = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var key in properties.GetPropertyNames())
             {
-                var data = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-
-                foreach (var kv in properties.Source)
-                    data[$"{SectionKey}{ConfigurationPath.KeyDelimiter}{kv.Key}"] = kv.Value;
-
-                Data = data;
+                if (string.IsNullOrEmpty(SectionKey))
+                    data[key] = properties.GetProperty(key);
+                else
+                    data[$"{SectionKey}{ConfigurationPath.KeyDelimiter}{key}"] = properties.GetProperty(key);
             }
+
+            Data = data;
         }
 
         void IRepositoryChangeListener.OnRepositoryChange(string namespaceName, Properties newProperties)

@@ -62,10 +62,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                 var actualChanges = UpdateAndCalcConfigChanges(newConfigProperties);
 
                 //check double checked result
-                if (actualChanges.Count == 0)
-                {
-                    return;
-                }
+                if (actualChanges.Count == 0) return;
 
                 FireConfigChange(_namespace, actualChanges);
             }

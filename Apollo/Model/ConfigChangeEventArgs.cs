@@ -12,7 +12,7 @@ namespace Com.Ctrip.Framework.Apollo.Model
         /// Constructor. </summary>
         /// <param name="namespaceName"> the namespace of this change </param>
         /// <param name="changes"> the actual changes </param>
-        public ConfigChangeEventArgs(string namespaceName, IDictionary<string, ConfigChange> changes)
+        public ConfigChangeEventArgs(string namespaceName, IReadOnlyDictionary<string, ConfigChange> changes)
         {
             Namespace = namespaceName;
             Changes = changes;
@@ -21,7 +21,7 @@ namespace Com.Ctrip.Framework.Apollo.Model
         /// <summary>
         /// Get the keys changed. </summary>
         /// <returns> the list of the keys </returns>
-        public ICollection<string> ChangedKeys => Changes.Keys;
+        public IEnumerable<string> ChangedKeys => Changes.Keys;
 
         /// <summary>
         /// Get a specific change instance for the key specified. </summary>
@@ -44,6 +44,6 @@ namespace Com.Ctrip.Framework.Apollo.Model
         /// <returns> the namespace </returns>
         public string Namespace { get; }
 
-        public IDictionary<string, ConfigChange> Changes { get; private set; }
+        public IReadOnlyDictionary<string, ConfigChange> Changes { get; }
     }
 }

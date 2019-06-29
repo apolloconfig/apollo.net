@@ -42,7 +42,7 @@ namespace Apollo.Configuration.Demo
         public ConfigurationDemo()
         {
             config = Configuration;
-            anotherConfig = Configuration.GetSection("TEST1.test");
+            anotherConfig = Configuration.GetSection("a");
 
             var services = new ServiceCollection();
             services.AddOptions()

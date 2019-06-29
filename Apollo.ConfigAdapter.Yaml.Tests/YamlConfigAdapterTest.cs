@@ -68,12 +68,12 @@ my:
 
             Assert.Equal(6, properties.GetPropertyNames().Count);
 
-            Assert.Null(properties.Source["environments:dev:url"]);
-            Assert.Null(properties.Source["environments:dev:url2"]);
-            Assert.Null(properties.Source["environments:dev:url3"]);
-            Assert.Null(properties.Source["environments:dev:url4"]);
-            Assert.Equal("`", properties.Source["environments:dev:url5"]);
-            Assert.Equal("", properties.Source["environments:dev:name"]);
+            Assert.Null(properties.GetProperty("environments:dev:url"));
+            Assert.Null(properties.GetProperty("environments:dev:url2"));
+            Assert.Null(properties.GetProperty("environments:dev:url3"));
+            Assert.Null(properties.GetProperty("environments:dev:url4"));
+            Assert.Equal("`", properties.GetProperty("environments:dev:url5"));
+            Assert.Equal("", properties.GetProperty("environments:dev:name"));
         }
 
         [Fact]
