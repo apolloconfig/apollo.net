@@ -8,17 +8,21 @@
 　　与System.Configuration.ConfigurationManager集成(.net 4.7.1及以后版本)请使用Com.Ctrip.Framework.Apollo.ConfigurationManager包
 　　直接使用ApolloConfigurationManager请使用Com.Ctrip.Framework.Apollo.Configuration或者Com.Ctrip.Framework.Apollo.ConfigurationManager
 
+2.0.1:
+    1. 修复并发时的一个NullReferenceException
 2.0.0:
     1. 添加json、xml等格式的namespace的支持，通过扩展名识别格式
     2. 重新设计IConfig，通过扩展方法实现更多功能
     3. 重构日志，直接通过委托而不需要实现接口</Description>
     <PackageProjectUrl>$(RepositoryUrl)/$(AssemblyName)</PackageProjectUrl>
-    <PackageReleaseNotes>2.0.0:
-    1. 添加json、xml等格式的namespace的支持
+    <PackageReleaseNotes>2.0.1:
+    1. 修复一个并发错误
+2.0.0:
+    1. 添加json、xml等格式的namespace的支持，通过扩展名识别格式
     2. 重新设计IConfig，通过扩展方法实现更多功能
     3. 重构日志，直接通过委托而不需要实现接口</PackageReleaseNotes>
     <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
-    <Version>2.0.0.1</Version>
+    <Version>2.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -58,10 +62,14 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
 
-    <PackageReference Include="Newtonsoft.Json" Version="6.*" Condition="'$(TargetFramework)' == 'net45'" />
     <PackageReference Include="Newtonsoft.Json" Version="11.*" Condition="'$(TargetFramework)' != 'net45'" />
+  </ItemGroup>
 
-    <Reference Include="System.Net.Http" Condition="'$(TargetFramework)' == 'net45'" />
+  <ItemGroup Condition="'$(TargetFramework)' == 'net45'">
+    <PackageReference Include="Newtonsoft.Json" Version="6.*" />
+
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Web" />
   </ItemGroup>
 
 </Project>

@@ -15,6 +15,7 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace Com.Ctrip.Framework.Apollo.Internals
 {
@@ -48,30 +49,21 @@ namespace Com.Ctrip.Framework.Apollo.Internals
         {
             var remoteConfigRepositories = _longPollNamespaces.GetOrAdd(namespaceName, _ => new HashSet<RemoteConfigRepository>());
 
-            remoteConfigRepositories.Add(remoteConfigRepository);
+            lock (remoteConfigRepositories) remoteConfigRepositories.Add(remoteConfigRepository);
 
             _notifications.TryAdd(namespaceName, InitNotificationId);
 
-            if (_cts == null)
-                StartLongPolling();
+            if (_cts == null) StartLongPolling();
         }
 
 
         private void StartLongPolling()
         {
-            if (Interlocked.CompareExchange(ref _cts, new CancellationTokenSource(), null) != null)
-            {
-                //already started
-                return;
-            }
+            if (Interlocked.CompareExchange(ref _cts, new CancellationTokenSource(), null) != null) return;
 
             try
             {
-                var appId = _options.AppId;
-                var cluster = _options.Cluster;
-                var dataCenter = _options.DataCenter;
-
-                var unused = DoLongPollingRefresh(appId, cluster, dataCenter, _cts.Token);
+                var unused = DoLongPollingRefresh(_options.AppId, _options.Cluster, _options.DataCenter, _cts.Token);
             }
             catch (Exception ex)
             {
@@ -103,8 +95,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
                     var response = await _httpUtil.DoGetAsync<IList<ApolloConfigNotification>>(url, 600000).ConfigureAwait(false);
 
-                    Logger().Debug(
-                        $"Long polling response: {response.StatusCode}, url: {url}");
+                    Logger().Debug($"Long polling response: {response.StatusCode}, url: {url}");
                     if (response.StatusCode == HttpStatusCode.OK && response.Body != null)
                     {
                         UpdateNotifications(response.Body);
@@ -130,8 +121,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                     lastServiceDto = null;
 
                     var sleepTimeInSecond = _longPollFailSchedulePolicyInSecond.Fail();
-                    Logger().Warn(
-                        $"Long polling failed, will retry in {sleepTimeInSecond} seconds. appId: {appId}, cluster: {cluster}, namespace: {AssembleNamespaces()}, long polling url: {url}, reason: {ex.GetDetailMessage()}");
+                    Logger().Warn($"Long polling failed, will retry in {sleepTimeInSecond} seconds. appId: {appId}, cluster: {cluster}, namespace: {string.Join(ConfigConsts.ClusterNamespaceSeparator, _longPollNamespaces.Keys)}, long polling url: {url}, reason: {ex.GetDetailMessage()}");
 
                     sleepTime = sleepTimeInSecond * 1000;
                 }
@@ -144,10 +134,8 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
         private void Notify(ServiceDto lastServiceDto, IList<ApolloConfigNotification> notifications)
         {
-            if (notifications == null || notifications.Count == 0)
-            {
-                return;
-            }
+            if (notifications == null || notifications.Count == 0) return;
+
             foreach (var notification in notifications)
             {
                 var namespaceName = notification.NamespaceName;
@@ -181,10 +169,8 @@ namespace Com.Ctrip.Framework.Apollo.Internals
         {
             foreach (var notification in deltaNotifications)
             {
-                if (string.IsNullOrEmpty(notification.NamespaceName))
-                {
-                    continue;
-                }
+                if (string.IsNullOrEmpty(notification.NamespaceName)) continue;
+
                 var namespaceName = notification.NamespaceName;
                 if (_notifications.ContainsKey(namespaceName))
                 {
@@ -203,15 +189,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
         {
             foreach (var notification in deltaNotifications)
             {
-                if (string.IsNullOrEmpty(notification.NamespaceName))
-                {
-                    continue;
-                }
-
-                if (notification.Messages == null || notification.Messages.IsEmpty())
-                {
-                    continue;
-                }
+                if (string.IsNullOrEmpty(notification.NamespaceName) || notification.Messages == null || notification.Messages.IsEmpty()) continue;
 
                 var localRemoteMessages = _remoteNotificationMessages.GetOrAdd(notification.NamespaceName, _ => new ApolloNotificationMessages());
 
@@ -219,19 +197,12 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             }
         }
 
-        private string AssembleNamespaces()
-        {
-            return string.Join(ConfigConsts.ClusterNamespaceSeparator, _longPollNamespaces.Keys);
-        }
-
         private string AssembleLongPollRefreshUrl(string uri, string appId, string cluster, string dataCenter)
         {
-            if (!uri.EndsWith("/", StringComparison.Ordinal))
-            {
-                uri += "/";
-            }
+            if (!uri.EndsWith("/", StringComparison.Ordinal)) uri += "/";
+
             var uriBuilder = new UriBuilder(uri + "notifications/v2");
-            var query = new Dictionary<string, string>();
+            var query = HttpUtility.ParseQueryString("");
 
             query["appId"] = appId;
             query["cluster"] = cluster;
@@ -247,7 +218,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                 query["ip"] = localIp;
             }
 
-            uriBuilder.Query = QueryUtils.Build(query);
+            uriBuilder.Query = query.ToString();
 
             return uriBuilder.ToString();
         }
