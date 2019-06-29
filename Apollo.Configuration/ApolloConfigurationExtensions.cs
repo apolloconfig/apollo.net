@@ -4,6 +4,7 @@ using Com.Ctrip.Framework.Apollo.Enums;
 using Com.Ctrip.Framework.Apollo.Internals;
 using Com.Ctrip.Framework.Apollo.Spi;
 using System;
+using System.Linq;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.Configuration
@@ -19,9 +20,9 @@ namespace Microsoft.Extensions.Configuration
         public static IApolloConfigurationBuilder AddApollo(this IConfigurationBuilder builder, IApolloOptions options)
         {
             var repositoryFactory = new ConfigRepositoryFactory(options ?? throw new ArgumentNullException(nameof(options)));
-
+#pragma warning disable 618
             ApolloConfigurationManager.SetApolloOptions(repositoryFactory);
-
+#pragma warning restore 618
             return new ApolloConfigurationBuilder(builder, repositoryFactory);
         }
     }
@@ -31,7 +32,7 @@ namespace Com.Ctrip.Framework.Apollo
 {
     public static class ApolloConfigurationBuilderExtensions
     {
-        /// <summary>添加默认namespace: application</summary>
+        /// <summary>添加默认namespace: application，等价于AddNamespace(ConfigConsts.NamespaceApplication)</summary>
         public static IApolloConfigurationBuilder AddDefault(this IApolloConfigurationBuilder builder, ConfigFileFormat format = ConfigFileFormat.Properties) =>
             builder.AddNamespace(ConfigConsts.NamespaceApplication, null, format);
 
@@ -47,9 +48,23 @@ namespace Com.Ctrip.Framework.Apollo
 
             if (format != ConfigFileFormat.Properties) @namespace += "." + format.ToString().ToLower();
 
-            builder.Add(new ApolloConfigurationProvider(sectionKey, builder.ConfigRepositoryFactory.GetConfigRepository(@namespace)));
 
-            ApolloConfigurationManager.Manager.Registry.Register(@namespace, new DefaultConfigFactory(builder.ConfigRepositoryFactory));
+            var configRepository = builder.ConfigRepositoryFactory.GetConfigRepository(@namespace);
+            var previous = builder.Sources.FirstOrDefault(source => source is ApolloConfigurationProvider apollo &&
+                                                        apollo.SectionKey == sectionKey &&
+                                                        apollo.ConfigRepository == configRepository);
+            if (previous != null)
+            {
+                builder.Sources.Remove(previous);
+                builder.Sources.Add(previous);
+            }
+            else
+            {
+                builder.Add(new ApolloConfigurationProvider(sectionKey, configRepository));
+#pragma warning disable 618
+                ApolloConfigurationManager.Manager.Registry.Register(@namespace, new DefaultConfigFactory(builder.ConfigRepositoryFactory));
+#pragma warning restore 618
+            }
 
             return builder;
         }
