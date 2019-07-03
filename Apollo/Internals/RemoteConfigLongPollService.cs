@@ -202,7 +202,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             if (!uri.EndsWith("/", StringComparison.Ordinal)) uri += "/";
 
             var uriBuilder = new UriBuilder(uri + "notifications/v2");
-            var query = HttpUtility.ParseQueryString("");
+            var query = new Dictionary<string, string>();
 
             query["appId"] = appId;
             query["cluster"] = cluster;
@@ -218,7 +218,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                 query["ip"] = localIp;
             }
 
-            uriBuilder.Query = query.ToString();
+            uriBuilder.Query = QueryUtils.Build(query);
 
             return uriBuilder.ToString();
         }

@@ -2,7 +2,9 @@
 
   <PropertyGroup>
     <AssemblyName>Com.Ctrip.Framework.Apollo.Configuration</AssemblyName>
-    <PackageReleaseNotes>2.0.2:
+    <PackageReleaseNotes>2.0.3:
+    1. 无
+2.0.2:
     1. 使用新方法获取Properties里的值
 2.0.1:
     1. 过滤重复的Namespace（后面添加的为准）
@@ -19,7 +21,7 @@ $(PackageReleaseNotes)</Description>
     <PackageIconUrl>https://raw.githubusercontent.com/ctripcorp/apollo/master/apollo-portal/src/main/resources/static/img/config.png</PackageIconUrl>
     <PackageProjectUrl>$(RepositoryUrl)/$(AssemblyName)</PackageProjectUrl>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>2.0.2</Version>
+    <Version>2.0.3</Version>
   </PropertyGroup>
 
   <ItemGroup>

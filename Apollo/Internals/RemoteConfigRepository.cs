@@ -192,7 +192,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             //Looks like .Net will handle all the url encoding for me...
             var path = $"configs/{appId}/{cluster}/{namespaceName}";
             var uriBuilder = new UriBuilder(uri + path);
-            var query = HttpUtility.ParseQueryString("");
+            var query = new Dictionary<string, string>();
 
             if (previousConfig != null)
             {
@@ -215,7 +215,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                 query["messages"] = JsonConvert.SerializeObject(remoteMessages, JsonSettings);
             }
 
-            uriBuilder.Query = query.ToString();
+            uriBuilder.Query = QueryUtils.Build(query);
 
             return uriBuilder.ToString();
         }
