@@ -14,18 +14,23 @@ namespace Com.Ctrip.Framework.Apollo.Core.Utils
 
         public Properties() => _dict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
-        public Properties(IDictionary<string, string> dictionary) =>
-            _dict = dictionary == null ? new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase) : new Dictionary<string, string>(dictionary, StringComparer.OrdinalIgnoreCase);
+        public Properties([CanBeNull] IDictionary<string, string> dictionary) =>
+            _dict = dictionary == null
+                ? new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+                : new Dictionary<string, string>(dictionary, StringComparer.OrdinalIgnoreCase);
 
-        public Properties(Properties source) => _dict = source._dict;
+        public Properties([NotNull] Properties source) => _dict = source._dict;
 
-        public Properties(string filePath)
+        public Properties([NotNull] string filePath)
         {
-            using (var file = new StreamReader(filePath, Encoding.UTF8))
-            using (var reader = new JsonTextReader(file))
-            {
-                _dict = new Dictionary<string, string>(new JsonSerializer().Deserialize<IDictionary<string, string>>(reader), StringComparer.OrdinalIgnoreCase);
-            }
+            if (File.Exists(filePath))
+                using (var file = new StreamReader(filePath, Encoding.UTF8))
+                using (var reader = new JsonTextReader(file))
+                {
+                    _dict = new Dictionary<string, string>(new JsonSerializer().Deserialize<IDictionary<string, string>>(reader), StringComparer.OrdinalIgnoreCase);
+                }
+            else
+                _dict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         }
 
         public bool ContainsKey(string key) => _dict.ContainsKey(key);

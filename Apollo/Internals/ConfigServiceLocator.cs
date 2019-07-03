@@ -2,13 +2,13 @@
 using Com.Ctrip.Framework.Apollo.Core.Dto;
 using Com.Ctrip.Framework.Apollo.Exceptions;
 using Com.Ctrip.Framework.Apollo.Logging;
+using Com.Ctrip.Framework.Apollo.Util;
 using Com.Ctrip.Framework.Apollo.Util.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace Com.Ctrip.Framework.Apollo.Internals
 {
@@ -124,7 +124,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             var localIp = _options.LocalIp;
 
             var uriBuilder = new UriBuilder(domainName + "/services/config");
-            var query = HttpUtility.ParseQueryString("");
+            var query = new Dictionary<string, string>();
 
             query["appId"] = appId;
             if (!string.IsNullOrEmpty(localIp))
@@ -132,7 +132,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                 query["ip"] = localIp;
             }
 
-            uriBuilder.Query = query.ToString();
+            uriBuilder.Query = QueryUtils.Build(query);
 
             return uriBuilder.ToString();
         }

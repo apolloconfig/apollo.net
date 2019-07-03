@@ -4,6 +4,7 @@ using Com.Ctrip.Framework.Apollo.Enums;
 using Com.Ctrip.Framework.Apollo.Exceptions;
 using Com.Ctrip.Framework.Apollo.Logging;
 using Com.Ctrip.Framework.Apollo.Util;
+using JetBrains.Annotations;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -16,6 +17,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
         private const string ConfigDir = "config-cache";
 
         private string _baseDir;
+        [CanBeNull]
         private volatile Properties _fileProperties;
 
         private readonly IApolloOptions _options;
@@ -60,7 +62,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
         public override Properties GetConfig()
         {
-            var properties = new Properties(_fileProperties);
+            var properties = _fileProperties == null ? new Properties() : new Properties(_fileProperties);
 
             return Format != ConfigFileFormat.Properties && ConfigAdapterRegister.TryGetAdapter(Format, out var adapter)
                 ? adapter.GetProperties(properties)
@@ -148,20 +150,18 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
         private void PersistLocalCacheFile(string baseDir, string namespaceName)
         {
-            if (baseDir == null)
-            {
-                return;
-            }
+            var properties = _fileProperties;
+            if (baseDir == null || properties == null) return;
+
             var file = AssembleLocalCacheFile(baseDir, namespaceName);
 
             try
             {
-                _fileProperties.Store(file);
+                properties.Store(file);
             }
             catch (Exception ex)
             {
-                Logger().Warn(
-                    $"Persist local cache file {file} failed, reason: {ex.GetDetailMessage()}.", ex);
+                Logger().Warn($"Persist local cache file {file} failed, reason: {ex.GetDetailMessage()}.", ex);
             }
         }
 
@@ -176,13 +176,13 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                 Logger().Warn(new ApolloConfigException("Prepare config cache dir failed", ex));
                 return;
             }
+
             CheckLocalConfigCacheDir(_baseDir);
         }
 
         private void CheckLocalConfigCacheDir(string baseDir)
         {
-            if (Directory.Exists(baseDir))
-                return;
+            if (Directory.Exists(baseDir)) return;
 
             try
             {
@@ -190,8 +190,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             }
             catch (Exception ex)
             {
-                Logger().Warn(
-                    $"Unable to create local config cache directory {baseDir}, reason: {ex.GetDetailMessage()}. Will not able to cache config file.", ex);
+                Logger().Warn($"Unable to create local config cache directory {baseDir}, reason: {ex.GetDetailMessage()}. Will not able to cache config file.", ex);
             }
         }
 
