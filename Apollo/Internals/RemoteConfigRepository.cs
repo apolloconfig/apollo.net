@@ -123,6 +123,11 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
                 foreach (var configService in randomConfigServices)
                 {
+                    if (!string.IsNullOrEmpty(_options.MetaServer))
+                    {
+                        configService.HomepageUrl = _options.MetaServer;
+                    }
+
                     url = AssembleQueryConfigUrl(configService.HomepageUrl, appId, cluster, Namespace, dataCenter, _remoteMessages, _configCache);
 
                     Logger().Debug($"Loading config from {url}");
