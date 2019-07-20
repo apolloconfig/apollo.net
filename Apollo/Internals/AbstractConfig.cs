@@ -1,5 +1,4 @@
-﻿using Apollo.Core.Utils;
-using Com.Ctrip.Framework.Apollo.Core.Utils;
+﻿using Com.Ctrip.Framework.Apollo.Core.Utils;
 using Com.Ctrip.Framework.Apollo.Enums;
 using Com.Ctrip.Framework.Apollo.Logging;
 using Com.Ctrip.Framework.Apollo.Model;

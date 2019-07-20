@@ -1,9 +1,10 @@
-﻿using Com.Ctrip.Framework.Apollo.Core;
+﻿using Com.Ctrip.Framework.Apollo;
+using Com.Ctrip.Framework.Apollo.Core;
 using Microsoft.Extensions.Configuration;
 using System.Linq;
 using Xunit;
 
-namespace Com.Ctrip.Framework.Apollo
+namespace Apollo.Configuration.Tests
 {
     public class ApolloConfigurationBuilderTest
     {
