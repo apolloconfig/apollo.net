@@ -13,7 +13,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
         public IConfigRegistry Registry { get; }
 
-        public DefaultConfigManager(IConfigRegistry registry, ConfigRepositoryFactory repositoryFactory)
+        public DefaultConfigManager(IConfigRegistry registry, IConfigRepositoryFactory repositoryFactory)
         {
             _configFactory = new DefaultConfigFactory(repositoryFactory);
             Registry = registry;

@@ -24,7 +24,7 @@ namespace Com.Ctrip.Framework.Apollo.Util.Http
 
         public Task<HttpResponse<T>> DoGetAsync<T>(string url) => DoGetAsync<T>(url, _options.Timeout);
 
-        public async Task<HttpResponse<T>> DoGetAsync<T>(string url, int timeout)
+        public virtual async Task<HttpResponse<T>> DoGetAsync<T>(string url, int timeout)
         {
             HttpResponseMessage response = null;
             try

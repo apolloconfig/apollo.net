@@ -12,7 +12,9 @@ namespace Apollo.ConfigurationManager.Demo
 
         public ConfigurationManagerDemo()
         {
+#pragma warning disable 618
             config = ApolloConfigurationManager.GetConfig(ConfigConsts.NamespaceApplication + ".json",
+#pragma warning restore 618
                 ConfigConsts.NamespaceApplication + ".xml",
                 ConfigConsts.NamespaceApplication + ".yml",
                 ConfigConsts.NamespaceApplication + ".yaml",
@@ -33,7 +35,6 @@ namespace Apollo.ConfigurationManager.Demo
 
         private void OnChanged(object sender, ConfigChangeEventArgs changeEvent)
         {
-            Console.WriteLine("Changes for namespace {0}", changeEvent.Namespace);
             foreach (var (key, value) in changeEvent.Changes)
             {
                 Console.WriteLine("Change - key: {0}, oldValue: {1}, newValue: {2}, changeType: {3}",
