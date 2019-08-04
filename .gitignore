@@ -7,6 +7,8 @@
 *.sln.docstates
 .vs
 
+*.cmd
+
 #Auto Generate files
 __ConfigTemp/
 
