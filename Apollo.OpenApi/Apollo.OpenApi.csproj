@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>Com.Ctrip.Framework.Apollo.OpenApi</AssemblyName>
+    <PackageReleaseNotes></PackageReleaseNotes>
+    <Nullable>enable</Nullable>
+    <LangVersion>preview</LangVersion>
+    <Description>携程Apollo的OpenApi客户端，入口接口IOpenApiFactory</Description>
+    <PackageIconUrl>https://raw.githubusercontent.com/ctripcorp/apollo/master/apollo-portal/src/main/resources/static/img/config.png</PackageIconUrl>
+    <PackageProjectUrl>$(RepositoryUrl)/$(AssemblyName)</PackageProjectUrl>
+    <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
+    <Version>2.0.0</Version>
+    <RootNamespace>Com.Ctrip.Framework.Apollo.OpenApi</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
+
+    <ProjectReference Include="..\Apollo\Apollo.csproj" PrivateAssets="All" />
+  </ItemGroup>
+
+</Project>
