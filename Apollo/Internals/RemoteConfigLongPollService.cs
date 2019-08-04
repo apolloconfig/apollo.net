@@ -15,7 +15,6 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace Com.Ctrip.Framework.Apollo.Internals
 {

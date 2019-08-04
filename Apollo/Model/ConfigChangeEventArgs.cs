@@ -10,11 +10,11 @@ namespace Com.Ctrip.Framework.Apollo.Model
     {
         /// <summary>
         /// Constructor. </summary>
-        /// <param name="namespaceName"> the namespace of this change </param>
+        /// <param name="config"> the namespace of this change </param>
         /// <param name="changes"> the actual changes </param>
-        public ConfigChangeEventArgs(string namespaceName, IReadOnlyDictionary<string, ConfigChange> changes)
+        public ConfigChangeEventArgs(IConfig config, IReadOnlyDictionary<string, ConfigChange> changes)
         {
-            Namespace = namespaceName;
+            Config = config;
             Changes = changes;
         }
 
@@ -42,7 +42,7 @@ namespace Com.Ctrip.Framework.Apollo.Model
         /// <summary>
         /// Get the namespace of this change event. </summary>
         /// <returns> the namespace </returns>
-        public string Namespace { get; }
+        public IConfig Config { get; }
 
         public IReadOnlyDictionary<string, ConfigChange> Changes { get; }
     }

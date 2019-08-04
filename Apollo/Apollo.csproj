@@ -23,6 +23,7 @@
 $(PackageReleaseNotes)</Description>
     <PackageIconUrl>https://raw.githubusercontent.com/ctripcorp/apollo/master/apollo-portal/src/main/resources/static/img/config.png</PackageIconUrl>
     <PackageProjectUrl>$(RepositoryUrl)/$(AssemblyName)</PackageProjectUrl>
+    <RootNamespace>Com.Ctrip.Framework.Apollo</RootNamespace>
     <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
     <Version>2.0.3</Version>
   </PropertyGroup>

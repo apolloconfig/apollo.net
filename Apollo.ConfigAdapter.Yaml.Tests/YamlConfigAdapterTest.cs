@@ -1,9 +1,10 @@
-﻿using Com.Ctrip.Framework.Apollo.ConfigAdapter;
+﻿using Com.Ctrip.Framework.Apollo;
+using Com.Ctrip.Framework.Apollo.ConfigAdapter;
 using Com.Ctrip.Framework.Apollo.Enums;
 using System;
 using Xunit;
 
-namespace Com.Ctrip.Framework.Apollo
+namespace Apollo.ConfigAdapter.Yaml.Tests
 {
     public class YamlConfigAdapterTest
     {

@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Com.Ctrip.Framework.Apollo;
+using System;
 using System.Collections.Generic;
 using Xunit;
 
-namespace Com.Ctrip.Framework.Apollo
+namespace Apollo.Tests
 {
     public class ConfigExtensionsTest
     {

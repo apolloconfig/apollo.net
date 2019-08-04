@@ -7,59 +7,40 @@ namespace Com.Ctrip.Framework.Apollo.Model
     /// </summary>
     public class ConfigChange
     {
-        private readonly string _namespaceName;
-        private readonly string _propertyName;
-        private string _oldValue;
-        private string _newValue;
-        private PropertyChangeType _changeType;
-
         /// <summary>
         /// Constructor. </summary>
-        /// <param name="namespaceName"> the namespace of the key </param>
+        /// <param name="config"> the config of the key </param>
         /// <param name="propertyName"> the key whose value is changed </param>
         /// <param name="oldValue"> the value before change </param>
         /// <param name="newValue"> the value after change </param>
         /// <param name="changeType"> the change type </param>
-        public ConfigChange(string namespaceName, string propertyName, string oldValue, string newValue,
+        public ConfigChange(IConfig config, string propertyName, string oldValue, string newValue,
             PropertyChangeType changeType)
         {
-            _namespaceName = namespaceName;
-            _propertyName = propertyName;
-            _oldValue = oldValue;
-            _newValue = newValue;
-            _changeType = changeType;
+            Config = config;
+            PropertyName = propertyName;
+            OldValue = oldValue;
+            NewValue = newValue;
+            ChangeType = changeType;
         }
 
-        public string PropertyName => _propertyName;
+        public string PropertyName { get; }
 
-        public string OldValue
-        {
-            get => _oldValue;
-            set => _oldValue = value;
-        }
+        public string OldValue { get; set; }
 
-        public string NewValue
-        {
-            get => _newValue;
-            set => _newValue = value;
-        }
+        public string NewValue { get; set; }
 
-        public PropertyChangeType ChangeType
-        {
-            get => _changeType;
-            set => _changeType = value;
-        }
+        public PropertyChangeType ChangeType { get; set; }
 
-        public string Namespace => _namespaceName;
+        public IConfig Config { get; }
 
         public override string ToString()
         {
             return "ConfigChange{" +
-                "namespace='" + _namespaceName + '\'' +
-                ", propertyName='" + _propertyName + '\'' +
-                ", oldValue='" + _oldValue + '\'' +
-                ", newValue='" + _newValue + '\'' +
-                ", changeType=" + _changeType +
+                "propertyName='" + PropertyName + '\'' +
+                ", oldValue='" + OldValue + '\'' +
+                ", newValue='" + NewValue + '\'' +
+                ", changeType=" + ChangeType +
                 '}';
         }
     }

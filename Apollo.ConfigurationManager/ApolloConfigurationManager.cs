@@ -33,7 +33,7 @@ namespace Com.Ctrip.Framework.Apollo
         /// <returns> config instance </returns>
         public static Task<IConfig> GetConfig([NotNull]string namespaceName)
         {
-            if (string.IsNullOrEmpty(namespaceName)) throw new ArgumentException("message", nameof(namespaceName));
+            if (string.IsNullOrEmpty(namespaceName)) throw new ArgumentNullException(nameof(namespaceName));
 
             return Manager.GetConfig(namespaceName);
         }

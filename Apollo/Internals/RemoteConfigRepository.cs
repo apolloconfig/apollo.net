@@ -1,5 +1,4 @@
-﻿using Apollo.Core.Utils;
-using Com.Ctrip.Framework.Apollo.Core.Dto;
+﻿using Com.Ctrip.Framework.Apollo.Core.Dto;
 using Com.Ctrip.Framework.Apollo.Core.Utils;
 using Com.Ctrip.Framework.Apollo.Exceptions;
 using Com.Ctrip.Framework.Apollo.Logging;
@@ -13,7 +12,6 @@ using System.Net;
 using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace Com.Ctrip.Framework.Apollo.Internals
 {

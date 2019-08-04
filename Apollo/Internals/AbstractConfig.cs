@@ -1,5 +1,4 @@
-﻿using Apollo.Core.Utils;
-using Com.Ctrip.Framework.Apollo.Core.Utils;
+﻿using Com.Ctrip.Framework.Apollo.Core.Utils;
 using Com.Ctrip.Framework.Apollo.Enums;
 using Com.Ctrip.Framework.Apollo.Logging;
 using Com.Ctrip.Framework.Apollo.Model;
@@ -13,7 +12,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
     public abstract class AbstractConfig : IConfig
     {
         private static readonly Func<Action<LogLevel, string, Exception>> Logger = () => LogManager.CreateLogger(typeof(AbstractConfig));
-        public virtual event ConfigChangeEvent ConfigChanged;
+        public event ConfigChangeEvent ConfigChanged;
         private static readonly TaskFactory ExecutorService;
 
         static AbstractConfig() => ExecutorService = new TaskFactory(new LimitedConcurrencyLevelTaskScheduler(5));
@@ -22,7 +21,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
         public abstract IEnumerable<string> GetPropertyNames();
 
-        protected void FireConfigChange(string @namespace, IReadOnlyDictionary<string, ConfigChange> actualChanges)
+        protected void FireConfigChange(IReadOnlyDictionary<string, ConfigChange> actualChanges)
         {
             if (ConfigChanged != null)
             {
@@ -33,7 +32,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                     {
                         try
                         {
-                            handlerCopy(@namespace, new ConfigChangeEventArgs(@namespace, actualChanges));
+                            handlerCopy(this, new ConfigChangeEventArgs(this, actualChanges));
                         }
                         catch (Exception ex)
                         {
@@ -67,12 +66,12 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
             foreach (var newKey in newKeys)
             {
-                changes.Add(new ConfigChange(namespaceName, newKey, null, current.GetProperty(newKey), PropertyChangeType.Added));
+                changes.Add(new ConfigChange(this, newKey, null, current.GetProperty(newKey), PropertyChangeType.Added));
             }
 
             foreach (var removedKey in removedKeys)
             {
-                changes.Add(new ConfigChange(namespaceName, removedKey, previous.GetProperty(removedKey), null, PropertyChangeType.Deleted));
+                changes.Add(new ConfigChange(this, removedKey, previous.GetProperty(removedKey), null, PropertyChangeType.Deleted));
             }
 
             foreach (var commonKey in commonKeys)
@@ -83,7 +82,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                 {
                     continue;
                 }
-                changes.Add(new ConfigChange(namespaceName, commonKey, previousValue, currentValue, PropertyChangeType.Modified));
+                changes.Add(new ConfigChange(this, commonKey, previousValue, currentValue, PropertyChangeType.Modified));
             }
 
             return changes;

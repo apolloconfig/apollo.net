@@ -8,7 +8,7 @@ namespace Com.Ctrip.Framework.Apollo
     /// </summary>
     /// <param name="sender"> the sender </param>
     /// <param name="args"> the changes </param>
-    public delegate void ConfigChangeEvent(object sender, ConfigChangeEventArgs args);
+    public delegate void ConfigChangeEvent(IConfig sender, ConfigChangeEventArgs args);
 
     public interface IConfig
     {

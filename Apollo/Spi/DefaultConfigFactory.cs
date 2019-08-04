@@ -5,9 +5,9 @@ namespace Com.Ctrip.Framework.Apollo.Spi
 {
     public class DefaultConfigFactory : IConfigFactory
     {
-        private readonly ConfigRepositoryFactory _repositoryFactory;
+        private readonly IConfigRepositoryFactory _repositoryFactory;
 
-        public DefaultConfigFactory(ConfigRepositoryFactory repositoryFactory) => _repositoryFactory = repositoryFactory;
+        public DefaultConfigFactory(IConfigRepositoryFactory repositoryFactory) => _repositoryFactory = repositoryFactory;
 
         public async Task<IConfig> Create(string namespaceName)
         {

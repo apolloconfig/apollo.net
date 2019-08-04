@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Apollo.Core.Utils
+namespace Com.Ctrip.Framework.Apollo.Core.Utils
 {
     // Provides a task scheduler that ensures a maximum concurrency level while
     // running on top of the thread pool.

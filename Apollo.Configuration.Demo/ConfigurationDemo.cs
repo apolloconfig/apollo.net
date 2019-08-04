@@ -48,9 +48,9 @@ namespace Apollo.Configuration.Demo
             services.AddOptions()
                 .Configure<Value>(config)
                 .Configure<Value>("other", anotherConfig);
-
+#pragma warning disable 618
             services.AddSingleton<ApolloConfigurationManager>();
-
+#pragma warning restore 618
             var serviceProvider = services.BuildServiceProvider();
 
             var optionsMonitor = serviceProvider.GetService<IOptionsMonitor<Value>>();
