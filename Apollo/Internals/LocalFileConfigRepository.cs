@@ -64,9 +64,17 @@ namespace Com.Ctrip.Framework.Apollo.Internals
         {
             var properties = _fileProperties == null ? new Properties() : new Properties(_fileProperties);
 
-            return Format != ConfigFileFormat.Properties && ConfigAdapterRegister.TryGetAdapter(Format, out var adapter)
-                ? adapter.GetProperties(properties)
-                : properties;
+            if (Format == ConfigFileFormat.Properties || !ConfigAdapterRegister.TryGetAdapter(Format, out var adapter))
+                return properties;
+
+            try
+            {
+                return adapter.GetProperties(properties);
+            }
+            catch (Exception ex)
+            {
+                throw new ApolloConfigException($"Config Error! AppId: {_options.AppId}, Namespace: {Namespace}", ex);
+            }
         }
 
         bool _disposed;
