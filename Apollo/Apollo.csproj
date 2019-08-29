@@ -2,7 +2,10 @@
 
   <PropertyGroup>
     <AssemblyName>Com.Ctrip.Framework.Apollo</AssemblyName>
-    <PackageReleaseNotes>2.0.3:
+    <PackageReleaseNotes>2.0.4:
+    1. 修复MultiConfig的ConfigChanged事件参数错误的问题
+    2. 当namespace数据异常时给出正确的提示
+2.0.3:
     1. 修复使用net471的ConfigurationBuilder会造成死锁的问题
     2. 修复当无本地缓存文件且远程加载配置失败时出现空引用异常
 2.0.2:
@@ -20,12 +23,27 @@
 　　与System.Configuration.ConfigurationManager集成(.net 4.7.1及以后版本)请使用Com.Ctrip.Framework.Apollo.ConfigurationManager包
 　　直接使用ApolloConfigurationManager请使用Com.Ctrip.Framework.Apollo.Configuration或者Com.Ctrip.Framework.Apollo.ConfigurationManager
 
-$(PackageReleaseNotes)</Description>
+2.1.0:
+    1. 修复MultiConfig的ConfigChanged事件参数错误的问题
+    2. 当namespace数据异常时给出正确的提示
+2.0.3:
+    1. 修复使用net471的ConfigurationBuilder会造成死锁的问题
+    2. 修复当无本地缓存文件且远程加载配置失败时出现空引用异常
+2.0.2:
+    1. 修复当配置发布后，非Properties格式的namespace可能不能获取到配置的问题
+    2. IConfig事件触发失败的BUG
+2.0.1:
+    1. 修复并发时的一个NullReferenceException
+2.0.0:
+    1. 添加json、xml等格式的namespace的支持，通过扩展名识别格式
+    2. 重新设计IConfig，通过扩展方法实现更多功能
+    3. 重构日志，直接通过委托而不需要实现接口</Description>
     <PackageIconUrl>https://raw.githubusercontent.com/ctripcorp/apollo/master/apollo-portal/src/main/resources/static/img/config.png</PackageIconUrl>
     <PackageProjectUrl>$(RepositoryUrl)/$(AssemblyName)</PackageProjectUrl>
     <RootNamespace>Com.Ctrip.Framework.Apollo</RootNamespace>
     <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
     <Version>2.0.3</Version>
+    <FileVersion>2.0.4.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
