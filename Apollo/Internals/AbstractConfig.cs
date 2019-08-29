@@ -43,7 +43,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             }
         }
 
-        protected ICollection<ConfigChange> CalcPropertyChanges(string namespaceName, Properties previous, Properties current)
+        protected ICollection<ConfigChange> CalcPropertyChanges(Properties previous, Properties current)
         {
             if (previous == null)
             {
