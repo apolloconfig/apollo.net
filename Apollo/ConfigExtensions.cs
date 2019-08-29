@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
+#nullable enable
 namespace Com.Ctrip.Framework.Apollo
 {
     public static partial class ConfigExtensions
@@ -18,7 +19,7 @@ namespace Com.Ctrip.Framework.Apollo
         /// <param name="key"> the property name </param>
         /// <param name="defaultValue"> the default value when key is not found or any error occurred </param>
         /// <returns> the property value </returns>
-        public static string GetProperty([NotNull]this IConfig config, string key, string defaultValue)
+        public static string? GetProperty([NotNull]this IConfig config, string? key, string? defaultValue)
         {
             if (config == null) throw new ArgumentNullException(nameof(config));
 
@@ -34,7 +35,7 @@ namespace Com.Ctrip.Framework.Apollo
         /// <param name="delimiter"> the delimeter regex </param>
         /// <param name="defaultValue"> the default value when key is not found or any error occurred </param>
         /// <returns> the property value as array </returns>
-        public static IReadOnlyList<string> GetProperty([NotNull]this IConfig config, string key, string delimiter, string[] defaultValue)
+        public static IReadOnlyList<string?>? GetProperty([NotNull]this IConfig config, string? key, string delimiter, string?[]? defaultValue)
         {
             if (config == null) throw new ArgumentNullException(nameof(config));
 
