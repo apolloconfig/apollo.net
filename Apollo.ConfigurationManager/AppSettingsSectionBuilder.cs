@@ -4,6 +4,8 @@ using Com.Ctrip.Framework.Apollo.Util;
 using System;
 using System.Collections.Specialized;
 using System.Configuration;
+using System.Reflection;
+using System.Reflection.Emit;
 
 namespace Com.Ctrip.Framework.Apollo
 {
@@ -37,24 +39,44 @@ namespace Com.Ctrip.Framework.Apollo
                     appSettings.Add(key, value);
                 }
 
-                if (ForceUpdate) config.ConfigChanged += Config_ConfigChanged;
+                if (ForceUpdate)
+                {
+                    var dynamicMethod = new DynamicMethod("AppSettingsRemove",
+                        typeof(void),
+                        new[] { typeof(NameValueCollection), typeof(string) },
+                        typeof(AppSettingsSectionBuilder).Module);
+
+                    var il = dynamicMethod.GetILGenerator();
+                    il.Emit(OpCodes.Ldarg_0);
+                    il.Emit(OpCodes.Ldarg_1);
+                    // ReSharper disable once AssignNullToNotNullAttribute
+                    il.Emit(OpCodes.Call, typeof(NameValueCollection).GetMethod("Remove"));
+                    il.Emit(OpCodes.Ret);
+
+                    //dynamicMethod.DefineParameter(0, ParameterAttributes.In, "appSettings");
+                    //dynamicMethod.DefineParameter(1, ParameterAttributes.In, "name");
+
+                    var remove = (Action<NameValueCollection, string>)dynamicMethod.CreateDelegate(typeof(Action<NameValueCollection, string>));
+
+                    config.ConfigChanged += ConfigConfigChanged;
+
+                    void ConfigConfigChanged(IConfig _, ConfigChangeEventArgs args)
+                    {
+                        lock (ConfigurationManager.AppSettings)
+                        {
+                            foreach (var change in args.Changes)
+                            {
+                                if (change.Value.ChangeType == PropertyChangeType.Deleted)
+                                    remove(ConfigurationManager.AppSettings, change.Value.PropertyName);
+                                else
+                                    ConfigurationManager.AppSettings.Set(change.Value.PropertyName, change.Value.NewValue);
+                            }
+                        }
+                    }
+                }
             }
 
             return base.ProcessConfigurationSection(configSection);
-        }
-
-        private void Config_ConfigChanged(IConfig config, ConfigChangeEventArgs args)
-        {
-            lock (ConfigurationManager.AppSettings)
-            {
-                foreach (var change in args.Changes)
-                {
-                    if (change.Value.ChangeType == PropertyChangeType.Deleted)
-                        ConfigurationManager.AppSettings.Remove(change.Value.PropertyName);
-                    else
-                        ConfigurationManager.AppSettings.Set(change.Value.PropertyName, change.Value.NewValue);
-                }
-            }
         }
 
         private static void TrySetConfigUtil(KeyValueConfigurationCollection appSettings)
