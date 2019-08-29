@@ -4,7 +4,6 @@
     <AssemblyName>Com.Ctrip.Framework.Apollo.OpenApi</AssemblyName>
     <PackageReleaseNotes></PackageReleaseNotes>
     <Nullable>enable</Nullable>
-    <LangVersion>preview</LangVersion>
     <Description>携程Apollo的OpenApi客户端，入口接口IOpenApiFactory</Description>
     <PackageIconUrl>https://raw.githubusercontent.com/ctripcorp/apollo/master/apollo-portal/src/main/resources/static/img/config.png</PackageIconUrl>
     <PackageProjectUrl>$(RepositoryUrl)/$(AssemblyName)</PackageProjectUrl>
