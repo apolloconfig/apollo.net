@@ -43,7 +43,7 @@ namespace Com.Ctrip.Framework.Apollo
             return base.ProcessConfigurationSection(configSection);
         }
 
-        private void Config_ConfigChanged(object sender, ConfigChangeEventArgs args)
+        private void Config_ConfigChanged(IConfig config, ConfigChangeEventArgs args)
         {
             lock (ConfigurationManager.AppSettings)
             {

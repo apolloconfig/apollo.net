@@ -64,6 +64,6 @@ namespace Com.Ctrip.Framework.Apollo
             return _config;
         }
 
-        private void Config_ConfigChanged(object sender, ConfigChangeEventArgs args) => ConfigurationManager.RefreshSection(SectionName);
+        private void Config_ConfigChanged(IConfig config, ConfigChangeEventArgs args) => ConfigurationManager.RefreshSection(SectionName);
     }
 }
