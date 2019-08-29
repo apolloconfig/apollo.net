@@ -2,7 +2,10 @@
 
   <PropertyGroup>
     <AssemblyName>Com.Ctrip.Framework.Apollo</AssemblyName>
-    <PackageReleaseNotes>2.0.3:
+    <PackageReleaseNotes>2.0.4:
+    1. 修复MultiConfig的ConfigChanged事件参数错误的问题
+    2. 当namespace数据异常时给出正确的提示
+2.0.3:
     1. 修复使用net471的ConfigurationBuilder会造成死锁的问题
     2. 修复当无本地缓存文件且远程加载配置失败时出现空引用异常
 2.0.2:
@@ -26,6 +29,7 @@ $(PackageReleaseNotes)</Description>
     <RootNamespace>Com.Ctrip.Framework.Apollo</RootNamespace>
     <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
     <Version>2.0.3</Version>
+    <FileVersion>2.0.4.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

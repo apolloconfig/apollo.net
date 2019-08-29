@@ -73,7 +73,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
         private IReadOnlyDictionary<string, ConfigChange> UpdateAndCalcConfigChanges(string _namespace, Properties newConfigProperties)
         {
-            var configChanges = CalcPropertyChanges(_namespace, _configProperties, newConfigProperties);
+            var configChanges = CalcPropertyChanges(_configProperties, newConfigProperties);
 
             var actualChanges = new Dictionary<string, ConfigChange>();
 

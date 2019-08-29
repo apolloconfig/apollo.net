@@ -3,7 +3,9 @@
 
   <PropertyGroup>
     <AssemblyName>Com.Ctrip.Framework.Apollo.ConfigurationManager</AssemblyName>
-    <PackageReleaseNotes>2.0.3:
+    <PackageReleaseNotes>2.0.4:
+    1. AppSettingsSectionBuilder默认强制更新（forceUpdate属性配置）ConfigurationManager.AppSettings实现AppSettings的动态更新（其实的仍然不支持动态更新）
+2.0.3:
     1. 无
 2.0.2:
     1. ApolloConfigurationManager标记为Obsolete
@@ -26,6 +28,7 @@ $(PackageReleaseNotes)</Description>
     <RootNamespace>Com.Ctrip.Framework.Apollo</RootNamespace>
     <TargetFrameworks>net471;net45;netstandard2.0</TargetFrameworks>
     <Version>2.0.3</Version>
+    <FileVersion>2.0.4.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
