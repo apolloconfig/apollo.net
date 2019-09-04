@@ -112,13 +112,13 @@ namespace Com.Ctrip.Framework.Apollo.Util
 
         private void InitTimeout()
         {
-            var customizedTimeout = GetAppConfig("Timeout");
+            var timeout = GetAppConfig("Timeout");
 
-            if (int.TryParse(customizedTimeout, out _timeout)) return;
+            if (string.IsNullOrWhiteSpace(timeout) || int.TryParse(timeout, out _timeout)) return;
 
             _timeout = 5000;
 
-            Logger().Error($"Config for Apollo.Timeout is invalid: {customizedTimeout}");
+            Logger().Error($"Config for Apollo.Timeout is invalid: {timeout}");
         }
 
         public int Timeout => _timeout;
@@ -128,13 +128,13 @@ namespace Com.Ctrip.Framework.Apollo.Util
 
         private void InitRefreshInterval()
         {
-            var customizedRefreshInterval = GetAppConfig("RefreshInterval");
+            var refreshInterval = GetAppConfig("RefreshInterval");
 
-            if (int.TryParse(GetAppConfig("RefreshInterval"), out _refreshInterval)) return;
+            if (string.IsNullOrWhiteSpace(refreshInterval) || int.TryParse(GetAppConfig("RefreshInterval"), out _refreshInterval)) return;
 
             _refreshInterval = 5 * 60 * 1000;
 
-            Logger().Error($"Config for Apollo.RefreshInterval is invalid: {customizedRefreshInterval}");
+            Logger().Error($"Config for Apollo.RefreshInterval is invalid: {refreshInterval}");
         }
 
         public int RefreshInterval => _refreshInterval;
