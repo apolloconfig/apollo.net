@@ -9,7 +9,7 @@ namespace Com.Ctrip.Framework.Apollo
         ConfigRepositoryFactory ConfigRepositoryFactory { get; }
     }
 
-    class ApolloConfigurationBuilder : IApolloConfigurationBuilder
+    internal class ApolloConfigurationBuilder : IApolloConfigurationBuilder
     {
         private readonly IConfigurationBuilder _builder;
 
