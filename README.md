@@ -1,9 +1,9 @@
 ﻿[Apollo配置中心](https://github.com/ctripcorp/apollo)的.Net客户端，更多关于Apollo配置中心的介绍，可以查看[Apollo配置中心Wiki](https://github.com/ctripcorp/apollo/wiki)。
 
-# 一、准备工作
+# 一、框架集成
 
-1. 与[Microsoft.Extensions.Configuration](https://docs.microsoft.com/zh-cn/aspnet/core/fundamentals/configuration/)集成请参考[Apollo.Configuration](https://github.com/ctripcorp/apollo.net/blob/dotnet-core/Apollo.Configuration/README.md)
-2. 与[System.Configuration.ConfigurationManager](https://docs.microsoft.com/zh-cn/dotnet/api/system.configuration.configurationbuilder)集成(.net 4.7.1及以后版本)或直接使用ApolloConfigurationManager请参考[Apollo.ConfigurationManager](https://github.com/ctripcorp/apollo.net/blob/dotnet-core/Apollo.ConfigurationManager/README.md)
+1. 与[Microsoft.Extensions.Configuration](https://docs.microsoft.com/zh-cn/aspnet/core/fundamentals/configuration/)集成请参考[Apollo.Configuration](https://github.com/ctripcorp/apollo.net/blob/dotnet-core/Apollo.Configuration/README.md)，完全支持IConfiguration的变动通知
+2. 与[System.Configuration.ConfigurationManager](https://docs.microsoft.com/zh-cn/dotnet/api/system.configuration.configurationbuilder)集成(.net 4.7.1及以后版本，只支持动态修改ConfigurationManager.AppSettings)或直接使用ApolloConfigurationManager请参考[Apollo.ConfigurationManager](https://github.com/ctripcorp/apollo.net/blob/dotnet-core/Apollo.ConfigurationManager/README.md)
 
 # 二、日志输出
 
