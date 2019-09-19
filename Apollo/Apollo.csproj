@@ -2,7 +2,9 @@
 
   <PropertyGroup>
     <AssemblyName>Com.Ctrip.Framework.Apollo</AssemblyName>
-    <PackageReleaseNotes>2.0.5:
+    <PackageReleaseNotes>2.1.0:
+      1. 修复ConfigServiceLocator不能刷新的bug
+2.0.5:
     1. LogManager.CreateLogger异常时返回结果
 2.0.4:
     1. 修复MultiConfig的ConfigChanged事件参数错误的问题
@@ -30,7 +32,7 @@ $(PackageReleaseNotes)</Description>
     <PackageProjectUrl>$(RepositoryUrl)/$(AssemblyName)</PackageProjectUrl>
     <RootNamespace>Com.Ctrip.Framework.Apollo</RootNamespace>
     <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
-    <Version>2.0.5</Version>
+    <Version>2.1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>

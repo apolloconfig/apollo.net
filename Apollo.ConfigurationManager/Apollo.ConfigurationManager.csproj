@@ -3,7 +3,9 @@
 
   <PropertyGroup>
     <AssemblyName>Com.Ctrip.Framework.Apollo.ConfigurationManager</AssemblyName>
-    <PackageReleaseNotes>2.0.5:
+    <PackageReleaseNotes>2.1.0:
+    1. 无
+2.0.5:
     1. ApolloConfigurationManager初始化异常后，每次调用抛出有意义的异常
 2.0.4:
     1. AppSettingsSectionBuilder默认强制更新（forceUpdate属性配置）AppSettings，实现ConfigurationManager.AppSettings的动态更新（其他的仍然不支持动态更新）
@@ -29,7 +31,7 @@ $(PackageReleaseNotes)</Description>
     <PackageTags>$(PackageTags) ConfigurationBuilder ConfigurationManager</PackageTags>
     <RootNamespace>Com.Ctrip.Framework.Apollo</RootNamespace>
     <TargetFrameworks>net471;net45;netstandard2.0</TargetFrameworks>
-    <Version>2.0.5</Version>
+    <Version>2.1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>

@@ -36,7 +36,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                 _configServices = serviceDtos;
         }
 
-        private IList<ServiceDto> GetCustomizedConfigService(IApolloOptions configUtil) =>
+        private static IList<ServiceDto> GetCustomizedConfigService(IApolloOptions configUtil) =>
             configUtil.ConfigServer?
                 .Select(configServiceUrl => new ServiceDto
                 {
@@ -84,7 +84,11 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
             lock (this)
                 if ((task = _updateConfigServicesTask) == null)
+                {
                     task = _updateConfigServicesTask = UpdateConfigServices(3);
+
+                    _updateConfigServicesTask.ContinueWith(_ => _updateConfigServicesTask = null);
+                }
 
             return task;
         }
