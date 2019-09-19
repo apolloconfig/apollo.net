@@ -2,8 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Com.Ctrip.Framework.Apollo.Configuration</AssemblyName>
-    <PackageReleaseNotes>2.0.4:
-2.0.3:
+    <PackageReleaseNotes>2.1.0:
     1. 无
 2.0.2:
     1. 使用新方法获取Properties里的值
@@ -23,7 +22,7 @@ $(PackageReleaseNotes)</Description>
     <PackageProjectUrl>$(RepositoryUrl)/$(AssemblyName)</PackageProjectUrl>
     <RootNamespace>Com.Ctrip.Framework.Apollo</RootNamespace>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>2.0.4</Version>
+    <Version>2.1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
