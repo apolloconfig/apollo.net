@@ -37,13 +37,13 @@ namespace Com.Ctrip.Framework.Apollo.Logging
             logger(LogLevel.Error, message, null);
 
         internal static void Error(this Action<LogLevel, string, Exception> logger, Exception exception) =>
-            logger(LogLevel.Error, null, exception);
+            logger(LogLevel.Error, exception.Message, exception);
 
         internal static void Error(this Action<LogLevel, string, Exception> logger, string message, Exception exception) =>
             logger(LogLevel.Error, message, exception);
 
         internal static void Warn(this Action<LogLevel, string, Exception> logger, Exception exception) =>
-            logger(LogLevel.Warn, null, exception);
+            logger(LogLevel.Warn, exception.Message, exception);
 
         internal static void Warn(this Action<LogLevel, string, Exception> logger, string message) =>
             logger(LogLevel.Warn, message, null);
