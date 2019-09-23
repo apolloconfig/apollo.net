@@ -9,6 +9,11 @@
 
 默认Sdk内部的日志不会输出，需要输出日志的请设置Com.Ctrip.Framework.Apollo.Logging.LogManager.LogFactory属性。
 
+内部内实现了控制台日志
+``` C#
+LogManager.UseConsoleLogging(logLevel);
+```
+
 # 三、客户端设计
 ![client-architecture](https://github.com/ctripcorp/apollo/raw/master/doc/images/client-architecture.png)
 
