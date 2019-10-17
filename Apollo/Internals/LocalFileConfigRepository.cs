@@ -4,7 +4,6 @@ using Com.Ctrip.Framework.Apollo.Enums;
 using Com.Ctrip.Framework.Apollo.Exceptions;
 using Com.Ctrip.Framework.Apollo.Logging;
 using Com.Ctrip.Framework.Apollo.Util;
-using JetBrains.Annotations;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -13,21 +12,20 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 {
     public class LocalFileConfigRepository : AbstractConfigRepository, IRepositoryChangeListener
     {
-        private static readonly Func<Action<LogLevel, string, Exception>> Logger = () => LogManager.CreateLogger(typeof(LocalFileConfigRepository));
+        private static readonly Func<Action<LogLevel, string, Exception?>> Logger = () => LogManager.CreateLogger(typeof(LocalFileConfigRepository));
         private const string ConfigDir = "config-cache";
 
-        private string _baseDir;
-        [CanBeNull]
-        private volatile Properties _fileProperties;
+        private string? _baseDir;
+        private volatile Properties? _fileProperties;
 
         private readonly IApolloOptions _options;
-        private readonly IConfigRepository _upstream;
+        private readonly IConfigRepository? _upstream;
 
         public ConfigFileFormat Format { get; } = ConfigFileFormat.Properties;
 
         public LocalFileConfigRepository(string @namespace,
             IApolloOptions configUtil,
-            IConfigRepository upstream = null) : base(@namespace)
+            IConfigRepository? upstream = null) : base(@namespace)
         {
             _upstream = upstream;
             _options = configUtil;
@@ -49,6 +47,8 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                 //sync with upstream immediately
                 if (TrySyncFromUpstream()) return;
             }
+
+            if (_baseDir == null) return;
 
             try
             {
@@ -123,6 +123,8 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
         private void UpdateFileProperties(Properties newProperties)
         {
+            if (_baseDir == null) return;
+
             lock (this)
             {
                 if (newProperties.Equals(_fileProperties)) return;
@@ -188,7 +190,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             CheckLocalConfigCacheDir(_baseDir);
         }
 
-        private void CheckLocalConfigCacheDir(string baseDir)
+        private static void CheckLocalConfigCacheDir(string baseDir)
         {
             if (Directory.Exists(baseDir)) return;
 

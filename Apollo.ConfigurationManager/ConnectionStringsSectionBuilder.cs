@@ -7,7 +7,7 @@ namespace Com.Ctrip.Framework.Apollo
 {
     public class ConnectionStringsSectionBuilder : ApolloConfigurationBuilder
     {
-        private string _defaultProviderName;
+        private string? _defaultProviderName;
         public override void Initialize(string name, NameValueCollection config)
         {
             base.Initialize(name, config);

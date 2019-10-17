@@ -15,10 +15,10 @@ namespace Com.Ctrip.Framework.Apollo.Util
 {
     public class ConfigUtil : IApolloOptions
     {
-        public static NameValueCollection AppSettings { get; set; }
-        private static Func<HttpMessageHandler> _httpMessageHandlerFactory;
+        public static NameValueCollection? AppSettings { get; set; }
+        private static Func<HttpMessageHandler>? _httpMessageHandlerFactory;
+        private static readonly Func<Action<LogLevel, string, Exception?>> Logger = () => LogManager.CreateLogger(typeof(ConfigUtil));
 
-        private static readonly Func<Action<LogLevel, string, Exception>> Logger = () => LogManager.CreateLogger(typeof(ConfigUtil));
         private int _refreshInterval = 5 * 60 * 1000; //5 minutes
         private int _timeout = 5000; //5 seconds, c# has no connectTimeout but response timeout
 
@@ -35,14 +35,16 @@ namespace Com.Ctrip.Framework.Apollo.Util
         /// Get the config from app config via key
         /// </summary>
         /// <returns> the value or null if not found </returns>
-        public static string GetAppConfig(string key)
+        public static string? GetAppConfig(string key)
         {
             var key1 = "Apollo." + key;
             var key2 = "Apollo:" + key;
 
-            var value = AppSettings[key1];
+            var appSettings = AppSettings ?? ConfigurationManager.AppSettings;
+
+            var value = appSettings[key1];
             if (string.IsNullOrEmpty(value))
-                value = AppSettings[key2];
+                value = appSettings[key2];
 
             if (string.IsNullOrEmpty(value))
                 value = Environment.GetEnvironmentVariable(key1);
@@ -68,7 +70,7 @@ namespace Com.Ctrip.Framework.Apollo.Util
                     Logger().Warn("Apollo.AppId is not set, apollo will only load public namespace configurations!");
                 }
 
-                return appId;
+                return appId!;
             }
         }
 
@@ -76,27 +78,29 @@ namespace Com.Ctrip.Framework.Apollo.Util
         /// Get the data center info for the current application.
         /// </summary>
         /// <returns> the current data center, null if there is no such info. </returns>
-        public string DataCenter => GetAppConfig("DataCenter");
+        public string? DataCenter => GetAppConfig("DataCenter");
 
         private void InitCluster()
         {
             //Load data center from app.config
-            Cluster = GetAppConfig("Cluster");
+            var cluster = GetAppConfig("Cluster");
 
             //Use data center as cluster
-            if (string.IsNullOrWhiteSpace(Cluster))
-                Cluster = DataCenter;
+            if (string.IsNullOrWhiteSpace(cluster))
+                cluster = DataCenter;
 
             //Use default cluster
-            if (string.IsNullOrWhiteSpace(Cluster))
-                Cluster = ConfigConsts.ClusterNameDefault;
+            if (string.IsNullOrWhiteSpace(cluster))
+                cluster = ConfigConsts.ClusterNameDefault;
+
+            Cluster = cluster!;
         }
 
         /// <summary>
         /// Get the cluster name for the current application.
         /// </summary>
         /// <returns> the cluster name, or "default" if not specified </returns>
-        public string Cluster { get; private set; }
+        public string Cluster { get; private set; } = ConfigConsts.ClusterNameDefault;
 
         /// <summary>
         /// Get the current environment.
@@ -108,7 +112,7 @@ namespace Com.Ctrip.Framework.Apollo.Util
 
         public string MetaServer => GetAppConfig("MetaServer") ?? MetaDomainConsts.GetDomain(Env);
 
-        public IReadOnlyCollection<string> ConfigServer => GetAppConfig("ConfigServer")?.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries);
+        public IReadOnlyCollection<string>? ConfigServer => GetAppConfig("ConfigServer")?.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries);
 
         private void InitTimeout()
         {
@@ -141,7 +145,7 @@ namespace Com.Ctrip.Framework.Apollo.Util
 
         public string LocalCacheDir => GetAppConfig("LocalCacheDir") ?? Path.Combine(ConfigConsts.DefaultLocalCacheDir, AppId);
 
-        public Func<HttpMessageHandler> HttpMessageHandlerFactory => _httpMessageHandlerFactory;
+        public Func<HttpMessageHandler>? HttpMessageHandlerFactory => _httpMessageHandlerFactory;
 
         public static void UseHttpMessageHandlerFactory(Func<HttpMessageHandler> factory) => Interlocked.CompareExchange(ref _httpMessageHandlerFactory, factory, null);
     }

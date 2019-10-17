@@ -7,8 +7,8 @@ namespace Com.Ctrip.Framework.Apollo.ConfigAdapter
     {
         public override Properties GetProperties(string content)
         {
-            using (var reader = new StringReader(content))
-                return new Properties(XmlConfigurationParser.Read(reader));
+            using var reader = new StringReader(content);
+            return new Properties(XmlConfigurationParser.Read(reader));
         }
     }
 }

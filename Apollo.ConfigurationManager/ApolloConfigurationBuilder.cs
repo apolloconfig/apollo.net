@@ -13,9 +13,9 @@ namespace Com.Ctrip.Framework.Apollo
     {
         private static readonly object Lock = new object();
 
-        private IConfig _config;
-        public IReadOnlyList<string> Namespaces { get; private set; }
-        public string SectionName { get; private set; }
+        private IConfig? _config;
+        public IReadOnlyList<string>? Namespaces { get; private set; }
+        public string? SectionName { get; private set; }
 
         public override void Initialize(string name, NameValueCollection config)
         {

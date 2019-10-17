@@ -2,7 +2,6 @@
 using Com.Ctrip.Framework.Apollo.Internals;
 using Com.Ctrip.Framework.Apollo.Spi;
 using Com.Ctrip.Framework.Apollo.Util;
-using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,8 +19,8 @@ namespace Com.Ctrip.Framework.Apollo
 #endif
     public static class ApolloConfigurationManager
     {
-        private static readonly Exception Exception;
-        public static IConfigManager Manager { get; }
+        private static readonly Exception? Exception;
+        public static IConfigManager? Manager { get; }
 
         static ApolloConfigurationManager()
         {
@@ -29,9 +28,9 @@ namespace Com.Ctrip.Framework.Apollo
             {
                 Manager = new DefaultConfigManager(new DefaultConfigRegistry(), new ConfigRepositoryFactory(new ConfigUtil()));
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Exception = e;
+                Exception = ex;
             }
         }
 
@@ -44,26 +43,26 @@ namespace Com.Ctrip.Framework.Apollo
         /// Get the config instance for the namespace. </summary>
         /// <param name="namespaceName"> the namespace of the config </param>
         /// <returns> config instance </returns>
-        public static Task<IConfig> GetConfig([NotNull]string namespaceName)
+        public static Task<IConfig> GetConfig(string namespaceName)
         {
             if (string.IsNullOrEmpty(namespaceName)) throw new ArgumentNullException(nameof(namespaceName));
 
             if (Exception != null) throw new InvalidOperationException("Apollo初始化异常", Exception);
 
-            return Manager.GetConfig(namespaceName);
+            return Manager!.GetConfig(namespaceName);
         }
 
         /// <summary>
         /// Get the config instance for the namespace. </summary>
         /// <param name="namespaces"> the namespaces of the config, order desc. </param>
         /// <returns> config instance </returns>
-        public static Task<IConfig> GetConfig([NotNull] params string[] namespaces) => GetConfig((IEnumerable<string>)namespaces);
+        public static Task<IConfig> GetConfig(params string[] namespaces) => GetConfig((IEnumerable<string>)namespaces);
 
         /// <summary>
         /// Get the config instance for the namespace. </summary>
         /// <param name="namespaces"> the namespaces of the config, order desc. </param>
         /// <returns> config instance </returns>
-        public static async Task<IConfig> GetConfig([NotNull]IEnumerable<string> namespaces)
+        public static async Task<IConfig> GetConfig(IEnumerable<string> namespaces)
         {
             if (namespaces == null) throw new ArgumentNullException(nameof(namespaces));
 

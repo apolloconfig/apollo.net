@@ -11,7 +11,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
         private readonly ConcurrentDictionary<string, IConfigRepository> _configRepositories = new ConcurrentDictionary<string, IConfigRepository>();
         private readonly IApolloOptions _options;
 
-        public ConfigRepositoryFactory(IApolloOptions options, HttpUtil httpUtil = null)
+        public ConfigRepositoryFactory(IApolloOptions options, HttpUtil? httpUtil = null)
         {
             _options = options;
             _httpUtil = httpUtil ?? new HttpUtil(options);

@@ -14,9 +14,9 @@ namespace Com.Ctrip.Framework.Apollo.ConfigAdapter
 
         private readonly IDictionary<string, string> _data = new SortedDictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         private readonly Stack<string> _context = new Stack<string>();
-        private string _currentPath;
+        private string _currentPath = string.Empty;
 
-        private JsonTextReader _reader;
+        private JsonTextReader? _reader;
 
         public static IDictionary<string, string> Parse(string input) => new JsonConfigurationParser().ParseString(input);
 
@@ -73,7 +73,7 @@ namespace Com.Ctrip.Framework.Apollo.ConfigAdapter
                     break;
 
                 default:
-                    throw new FormatException($"Unsupported JSON token '{_reader.TokenType}' was found. Path '{_reader.Path}', line {_reader.LineNumber} position {_reader.LinePosition}.");
+                    throw new FormatException($"Unsupported JSON token '{_reader!.TokenType}' was found. Path '{_reader.Path}', line {_reader.LineNumber} position {_reader.LinePosition}.");
             }
         }
 

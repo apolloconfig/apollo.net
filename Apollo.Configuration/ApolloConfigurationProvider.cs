@@ -10,11 +10,11 @@ namespace Com.Ctrip.Framework.Apollo
 {
     public class ApolloConfigurationProvider : ConfigurationProvider, IRepositoryChangeListener, IConfigurationSource
     {
-        internal string SectionKey { get; }
+        internal string? SectionKey { get; }
         internal IConfigRepository ConfigRepository { get; }
-        private Task _initializeTask;
+        private Task? _initializeTask;
 
-        public ApolloConfigurationProvider(string sectionKey, IConfigRepository configRepository)
+        public ApolloConfigurationProvider(string? sectionKey, IConfigRepository configRepository)
         {
             SectionKey = sectionKey;
             ConfigRepository = configRepository;
@@ -36,9 +36,9 @@ namespace Com.Ctrip.Framework.Apollo
             foreach (var key in properties.GetPropertyNames())
             {
                 if (string.IsNullOrEmpty(SectionKey))
-                    data[key] = properties.GetProperty(key);
+                    data[key] = properties.GetProperty(key)!;
                 else
-                    data[$"{SectionKey}{ConfigurationPath.KeyDelimiter}{key}"] = properties.GetProperty(key);
+                    data[$"{SectionKey}{ConfigurationPath.KeyDelimiter}{key}"] = properties.GetProperty(key)!;
             }
 
             Data = data;

@@ -12,7 +12,7 @@ namespace Com.Ctrip.Framework.Apollo
         /// Get the data center info for the current application.
         /// </summary>
         /// <returns> the current data center, null if there is no such info. </returns>
-        string DataCenter { get; }
+        string? DataCenter { get; }
 
         /// <summary>
         /// Get the cluster name for the current application.
@@ -28,9 +28,9 @@ namespace Com.Ctrip.Framework.Apollo
 
         string LocalIp { get; }
 
-        string MetaServer { get; }
+        string? MetaServer { get; }
 
-        IReadOnlyCollection<string> ConfigServer { get; }
+        IReadOnlyCollection<string>? ConfigServer { get; }
 
         /// <summary>ms</summary>
         int Timeout { get; }
@@ -38,8 +38,8 @@ namespace Com.Ctrip.Framework.Apollo
         /// <summary>ms</summary>
         int RefreshInterval { get; }
 
-        string LocalCacheDir { get; }
+        string? LocalCacheDir { get; }
 
-        Func<HttpMessageHandler> HttpMessageHandlerFactory { get; }
+        Func<HttpMessageHandler>? HttpMessageHandlerFactory { get; }
     }
 }

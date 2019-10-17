@@ -82,7 +82,7 @@ namespace Apollo.Configuration.Demo
 
         private class Value
         {
-            public string Timeout { get; set; }
+            public string Timeout { get; set; } = "";
         }
     }
 }

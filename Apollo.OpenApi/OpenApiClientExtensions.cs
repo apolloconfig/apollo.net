@@ -1,5 +1,5 @@
-﻿using JetBrains.Annotations;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Net;
@@ -7,7 +7,6 @@ using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
 
 namespace Com.Ctrip.Framework.Apollo.OpenApi
 {
@@ -21,7 +20,7 @@ namespace Com.Ctrip.Framework.Apollo.OpenApi
             }
         };
 
-        public static async Task<TResponse?> Get<TResponse>(this IOpenApiClient client, [NotNull] string url, CancellationToken cancellationToken) where TResponse : class
+        public static async Task<TResponse?> Get<TResponse>(this IOpenApiClient client, string url, CancellationToken cancellationToken) where TResponse : class
         {
             if (url == null) throw new ArgumentNullException(nameof(url));
 
@@ -35,7 +34,7 @@ namespace Com.Ctrip.Framework.Apollo.OpenApi
             return await response.Content.ReadAsAsync<TResponse>(cancellationToken).ConfigureAwait(false);
         }
 
-        public static async Task<bool> Delete(this IOpenApiClient client, [NotNull] string url, CancellationToken cancellationToken)
+        public static async Task<bool> Delete(this IOpenApiClient client, string url, CancellationToken cancellationToken)
         {
             if (url == null) throw new ArgumentNullException(nameof(url));
 
@@ -49,7 +48,7 @@ namespace Com.Ctrip.Framework.Apollo.OpenApi
             return true;
         }
 
-        public static async Task<TResponse> Post<TResponse>(this IOpenApiClient client, [NotNull] string url, object data, CancellationToken cancellationToken)
+        public static async Task<TResponse> Post<TResponse>(this IOpenApiClient client, string url, object data, CancellationToken cancellationToken)
         {
             if (url == null) throw new ArgumentNullException(nameof(url));
 
@@ -65,7 +64,7 @@ namespace Com.Ctrip.Framework.Apollo.OpenApi
             return await response.Content.ReadAsAsync<TResponse>(cancellationToken).ConfigureAwait(false);
         }
 
-        public static async Task<TResponse> Put<TResponse>(this IOpenApiClient client, [NotNull] string url, object data, CancellationToken cancellationToken)
+        public static async Task<TResponse> Put<TResponse>(this IOpenApiClient client, string url, object data, CancellationToken cancellationToken)
         {
             if (url == null) throw new ArgumentNullException(nameof(url));
 

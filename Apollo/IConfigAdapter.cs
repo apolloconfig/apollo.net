@@ -3,7 +3,6 @@ using Com.Ctrip.Framework.Apollo.Core;
 using Com.Ctrip.Framework.Apollo.Core.Utils;
 using Com.Ctrip.Framework.Apollo.Enums;
 using Com.Ctrip.Framework.Apollo.Logging;
-using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 
@@ -16,7 +15,7 @@ namespace Com.Ctrip.Framework.Apollo
 
     public abstract class ContentConfigAdapter : IConfigAdapter
     {
-        private static readonly Func<Action<LogLevel, string, Exception>> Logger = () => LogManager.CreateLogger(typeof(ContentConfigAdapter));
+        private static readonly Func<Action<LogLevel, string, Exception?>> Logger = () => LogManager.CreateLogger(typeof(ContentConfigAdapter));
 
         public Properties GetProperties(Properties properties)
         {
@@ -28,10 +27,10 @@ namespace Com.Ctrip.Framework.Apollo
                 return properties;
             }
 
-            return GetProperties(content);
+            return GetProperties(content!);
         }
 
-        public abstract Properties GetProperties([NotNull]string content);
+        public abstract Properties GetProperties(string content);
     }
 
     public static class ConfigAdapterRegister
@@ -46,7 +45,7 @@ namespace Com.Ctrip.Framework.Apollo
             AddAdapter(ConfigFileFormat.Xml, new XmlConfigAdapter());
         }
 
-        public static void AddAdapter(ConfigFileFormat format, [NotNull]IConfigAdapter adapter) =>
+        public static void AddAdapter(ConfigFileFormat format, IConfigAdapter adapter) =>
             Dic[format] = adapter ?? throw new ArgumentNullException(nameof(adapter));
 
         internal static bool TryGetAdapter(ConfigFileFormat format, out IConfigAdapter adapter) =>

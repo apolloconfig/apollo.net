@@ -14,14 +14,14 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 {
     public class ConfigServiceLocator : IDisposable
     {
-        private static readonly Func<Action<LogLevel, string, Exception>> Logger = () => LogManager.CreateLogger(typeof(ConfigServiceLocator));
+        private static readonly Func<Action<LogLevel, string, Exception?>> Logger = () => LogManager.CreateLogger(typeof(ConfigServiceLocator));
 
         private readonly HttpUtil _httpUtil;
 
         private readonly IApolloOptions _options;
         private volatile IList<ServiceDto> _configServices = new List<ServiceDto>();
-        private Task _updateConfigServicesTask;
-        private readonly Timer _timer;
+        private Task? _updateConfigServicesTask;
+        private readonly Timer? _timer;
 
         public ConfigServiceLocator(HttpUtil httpUtil, IApolloOptions configUtil)
         {
@@ -36,7 +36,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                 _configServices = serviceDtos;
         }
 
-        private static IList<ServiceDto> GetCustomizedConfigService(IApolloOptions configUtil) =>
+        private static IList<ServiceDto>? GetCustomizedConfigService(IApolloOptions configUtil) =>
             configUtil.ConfigServer?
                 .Select(configServiceUrl => new ServiceDto
                 {
@@ -79,7 +79,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
         private Task UpdateConfigServices()
         {
-            Task task;
+            Task? task;
             if ((task = _updateConfigServicesTask) != null) return task;
 
             lock (this)
@@ -97,9 +97,9 @@ namespace Com.Ctrip.Framework.Apollo.Internals
         {
             var url = AssembleMetaServiceUrl();
 
-            Exception exception = null;
+            Exception? exception = null;
 
-            for (var i = 0; i < times; i++)
+            for (var i = 0; i < Math.Max(1, times); i++)
             {
                 try
                 {
@@ -118,7 +118,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                 }
             }
 
-            throw new ApolloConfigException($"Get config services failed from {url}", exception);
+            throw new ApolloConfigException($"Get config services failed from {url}", exception!);
         }
 
         private string AssembleMetaServiceUrl()

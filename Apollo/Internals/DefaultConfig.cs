@@ -4,6 +4,7 @@ using Com.Ctrip.Framework.Apollo.Logging;
 using Com.Ctrip.Framework.Apollo.Model;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,9 +12,9 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 {
     public class DefaultConfig : AbstractConfig, IRepositoryChangeListener, IDisposable
     {
-        private static readonly Func<Action<LogLevel, string, Exception>> Logger = () => LogManager.CreateLogger(typeof(DefaultConfig));
+        private static readonly Func<Action<LogLevel, string, Exception?>> Logger = () => LogManager.CreateLogger(typeof(DefaultConfig));
         private readonly string _namespace;
-        private volatile Properties _configProperties;
+        private volatile Properties? _configProperties;
         private readonly IConfigRepository _configRepository;
         private readonly SemaphoreSlim _waitHandle = new SemaphoreSlim(1, 1);
 
@@ -43,7 +44,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             }
         }
 
-        public override bool TryGetProperty(string key, out string value)
+        public override bool TryGetProperty(string key, [NotNullWhen(true)] out string? value)
         {
             value = _configProperties?.GetProperty(key);
 
@@ -70,7 +71,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
         private IReadOnlyDictionary<string, ConfigChange> UpdateAndCalcConfigChanges(Properties newConfigProperties)
         {
-            var configChanges = CalcPropertyChanges(_configProperties, newConfigProperties);
+            var configChanges = CalcPropertyChanges(_configProperties!, newConfigProperties);
 
             var actualChanges = new Dictionary<string, ConfigChange>();
 

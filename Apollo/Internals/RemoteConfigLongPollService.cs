@@ -20,12 +20,12 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 {
     public class RemoteConfigLongPollService : IDisposable
     {
-        private static readonly Func<Action<LogLevel, string, Exception>> Logger = () => LogManager.CreateLogger(typeof(RemoteConfigLongPollService));
+        private static readonly Func<Action<LogLevel, string, Exception?>> Logger = () => LogManager.CreateLogger(typeof(RemoteConfigLongPollService));
         private static readonly long InitNotificationId = -1;
         private readonly ConfigServiceLocator _serviceLocator;
         private readonly HttpUtil _httpUtil;
         private readonly IApolloOptions _options;
-        private CancellationTokenSource _cts;
+        private CancellationTokenSource? _cts;
         private readonly ISchedulePolicy _longPollFailSchedulePolicyInSecond;
         private readonly ISchedulePolicy _longPollSuccessSchedulePolicyInMs;
         private readonly ConcurrentDictionary<string, ISet<RemoteConfigRepository>> _longPollNamespaces;
@@ -71,15 +71,15 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             }
         }
 
-        private async Task DoLongPollingRefresh(string appId, string cluster, string dataCenter, CancellationToken cancellationToken)
+        private async Task DoLongPollingRefresh(string appId, string cluster, string? dataCenter, CancellationToken cancellationToken)
         {
             var random = new Random();
-            ServiceDto lastServiceDto = null;
+            ServiceDto? lastServiceDto = null;
 
             while (!cancellationToken.IsCancellationRequested)
             {
                 var sleepTime = 50; //default 50 ms
-                string url = null;
+                string? url = null;
                 try
                 {
                     if (lastServiceDto == null)
@@ -92,7 +92,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
                     Logger().Debug($"Long polling from {url}");
 
-                    var response = await _httpUtil.DoGetAsync<IList<ApolloConfigNotification>>(url, 600000).ConfigureAwait(false);
+                    var response = await _httpUtil.DoGetAsync<IReadOnlyCollection<ApolloConfigNotification>>(url, 600000).ConfigureAwait(false);
 
                     Logger().Debug($"Long polling response: {response.StatusCode}, url: {url}");
                     if (response.StatusCode == HttpStatusCode.OK && response.Body != null)
@@ -131,7 +131,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             }
         }
 
-        private void Notify(ServiceDto lastServiceDto, IList<ApolloConfigNotification> notifications)
+        private void Notify(ServiceDto lastServiceDto, IReadOnlyCollection<ApolloConfigNotification> notifications)
         {
             if (notifications == null || notifications.Count == 0) return;
 
@@ -148,8 +148,8 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                 if (_longPollNamespaces.TryGetValue($"{namespaceName}.{ConfigFileFormat.Properties.GetString()}", out registries) && registries != null)
                     toBeNotified.AddRange(registries);
 
-                _remoteNotificationMessages.TryGetValue(namespaceName, out var originalMessages);
-                var remoteMessages = originalMessages?.Clone();
+                if (!_remoteNotificationMessages.TryGetValue(namespaceName, out var originalMessages)) return;
+                var remoteMessages = originalMessages.Clone();
                 foreach (var remoteConfigRepository in toBeNotified)
                 {
                     try
@@ -164,7 +164,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             }
         }
 
-        private void UpdateNotifications(IList<ApolloConfigNotification> deltaNotifications)
+        private void UpdateNotifications(IReadOnlyCollection<ApolloConfigNotification> deltaNotifications)
         {
             foreach (var notification in deltaNotifications)
             {
@@ -184,7 +184,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             }
         }
 
-        private void UpdateRemoteNotifications(IList<ApolloConfigNotification> deltaNotifications)
+        private void UpdateRemoteNotifications(IReadOnlyCollection<ApolloConfigNotification> deltaNotifications)
         {
             foreach (var notification in deltaNotifications)
             {
@@ -196,7 +196,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             }
         }
 
-        private string AssembleLongPollRefreshUrl(string uri, string appId, string cluster, string dataCenter)
+        private string AssembleLongPollRefreshUrl(string uri, string appId, string cluster, string? dataCenter)
         {
             if (!uri.EndsWith("/", StringComparison.Ordinal)) uri += "/";
 
@@ -209,7 +209,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
             if (!string.IsNullOrEmpty(dataCenter))
             {
-                query["dataCenter"] = dataCenter;
+                query["dataCenter"] = dataCenter!;
             }
             var localIp = _options.LocalIp;
             if (!string.IsNullOrEmpty(localIp))

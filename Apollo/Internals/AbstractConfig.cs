@@ -4,6 +4,7 @@ using Com.Ctrip.Framework.Apollo.Logging;
 using Com.Ctrip.Framework.Apollo.Model;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,13 +12,13 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 {
     public abstract class AbstractConfig : IConfig
     {
-        private static readonly Func<Action<LogLevel, string, Exception>> Logger = () => LogManager.CreateLogger(typeof(AbstractConfig));
-        public event ConfigChangeEvent ConfigChanged;
+        private static readonly Func<Action<LogLevel, string, Exception?>> Logger = () => LogManager.CreateLogger(typeof(AbstractConfig));
+        public event ConfigChangeEvent? ConfigChanged;
         private static readonly TaskFactory ExecutorService;
 
         static AbstractConfig() => ExecutorService = new TaskFactory(new LimitedConcurrencyLevelTaskScheduler(5));
 
-        public abstract bool TryGetProperty(string key, out string value);
+        public abstract bool TryGetProperty(string key, [NotNullWhen(true)] out string? value);
 
         public abstract IEnumerable<string> GetPropertyNames();
 
