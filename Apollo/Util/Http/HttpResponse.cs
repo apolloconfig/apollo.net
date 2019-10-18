@@ -13,7 +13,7 @@ namespace Com.Ctrip.Framework.Apollo.Util.Http
         public HttpResponse(HttpStatusCode statusCode)
         {
             StatusCode = statusCode;
-            Body = default(T);
+            Body = default(T)!;
         }
 
         public HttpStatusCode StatusCode { get; }

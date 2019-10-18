@@ -36,7 +36,7 @@ namespace Com.Ctrip.Framework.Apollo
 
             Assert.NotNull(result);
 
-            Assert.Equal(AppIds[0], result.AppId);
+            Assert.Equal(AppIds[0], result!.AppId);
         }
 
         [Fact]
@@ -50,7 +50,7 @@ namespace Com.Ctrip.Framework.Apollo
             Dump(result);
 
             Assert.NotNull(result);
-            Assert.Equal(2, result.Count);
+            Assert.Equal(2, result!.Count);
         }
 
         [Fact]

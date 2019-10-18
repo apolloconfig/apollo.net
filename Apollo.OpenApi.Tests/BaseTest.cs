@@ -27,6 +27,6 @@ namespace Com.Ctrip.Framework.Apollo
 
         protected BaseTest(ITestOutputHelper output) => _output = output;
 
-        protected void Dump(object obj) => _output.WriteLine(JsonConvert.SerializeObject(obj, Formatting.Indented));
+        protected void Dump(object? obj) => _output.WriteLine(JsonConvert.SerializeObject(obj, Formatting.Indented));
     }
 }

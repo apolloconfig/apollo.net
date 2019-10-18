@@ -14,7 +14,7 @@ namespace Com.Ctrip.Framework.Apollo.Model
         /// <param name="oldValue"> the value before change </param>
         /// <param name="newValue"> the value after change </param>
         /// <param name="changeType"> the change type </param>
-        public ConfigChange(IConfig config, string propertyName, string oldValue, string newValue,
+        public ConfigChange(IConfig config, string propertyName, string? oldValue, string? newValue,
             PropertyChangeType changeType)
         {
             Config = config;
@@ -26,9 +26,9 @@ namespace Com.Ctrip.Framework.Apollo.Model
 
         public string PropertyName { get; }
 
-        public string OldValue { get; set; }
+        public string? OldValue { get; set; }
 
-        public string NewValue { get; set; }
+        public string? NewValue { get; set; }
 
         public PropertyChangeType ChangeType { get; set; }
 

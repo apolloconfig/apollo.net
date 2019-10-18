@@ -9,23 +9,16 @@
     {
         public static string GetString(this ConfigFileFormat format)
         {
-            switch (format)
+            return format switch
             {
-                case ConfigFileFormat.Properties:
-                    return "properties";
-                case ConfigFileFormat.Xml:
-                    return "xml";
-                case ConfigFileFormat.Json:
-                    return "json";
-                case ConfigFileFormat.Yml:
-                    return "yml";
-                case ConfigFileFormat.Yaml:
-                    return "yaml";
-                case ConfigFileFormat.Txt:
-                    return "txt";
-                default:
-                    return "unknown";
-            }
+                ConfigFileFormat.Properties => "properties",
+                ConfigFileFormat.Xml => "xml",
+                ConfigFileFormat.Json => "json",
+                ConfigFileFormat.Yml => "yml",
+                ConfigFileFormat.Yaml => "yaml",
+                ConfigFileFormat.Txt => "txt",
+                _ => "unknown",
+            };
         }
     }
 }

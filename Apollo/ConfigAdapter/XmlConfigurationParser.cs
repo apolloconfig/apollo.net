@@ -117,16 +117,13 @@ namespace Com.Ctrip.Framework.Apollo.ConfigAdapter
             }
         }
 
-        private static string GetLineInfo(XmlReader reader)
-        {
-            var lineInfo = reader as IXmlLineInfo;
-            return lineInfo == null ? string.Empty : $"Line {lineInfo.LineNumber}, position {lineInfo.LinePosition}.";
-        }
+        private static string GetLineInfo(XmlReader reader) =>
+            reader is IXmlLineInfo lineInfo ? $"Line {lineInfo.LineNumber}, position {lineInfo.LinePosition}." : string.Empty;
 
         private static void ProcessAttributes(XmlReader reader, Stack<string> prefixStack, IDictionary<string, string> data,
-            Action<XmlReader, Stack<string>, IDictionary<string, string>, XmlWriter> act, XmlWriter writer = null)
+            Action<XmlReader, Stack<string>, IDictionary<string, string>> act)
         {
-            for (int i = 0; i < reader.AttributeCount; i++)
+            for (var i = 0; i < reader.AttributeCount; i++)
             {
                 reader.MoveToAttribute(i);
 
@@ -136,7 +133,7 @@ namespace Com.Ctrip.Framework.Apollo.ConfigAdapter
                     throw new FormatException($"XML namespaces are not supported.{GetLineInfo(reader)}");
                 }
 
-                act(reader, prefixStack, data, writer);
+                act(reader, prefixStack, data);
             }
 
             // Go back to the element containing the attributes we just processed
@@ -146,7 +143,7 @@ namespace Com.Ctrip.Framework.Apollo.ConfigAdapter
         // The special attribute "Name" only contributes to prefix
         // This method adds a prefix if current node in reader represents a "Name" attribute
         private static void AddNamePrefix(XmlReader reader, Stack<string> prefixStack,
-            IDictionary<string, string> data, XmlWriter writer)
+            IDictionary<string, string> data)
         {
             if (!string.Equals(reader.LocalName, NameAttributeKey, StringComparison.OrdinalIgnoreCase))
             {
@@ -168,7 +165,7 @@ namespace Com.Ctrip.Framework.Apollo.ConfigAdapter
         // Common attributes contribute to key-value pairs
         // This method adds a key-value pair if current node in reader represents a common attribute
         private static void AddAttributePair(XmlReader reader, Stack<string> prefixStack,
-            IDictionary<string, string> data, XmlWriter writer)
+            IDictionary<string, string> data)
         {
             prefixStack.Push(reader.LocalName);
             var key = ConfigurationPath.Combine(prefixStack.Reverse());

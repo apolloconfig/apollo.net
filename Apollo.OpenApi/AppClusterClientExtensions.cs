@@ -1,6 +1,5 @@
 ﻿using Com.Ctrip.Framework.Apollo.Core;
 using Com.Ctrip.Framework.Apollo.OpenApi.Model;
-using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +12,7 @@ namespace Com.Ctrip.Framework.Apollo.OpenApi
     public static class AppClusterClientExtensions
     {
         /// <summary>获取App的环境，集群信息</summary>
-        public static Task<IReadOnlyList<EnvCluster>?> GetEnvClusterInfo([NotNull] this IAppClusterClient client,
+        public static Task<IReadOnlyList<EnvCluster>?> GetEnvClusterInfo(this IAppClusterClient client,
             CancellationToken cancellationToken = default)
         {
             if (client == null) throw new ArgumentNullException(nameof(client));
@@ -22,7 +21,7 @@ namespace Com.Ctrip.Framework.Apollo.OpenApi
         }
 
         /// <summary>获取App信息</summary>
-        public static async Task<AppInfo?> GetAppInfo([NotNull] this IAppClusterClient client, CancellationToken cancellationToken = default)
+        public static async Task<AppInfo?> GetAppInfo(this IAppClusterClient client, CancellationToken cancellationToken = default)
         {
             if (client == null) throw new ArgumentNullException(nameof(client));
 
@@ -32,7 +31,7 @@ namespace Com.Ctrip.Framework.Apollo.OpenApi
         }
 
         /// <summary>获取App信息</summary>
-        public static Task<IReadOnlyList<AppInfo>?> GetAppsInfo([NotNull] this IAppClusterClient client,
+        public static Task<IReadOnlyList<AppInfo>?> GetAppsInfo(this IAppClusterClient client,
             IReadOnlyCollection<string>? appIds = null, CancellationToken cancellationToken = default)
         {
             if (client == null) throw new ArgumentNullException(nameof(client));
@@ -44,7 +43,7 @@ namespace Com.Ctrip.Framework.Apollo.OpenApi
         }
 
         /// <summary>获取集群下所有Namespace信息</summary>
-        public static Task<IReadOnlyList<Namespace>?> GetNamespaces([NotNull] this IAppClusterClient client, [NotNull] string env,
+        public static Task<IReadOnlyList<Namespace>?> GetNamespaces(this IAppClusterClient client, string env,
             string clusterName = ConfigConsts.ClusterNameDefault,
             CancellationToken cancellationToken = default)
         {
@@ -55,8 +54,8 @@ namespace Com.Ctrip.Framework.Apollo.OpenApi
         }
 
         /// <summary>创建Namespace</summary>
-        public static Task<AppNamespace> CreateAppNamespace([NotNull] this IAppClusterClient client,
-            [NotNull] AppNamespace appNamespace, CancellationToken cancellationToken = default)
+        public static Task<AppNamespace> CreateAppNamespace(this IAppClusterClient client,
+             AppNamespace appNamespace, CancellationToken cancellationToken = default)
         {
             if (client == null) throw new ArgumentNullException(nameof(client));
             if (appNamespace == null) throw new ArgumentNullException(nameof(appNamespace));

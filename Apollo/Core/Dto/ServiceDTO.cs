@@ -2,11 +2,11 @@
 {
     public class ServiceDto
     {
-        public string AppName { get; set; }
+        public string AppName { get; set; } = default!;
 
-        public string HomepageUrl { get; set; }
+        public string HomepageUrl { get; set; } = default!;
 
-        public string InstanceId { get; set; }
+        public string InstanceId { get; set; } = default!;
 
         public override string ToString() => $"ServiceDTO{{appName='{AppName}{'\''}, instanceId='{InstanceId}{'\''}, homepageUrl='{HomepageUrl}{'\''}{'}'}";
     }

@@ -29,15 +29,13 @@ namespace Apollo.Tests
     <b><c>4</c></b>
 </setting>";
 
-            using (var reader = new StringReader(xml))
-            {
-                var data = XmlConfigurationParser.Read(reader);
+            using var reader = new StringReader(xml);
+            var data = XmlConfigurationParser.Read(reader);
 
-                Assert.NotNull(data);
-                Assert.Equal(2, data.Count);
-                Assert.Equal("3", data["a"]);
-                Assert.Equal("4", data["b:c"]);
-            }
+            Assert.NotNull(data);
+            Assert.Equal(2, data.Count);
+            Assert.Equal("3", data["a"]);
+            Assert.Equal("4", data["b:c"]);
         }
 
         [Fact]

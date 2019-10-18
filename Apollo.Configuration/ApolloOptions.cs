@@ -14,10 +14,10 @@ namespace Com.Ctrip.Framework.Apollo
         /// Get the app id for the current application.
         /// </summary>
         /// <returns> the app id or ConfigConsts.NO_APPID_PLACEHOLDER if app id is not available</returns>
-        private string _appId;
-        private string _dataCenter;
-        private string _cluster;
-        private string _metaServer;
+        private string _appId = ConfigConsts.NoAppidPlaceholder;
+        private string? _dataCenter;
+        private string? _cluster;
+        private string? _metaServer;
 
         public string AppId
         {
@@ -35,7 +35,7 @@ namespace Com.Ctrip.Framework.Apollo
         /// Get the data center info for the current application.
         /// </summary>
         /// <returns> the current data center, null if there is no such info. </returns>
-        public virtual string DataCenter
+        public virtual string? DataCenter
         {
             get => _dataCenter;
             set
@@ -59,7 +59,7 @@ namespace Com.Ctrip.Framework.Apollo
         public virtual string LocalIp { get; set; } = NetworkInterfaceManager.HostIp;
 
         /// <summary>Default http://localhost:8080</summary>
-        public virtual string MetaServer
+        public virtual string? MetaServer
         {
             get
             {
@@ -73,7 +73,7 @@ namespace Com.Ctrip.Framework.Apollo
             set => _metaServer = ConfigConsts.DefaultMetaServerUrl == value ? null : value;
         }
 
-        public IReadOnlyCollection<string> ConfigServer { get; set; }
+        public IReadOnlyCollection<string>? ConfigServer { get; set; }
 
         /// <summary>ms. Default 5000ms</summary>
         public virtual int Timeout { get; set; } = 5000; //5 secondss
@@ -81,10 +81,10 @@ namespace Com.Ctrip.Framework.Apollo
         /// <summary>ms. Default 300,000ms</summary>
         public virtual int RefreshInterval { get; set; } = 5 * 60 * 1000; //5 minutes
 
-        public string LocalCacheDir { get; set; }
+        public string? LocalCacheDir { get; set; }
 
         public IDictionary<string, string> Meta { get; set; } = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
-        public Func<HttpMessageHandler> HttpMessageHandlerFactory { get; set; }
+        public Func<HttpMessageHandler>? HttpMessageHandlerFactory { get; set; }
     }
 }

@@ -26,27 +26,19 @@ namespace Com.Ctrip.Framework.Apollo.Util.Http
 
         public async Task<HttpResponse<T>> DoGetAsync<T>(string url, int timeout)
         {
-            HttpResponseMessage response = null;
+            HttpResponseMessage? response = null;
             try
             {
-#if DEBUG
+                using var cts = new CancellationTokenSource(timeout);
                 var httpClient = new HttpClient(_httpMessageHandler, false) { Timeout = TimeSpan.FromMilliseconds(timeout > 0 ? timeout : _options.Timeout) };
 
-                response = await httpClient.GetAsync(url).ConfigureAwait(false);
-#else
-                using (var cts = new CancellationTokenSource(timeout))
-                {
-                    var httpClient = new HttpClient(_httpMessageHandler, false) { Timeout = TimeSpan.FromMilliseconds(timeout > 0 ? timeout : _options.Timeout) };
-
-                    response = await Timeout(httpClient.GetAsync(url, cts.Token), timeout, cts).ConfigureAwait(false);
-                }
-#endif
+                response = await Timeout(httpClient.GetAsync(url, cts.Token), timeout, cts).ConfigureAwait(false);
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
-                    using (var s = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
-                    using (var sr = new StreamReader(s, Encoding.UTF8))
-                    using (var jtr = new JsonTextReader(sr))
-                        return new HttpResponse<T>(response.StatusCode, JsonSerializer.Create().Deserialize<T>(jtr));
+                    using var s = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+                    using var sr = new StreamReader(s, Encoding.UTF8);
+                    using var jtr = new JsonTextReader(sr);
+                    return new HttpResponse<T>(response.StatusCode, JsonSerializer.Create().Deserialize<T>(jtr));
                 }
 
                 if (response.StatusCode == HttpStatusCode.NotModified)

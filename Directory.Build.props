@@ -8,6 +8,7 @@
     <GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">True</GeneratePackageOnBuild>
     <IncludeSymbols>True</IncludeSymbols>
     <LangVersion>8.0</LangVersion>
+    <Nullable>enable</Nullable>
     <NoWarn>1591</NoWarn>
     <PackageTags>apollo configcenter configuration ctrip</PackageTags>
     <RepositoryType>git</RepositoryType>
@@ -16,10 +17,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ConfigureAwaitChecker.Analyzer" Version="4.*" PrivateAssets="All" />
-    <PackageReference Include="JetBrains.Annotations" Version="2019.*" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0-*" PrivateAssets="All" Condition="! $(OS.Contains('Win'))" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-*" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0-*" PrivateAssets="All" Condition="'$(OS)' != 'Windows_NT'" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-*" PrivateAssets="All"/>
+    <PackageReference Include="Nullable" Version="1.*" PrivateAssets="All"/>
   </ItemGroup>
 
 </Project>

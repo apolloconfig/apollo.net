@@ -11,7 +11,7 @@ namespace Com.Ctrip.Framework.Apollo.ConfigAdapter
     {
         private readonly IDictionary<string, string> _data = new SortedDictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         private readonly Stack<string> _context = new Stack<string>();
-        private string _currentPath;
+        private string _currentPath = "";
 
         public IDictionary<string, string> Parse(TextReader reader)
         {
@@ -63,7 +63,7 @@ namespace Com.Ctrip.Framework.Apollo.ConfigAdapter
 
             if (_data.ContainsKey(_currentPath)) throw new FormatException($"A duplicate key '{_currentPath}' was found.");
 
-            _data[_currentPath] = IsNullValue(scalarNode) ? null : scalarNode.Value;
+            _data[_currentPath] = IsNullValue(scalarNode) ? "" : scalarNode.Value;
 
             ExitContext();
         }

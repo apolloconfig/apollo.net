@@ -2,13 +2,13 @@
 {
     public class ApolloConfigNotification
     {
-        private volatile ApolloNotificationMessages _messages;
+        private volatile ApolloNotificationMessages? _messages;
 
-        public string NamespaceName { get; set; }
+        public string NamespaceName { get; set; } = default!;
 
         public long NotificationId { get; set; }
 
-        public ApolloNotificationMessages Messages
+        public ApolloNotificationMessages? Messages
         {
             get => _messages;
             set => _messages = value;

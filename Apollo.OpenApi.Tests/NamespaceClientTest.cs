@@ -19,7 +19,7 @@ namespace Com.Ctrip.Framework.Apollo
             var result = await client.GetNamespaceInfo().ConfigureAwait(false);
 
             Assert.NotNull(result);
-            Assert.Equal(client.AppId, result.AppId);
+            Assert.Equal(client.AppId, result!.AppId);
             Assert.Equal(client.Cluster, result.ClusterName);
             Assert.Equal(client.Namespace, result.NamespaceName);
         }
@@ -52,20 +52,20 @@ namespace Com.Ctrip.Framework.Apollo
                 Assert.NotNull(item.DataChangeCreatedBy);
                 Assert.Equal(value1, item.Value);
 
-                item = await client.GetItem(key).ConfigureAwait(false);
+                var item2 = await client.GetItem(key).ConfigureAwait(false);
+
+                Assert.NotNull(item2);
+                Assert.Equal(value1, item2!.Value);
+
+                item2.Value = value2;
+                item2.DataChangeLastModifiedBy = item2.DataChangeCreatedBy;
+
+                await client.UpdateItem(item2).ConfigureAwait(false);
+
+                item2 = await client.GetItem(key).ConfigureAwait(false);
 
                 Assert.NotNull(item);
-                Assert.Equal(value1, item.Value);
-
-                item.Value = value2;
-                item.DataChangeLastModifiedBy = item.DataChangeCreatedBy;
-
-                await client.UpdateItem(item).ConfigureAwait(false);
-
-                item = await client.GetItem(key).ConfigureAwait(false);
-
-                Assert.NotNull(item);
-                Assert.Equal(value2, item.Value);
+                Assert.Equal(value2, item!.Value);
             }
             catch
             {
@@ -83,14 +83,14 @@ namespace Com.Ctrip.Framework.Apollo
                 }).ConfigureAwait(false);
 
                 Assert.NotNull(item);
-                Assert.NotNull(item.DataChangeLastModifiedTime);
+                Assert.NotNull(item!.DataChangeLastModifiedTime);
                 Assert.NotNull(item.DataChangeCreatedBy);
                 Assert.Equal(value1, item.Value);
 
-                item = await client.GetItem(key).ConfigureAwait(false);
+                var item2 = await client.GetItem(key).ConfigureAwait(false);
 
-                Assert.NotNull(item);
-                Assert.Equal(value1, item.Value);
+                Assert.NotNull(item2);
+                Assert.Equal(value1, item2!.Value);
             }
             catch
             {

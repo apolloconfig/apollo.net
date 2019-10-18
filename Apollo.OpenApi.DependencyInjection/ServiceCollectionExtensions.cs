@@ -1,5 +1,4 @@
 ﻿using Com.Ctrip.Framework.Apollo.OpenApi;
-using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using System;
@@ -10,7 +9,7 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddApolloOpenApi([NotNull] this IServiceCollection services)
+        public static IServiceCollection AddApolloOpenApi( this IServiceCollection services)
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
 

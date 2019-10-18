@@ -10,7 +10,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 {
     public abstract class AbstractConfigRepository : IConfigRepository
     {
-        private static readonly Func<Action<LogLevel, string, Exception>> Logger = () => LogManager.CreateLogger(typeof(AbstractConfigRepository));
+        private static readonly Func<Action<LogLevel, string, Exception?>> Logger = () => LogManager.CreateLogger(typeof(AbstractConfigRepository));
 
         private readonly List<IRepositoryChangeListener> _listeners = new List<IRepositoryChangeListener>();
         public string Namespace { get; }

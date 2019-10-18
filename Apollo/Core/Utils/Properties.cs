@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,33 +8,32 @@ namespace Com.Ctrip.Framework.Apollo.Core.Utils
 {
     public class Properties
     {
-        [NotNull]
         private readonly Dictionary<string, string> _dict;
 
         public Properties() => _dict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
-        public Properties([CanBeNull] IDictionary<string, string> dictionary) =>
+        public Properties(IDictionary<string, string>? dictionary) =>
             _dict = dictionary == null
                 ? new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
                 : new Dictionary<string, string>(dictionary, StringComparer.OrdinalIgnoreCase);
 
-        public Properties([NotNull] Properties source) => _dict = source._dict;
+        public Properties( Properties source) => _dict = source._dict;
 
-        public Properties([NotNull] string filePath)
+        public Properties( string filePath)
         {
             if (File.Exists(filePath))
-                using (var file = new StreamReader(filePath, Encoding.UTF8))
-                using (var reader = new JsonTextReader(file))
-                {
-                    _dict = new Dictionary<string, string>(new JsonSerializer().Deserialize<IDictionary<string, string>>(reader), StringComparer.OrdinalIgnoreCase);
-                }
+            {
+                using var file = new StreamReader(filePath, Encoding.UTF8);
+                using var reader = new JsonTextReader(file);
+                _dict = new Dictionary<string, string>(new JsonSerializer().Deserialize<IDictionary<string, string>>(reader), StringComparer.OrdinalIgnoreCase);
+            }
             else
                 _dict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         }
 
         public bool ContainsKey(string key) => _dict.ContainsKey(key);
 
-        public string GetProperty(string key)
+        public string? GetProperty(string key)
         {
             _dict.TryGetValue(key, out var result);
 
@@ -46,10 +44,8 @@ namespace Com.Ctrip.Framework.Apollo.Core.Utils
 
         public void Store(string filePath)
         {
-            using (var file = new StreamWriter(filePath, false, Encoding.UTF8))
-            {
-                new JsonSerializer().Serialize(file, _dict);
-            }
+            using var file = new StreamWriter(filePath, false, Encoding.UTF8);
+            new JsonSerializer().Serialize(file, _dict);
         }
     }
 }
