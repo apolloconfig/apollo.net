@@ -2,6 +2,7 @@
 using Com.Ctrip.Framework.Apollo.Logging;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 
 namespace Com.Ctrip.Framework.Apollo
@@ -17,6 +18,7 @@ namespace Com.Ctrip.Framework.Apollo
         /// <param name="key"> the property name </param>
         /// <param name="defaultValue"> the default value when key is not found or any error occurred </param>
         /// <returns> the property value </returns>
+        [return: NotNullIfNotNull("defaultValue")]
         public static string? GetProperty(this IConfig config, string key, string? defaultValue)
         {
             if (config == null) throw new ArgumentNullException(nameof(config));
@@ -33,6 +35,7 @@ namespace Com.Ctrip.Framework.Apollo
         /// <param name="delimiter"> the delimeter regex </param>
         /// <param name="defaultValue"> the default value when key is not found or any error occurred </param>
         /// <returns> the property value as array </returns>
+        [return: NotNullIfNotNull("defaultValue")]
         public static IReadOnlyList<string?>? GetProperty(this IConfig config, string key, string delimiter, string?[]? defaultValue)
         {
             if (config == null) throw new ArgumentNullException(nameof(config));
