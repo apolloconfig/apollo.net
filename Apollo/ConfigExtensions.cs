@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-#nullable enable
 namespace Com.Ctrip.Framework.Apollo
 {
     public static partial class ConfigExtensions
