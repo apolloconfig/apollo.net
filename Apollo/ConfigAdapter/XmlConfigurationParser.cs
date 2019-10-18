@@ -117,11 +117,8 @@ namespace Com.Ctrip.Framework.Apollo.ConfigAdapter
             }
         }
 
-        private static string GetLineInfo(XmlReader reader)
-        {
-            var lineInfo = reader as IXmlLineInfo;
-            return lineInfo == null ? string.Empty : $"Line {lineInfo.LineNumber}, position {lineInfo.LinePosition}.";
-        }
+        private static string GetLineInfo(XmlReader reader) =>
+            reader is IXmlLineInfo lineInfo ? $"Line {lineInfo.LineNumber}, position {lineInfo.LinePosition}." : string.Empty;
 
         private static void ProcessAttributes(XmlReader reader, Stack<string> prefixStack, IDictionary<string, string> data,
             Action<XmlReader, Stack<string>, IDictionary<string, string>> act)

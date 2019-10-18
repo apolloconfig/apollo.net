@@ -36,9 +36,9 @@ namespace Com.Ctrip.Framework.Apollo
             foreach (var key in properties.GetPropertyNames())
             {
                 if (string.IsNullOrEmpty(SectionKey))
-                    data[key] = properties.GetProperty(key)!;
+                    data[key] = properties.GetProperty(key) ?? string.Empty;
                 else
-                    data[$"{SectionKey}{ConfigurationPath.KeyDelimiter}{key}"] = properties.GetProperty(key)!;
+                    data[$"{SectionKey}{ConfigurationPath.KeyDelimiter}{key}"] = properties.GetProperty(key) ?? string.Empty;
             }
 
             Data = data;

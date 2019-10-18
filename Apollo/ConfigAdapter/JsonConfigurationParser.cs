@@ -79,7 +79,7 @@ namespace Com.Ctrip.Framework.Apollo.ConfigAdapter
 
         private void VisitArray(JArray array)
         {
-            for (int index = 0; index < array.Count; index++)
+            for (var index = 0; index < array.Count; index++)
             {
                 EnterContext(index.ToString());
                 VisitToken(array[index]);

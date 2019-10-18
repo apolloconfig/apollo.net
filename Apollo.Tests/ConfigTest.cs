@@ -24,7 +24,7 @@ namespace Apollo.Tests
 
             Assert.Equal("3", config.GetProperty("A", ""));
 
-            ConfigChangeEventArgs args = null;
+            ConfigChangeEventArgs? args = null;
             config.ConfigChanged += (sender, e) => args = e;
 
             repositoryFactory.Change(new Properties(new Dictionary<string, string>()));
@@ -50,7 +50,7 @@ namespace Apollo.Tests
             Assert.Equal("3", config.GetProperty("A", ""));
             Assert.Equal("4", config.GetProperty("B", ""));
 
-            ConfigChangeEventArgs args = null;
+            ConfigChangeEventArgs? args = null;
             config.ConfigChanged += (sender, e) => args = e;
 
             repositoryFactories[1].Change(new Properties(new Dictionary<string, string>()));

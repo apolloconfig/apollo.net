@@ -63,7 +63,7 @@ namespace Com.Ctrip.Framework.Apollo.ConfigAdapter
 
             if (_data.ContainsKey(_currentPath)) throw new FormatException($"A duplicate key '{_currentPath}' was found.");
 
-            if (!IsNullValue(scalarNode)) _data[_currentPath] = scalarNode.Value;
+            _data[_currentPath] = IsNullValue(scalarNode) ? "" : scalarNode.Value;
 
             ExitContext();
         }
