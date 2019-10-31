@@ -70,8 +70,6 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                 Logger().Debug($"refresh config for namespace: {Namespace}");
 
                 await Sync(isFirst).ConfigureAwait(false);
-
-                _syncException = null;
             }
             catch (Exception ex)
             {
@@ -91,6 +89,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             {
                 Logger().Debug("Remote Config refreshed!");
                 _configCache = current;
+                _syncException = null;
                 FireRepositoryChange(Namespace, GetConfig());
             }
         }
