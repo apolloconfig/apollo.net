@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
-#nullable enable
 namespace Com.Ctrip.Framework.Apollo
 {
     /// <summary>
