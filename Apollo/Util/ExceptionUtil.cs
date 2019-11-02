@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Com.Ctrip.Framework.Apollo.Util
 {
-    static class ExceptionUtil
+    internal static class ExceptionUtil
     {
         public static string GetDetailMessage(this Exception ex)
         {

@@ -8,7 +8,7 @@ using System;
 
 namespace Apollo.Configuration.Demo
 {
-    class ConfigurationDemo
+    internal class ConfigurationDemo
     {
         private static readonly IConfiguration Configuration;
         static ConfigurationDemo()

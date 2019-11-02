@@ -28,7 +28,7 @@ namespace Com.Ctrip.Framework.Apollo
         /// <summary>
         /// Config change event subscriber
         /// </summary>
-        event ConfigChangeEvent? ConfigChanged;
+        event ConfigChangeEvent ConfigChanged;
     }
 }
 

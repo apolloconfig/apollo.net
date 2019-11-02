@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Com.Ctrip.Framework.Apollo.Util
 {
-    static class QueryUtils
+    internal static class QueryUtils
     {
         //不要使用HttpUtility.ParseQueryString()，netfx里会和问题
         public static string Build(IReadOnlyCollection<KeyValuePair<string, string>> source)
