@@ -46,8 +46,7 @@ namespace Com.Ctrip.Framework.Apollo
             if (string.IsNullOrWhiteSpace(@namespace)) throw new ArgumentNullException(nameof(@namespace));
             if (format < ConfigFileFormat.Properties || format > ConfigFileFormat.Txt) throw new ArgumentOutOfRangeException(nameof(format), format, $"最小值{ConfigFileFormat.Properties}，最大值{ConfigFileFormat.Txt}");
 
-            if (format != ConfigFileFormat.Properties) @namespace += "." + format.ToString().ToLower();
-
+            if (format != ConfigFileFormat.Properties) @namespace += "." + format.GetString();
 
             var configRepository = builder.ConfigRepositoryFactory.GetConfigRepository(@namespace);
             var previous = builder.Sources.FirstOrDefault(source =>
