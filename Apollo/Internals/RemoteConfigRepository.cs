@@ -246,7 +246,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             });
         }
 
-        bool _disposed;
+        private bool _disposed;
         protected override void Dispose(bool disposing)
         {
             if (_disposed)

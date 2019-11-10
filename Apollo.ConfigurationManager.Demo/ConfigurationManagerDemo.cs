@@ -5,7 +5,7 @@ using System;
 
 namespace Apollo.ConfigurationManager.Demo
 {
-    class ConfigurationManagerDemo
+    internal class ConfigurationManagerDemo
     {
         private readonly string DEFAULT_VALUE = "undefined";
         private readonly IConfig config;

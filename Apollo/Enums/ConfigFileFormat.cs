@@ -5,7 +5,7 @@
         Properties, Xml, Json, Yml, Yaml, Txt
     }
 
-    static class ConfigFileFormatMethods
+    internal static class ConfigFileFormatMethods
     {
         public static string GetString(this ConfigFileFormat format)
         {

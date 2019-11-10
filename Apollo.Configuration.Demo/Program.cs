@@ -4,7 +4,7 @@ using System;
 
 namespace Apollo.Configuration.Demo
 {
-    class Program
+    internal class Program
     {
         private static void Main()
         {

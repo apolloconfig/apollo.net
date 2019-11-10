@@ -3,7 +3,7 @@ using Com.Ctrip.Framework.Apollo.Util;
 
 namespace Com.Ctrip.Framework.Apollo.Core
 {
-    class MetaDomainConsts
+    internal class MetaDomainConsts
     {
         public static string GetDomain(Env env)
         {
