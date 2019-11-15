@@ -3,7 +3,10 @@
 
   <PropertyGroup>
     <AssemblyName>Com.Ctrip.Framework.Apollo.ConfigurationManager</AssemblyName>
-    <PackageReleaseNotes>2.1.0:
+    <PackageReleaseNotes>2.2.0:
+      1. 使用C# 8、添加nullable
+      2. 添加net40支持
+2.1.0:
     1. 无
 2.0.5:
     1. ApolloConfigurationManager初始化异常后，每次调用抛出有意义的异常
@@ -30,8 +33,8 @@ $(PackageReleaseNotes)</Description>
     <PackageProjectUrl>$(RepositoryUrl)/$(AssemblyName)</PackageProjectUrl>
     <PackageTags>$(PackageTags) ConfigurationBuilder ConfigurationManager</PackageTags>
     <RootNamespace>Com.Ctrip.Framework.Apollo</RootNamespace>
-    <TargetFrameworks>net471;net45;netstandard2.0</TargetFrameworks>
-    <Version>2.1.0</Version>
+    <TargetFrameworks>net471;net45;net40;netstandard2.0</TargetFrameworks>
+    <Version>2.2.0</Version>
   </PropertyGroup>
 
   <ItemGroup>

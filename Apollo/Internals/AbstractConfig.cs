@@ -21,8 +21,11 @@ namespace Com.Ctrip.Framework.Apollo.Internals
         public abstract bool TryGetProperty(string key, [NotNullWhen(true)] out string? value);
 
         public abstract IEnumerable<string> GetPropertyNames();
-
+#if NET40
+        protected void FireConfigChange(IDictionary<string, ConfigChange> actualChanges)
+#else
         protected void FireConfigChange(IReadOnlyDictionary<string, ConfigChange> actualChanges)
+#endif
         {
             if (ConfigChanged != null)
             {

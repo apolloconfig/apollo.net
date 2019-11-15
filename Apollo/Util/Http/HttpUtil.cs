@@ -29,7 +29,12 @@ namespace Com.Ctrip.Framework.Apollo.Util.Http
             HttpResponseMessage? response = null;
             try
             {
+#if NET40
+                using var cts = new CancellationTokenSource();
+                cts.CancelAfter(timeout);
+#else
                 using var cts = new CancellationTokenSource(timeout);
+#endif
                 var httpClient = new HttpClient(_httpMessageHandler, false) { Timeout = TimeSpan.FromMilliseconds(timeout > 0 ? timeout : _options.Timeout) };
 
                 response = await Timeout(httpClient.GetAsync(url, cts.Token), timeout, cts).ConfigureAwait(false);
@@ -62,7 +67,11 @@ namespace Com.Ctrip.Framework.Apollo.Util.Http
 
         private static async Task<T> Timeout<T>(Task<T> task, int millisecondsDelay, CancellationTokenSource cts)
         {
+#if NET40
+            if (await TaskEx.WhenAny(task, TaskEx.Delay(millisecondsDelay, cts.Token)).ConfigureAwait(false) == task)
+#else
             if (await Task.WhenAny(task, Task.Delay(millisecondsDelay, cts.Token)).ConfigureAwait(false) == task)
+#endif
                 return task.Result;
 
             cts.Cancel();

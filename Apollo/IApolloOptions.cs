@@ -1,6 +1,7 @@
 ﻿using Com.Ctrip.Framework.Apollo.Enums;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Net.Http;
 
 namespace Com.Ctrip.Framework.Apollo
@@ -29,9 +30,11 @@ namespace Com.Ctrip.Framework.Apollo
         string LocalIp { get; }
 
         string? MetaServer { get; }
-
+#if NET40
+        ReadOnlyCollection<string>? ConfigServer { get; }
+#else
         IReadOnlyCollection<string>? ConfigServer { get; }
-
+#endif
         /// <summary>ms</summary>
         int Timeout { get; }
 

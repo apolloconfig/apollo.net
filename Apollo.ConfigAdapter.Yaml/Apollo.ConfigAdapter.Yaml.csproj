@@ -8,8 +8,8 @@
     <PackageReleaseNotes>添加对yml和yaml格式的namespace支持，使用YamlConfigAdapter.Register()添加支持。</PackageReleaseNotes>
     <PackageTags>$(PackageTags) yml yaml</PackageTags>
     <RootNamespace>Com.Ctrip.Framework.Apollo.ConfigAdapter</RootNamespace>
-    <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
-    <Version>2.1.0</Version>
+    <TargetFrameworks>net40;net45;netstandard2.0</TargetFrameworks>
+    <Version>2.2.0</Version>
   </PropertyGroup>
 
   <ItemGroup>

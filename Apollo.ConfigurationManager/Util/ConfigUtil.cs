@@ -4,6 +4,7 @@ using Com.Ctrip.Framework.Apollo.Foundation;
 using Com.Ctrip.Framework.Apollo.Logging;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Configuration;
 using System.IO;
@@ -111,9 +112,19 @@ namespace Com.Ctrip.Framework.Apollo.Util
         public string LocalIp { get; set; } = NetworkInterfaceManager.HostIp;
 
         public string MetaServer => GetAppConfig("MetaServer") ?? MetaDomainConsts.GetDomain(Env);
+#if NET40
+        public ReadOnlyCollection<string>? ConfigServer
+        {
+            get
+            {
+                var servers = GetAppConfig("ConfigServer")?.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries);
 
+                return servers == null ? null : new ReadOnlyCollection<string>(servers);
+            }
+        }
+#else
         public IReadOnlyCollection<string>? ConfigServer => GetAppConfig("ConfigServer")?.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries);
-
+#endif
         private void InitTimeout()
         {
             var timeout = GetAppConfig("Timeout");
