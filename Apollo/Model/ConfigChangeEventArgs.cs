@@ -12,7 +12,11 @@ namespace Com.Ctrip.Framework.Apollo.Model
         /// Constructor. </summary>
         /// <param name="config"> the namespace of this change </param>
         /// <param name="changes"> the actual changes </param>
+#if NET40
+        public ConfigChangeEventArgs(IConfig config, IDictionary<string, ConfigChange> changes)
+#else
         public ConfigChangeEventArgs(IConfig config, IReadOnlyDictionary<string, ConfigChange> changes)
+#endif
         {
             Config = config;
             Changes = changes;
@@ -43,7 +47,10 @@ namespace Com.Ctrip.Framework.Apollo.Model
         /// Get the namespace of this change event. </summary>
         /// <returns> the namespace </returns>
         public IConfig Config { get; }
-
+#if NET40
+        public IDictionary<string, ConfigChange> Changes { get; }
+#else
         public IReadOnlyDictionary<string, ConfigChange> Changes { get; }
+#endif
     }
 }

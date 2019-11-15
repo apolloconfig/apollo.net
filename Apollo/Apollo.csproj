@@ -2,7 +2,10 @@
 
   <PropertyGroup>
     <AssemblyName>Com.Ctrip.Framework.Apollo</AssemblyName>
-    <PackageReleaseNotes>2.1.0:
+    <PackageReleaseNotes>2.2.0:
+      1. 使用C# 8、添加nullable
+      2. 添加net40支持
+2.1.0:
       1. 修复ConfigServiceLocator不能刷新的bug
 2.0.5:
     1. LogManager.CreateLogger异常时返回结果
@@ -28,11 +31,11 @@
 　　直接使用ApolloConfigurationManager请使用Com.Ctrip.Framework.Apollo.Configuration或者Com.Ctrip.Framework.Apollo.ConfigurationManager
 
 $(PackageReleaseNotes)</Description>
-    <PackageIconUrl>https://raw.githubusercontent.com/ctripcorp/apollo/master/apollo-portal/src/main/resources/static/img/config.png</PackageIconUrl>
+    <PackageIcon>https://raw.githubusercontent.com/ctripcorp/apollo/master/apollo-portal/src/main/resources/static/img/config.png</PackageIcon>
     <PackageProjectUrl>$(RepositoryUrl)/$(AssemblyName)</PackageProjectUrl>
     <RootNamespace>Com.Ctrip.Framework.Apollo</RootNamespace>
-    <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
-    <Version>2.1.0</Version>
+    <TargetFrameworks>net40;net45;netstandard2.0</TargetFrameworks>
+    <Version>2.2.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -72,13 +75,21 @@ $(PackageReleaseNotes)</Description>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
 
-    <PackageReference Include="Newtonsoft.Json" Version="11.*" Condition="'$(TargetFramework)' != 'net45'" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.*" Condition="'$(TargetFrameworkIdentifier)' != '.NETFramework'" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net45'">
     <PackageReference Include="Newtonsoft.Json" Version="6.*" />
 
     <Reference Include="System.Net.Http" />
+    <Reference Include="System.Web" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
+    <PackageReference Include="Microsoft.Bcl.Async" Version="1.*" />
+    <PackageReference Include="Microsoft.Net.Http" Version="2.*" />
+    <PackageReference Include="Newtonsoft.Json" Version="6.*" />
+
     <Reference Include="System.Web" />
   </ItemGroup>
 

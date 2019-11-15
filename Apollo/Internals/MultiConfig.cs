@@ -10,11 +10,15 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 {
     public class MultiConfig : AbstractConfig
     {
+#if NET40
+        private readonly ICollection<IConfig> _configs;
+#else
         private readonly IReadOnlyCollection<IConfig> _configs;
+#endif
         private Properties _configProperties;
 
         /// <param name="configs">order desc</param>
-        public MultiConfig( IEnumerable<IConfig> configs)
+        public MultiConfig(IEnumerable<IConfig> configs)
         {
             if (configs == null) throw new ArgumentNullException(nameof(configs));
 
@@ -70,8 +74,11 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                 FireConfigChange(actualChanges);
             }
         }
-
+#if NET40
+        private IDictionary<string, ConfigChange> UpdateAndCalcConfigChanges(Properties newConfigProperties)
+#else
         private IReadOnlyDictionary<string, ConfigChange> UpdateAndCalcConfigChanges(Properties newConfigProperties)
+#endif
         {
             var configChanges = CalcPropertyChanges(_configProperties, newConfigProperties);
 

@@ -9,6 +9,7 @@ using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Reflection;
 using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -162,8 +163,11 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                         exception = ex;
                     }
                 }
-
-                await Task.Delay(1000).ConfigureAwait(false); //sleep 1 second
+#if NET40
+                await TaskEx.Delay(1000).ConfigureAwait(false);
+#else
+                await Task.Delay(1000).ConfigureAwait(false);
+#endif
             }
 
             if (notFound)
@@ -263,3 +267,49 @@ namespace Com.Ctrip.Framework.Apollo.Internals
         }
     }
 }
+#if NET40
+namespace System.Runtime.ExceptionServices
+{
+    internal sealed class ExceptionDispatchInfo
+    {
+        private readonly object _source;
+        private readonly string _stackTrace;
+
+        private const BindingFlags PrivateInstance = BindingFlags.Instance | BindingFlags.NonPublic;
+        private static readonly FieldInfo RemoteStackTrace = typeof(Exception).GetField("_remoteStackTraceString", PrivateInstance);
+        private static readonly FieldInfo Source = typeof(Exception).GetField("_source", PrivateInstance);
+        private static readonly MethodInfo InternalPreserveStackTrace = typeof(Exception).GetMethod("InternalPreserveStackTrace", PrivateInstance);
+
+        private ExceptionDispatchInfo(Exception source)
+        {
+            SourceException = source;
+            _stackTrace = SourceException.StackTrace + Environment.NewLine;
+            _source = Source.GetValue(SourceException);
+        }
+
+        public Exception SourceException { get; }
+
+        public static ExceptionDispatchInfo Capture(Exception source)
+        {
+            if (source == null) throw new ArgumentNullException(nameof(source));
+
+            return new ExceptionDispatchInfo(source);
+        }
+
+        public void Throw()
+        {
+            try
+            {
+                throw SourceException;
+            }
+            catch
+            {
+                InternalPreserveStackTrace.Invoke(SourceException, new object[0]);
+                RemoteStackTrace.SetValue(SourceException, _stackTrace);
+                Source.SetValue(SourceException, _source);
+                throw;
+            }
+        }
+    }
+}
+#endif

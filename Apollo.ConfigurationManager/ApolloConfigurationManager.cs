@@ -65,8 +65,11 @@ namespace Com.Ctrip.Framework.Apollo
         public static async Task<IConfig> GetConfig(IEnumerable<string> namespaces)
         {
             if (namespaces == null) throw new ArgumentNullException(nameof(namespaces));
-
+#if NET40
+            return new MultiConfig(await TaskEx.WhenAll(namespaces.Reverse().Distinct().Select(GetConfig)).ConfigureAwait(false));
+#else
             return new MultiConfig(await Task.WhenAll(namespaces.Reverse().Distinct().Select(GetConfig)).ConfigureAwait(false));
+#endif
         }
     }
 }

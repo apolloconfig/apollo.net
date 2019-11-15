@@ -91,9 +91,11 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                     url = AssembleLongPollRefreshUrl(lastServiceDto.HomepageUrl, appId, cluster, dataCenter);
 
                     Logger().Debug($"Long polling from {url}");
-
+#if NET40
+                    var response = await _httpUtil.DoGetAsync<ICollection<ApolloConfigNotification>>(url, 600000).ConfigureAwait(false);
+#else
                     var response = await _httpUtil.DoGetAsync<IReadOnlyCollection<ApolloConfigNotification>>(url, 600000).ConfigureAwait(false);
-
+#endif
                     Logger().Debug($"Long polling response: {response.StatusCode}, url: {url}");
                     if (response.StatusCode == HttpStatusCode.OK && response.Body != null)
                     {
@@ -126,12 +128,19 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                 }
                 finally
                 {
+#if NET40
+                    await TaskEx.Delay(sleepTime, cancellationToken).ConfigureAwait(false);
+#else
                     await Task.Delay(sleepTime, cancellationToken).ConfigureAwait(false);
+#endif
                 }
             }
         }
-
+#if NET40
+        private void Notify(ServiceDto lastServiceDto, ICollection<ApolloConfigNotification> notifications)
+#else
         private void Notify(ServiceDto lastServiceDto, IReadOnlyCollection<ApolloConfigNotification> notifications)
+#endif
         {
             if (notifications == null || notifications.Count == 0) return;
 
@@ -164,7 +173,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             }
         }
 
-        private void UpdateNotifications(IReadOnlyCollection<ApolloConfigNotification> deltaNotifications)
+        private void UpdateNotifications(IEnumerable<ApolloConfigNotification> deltaNotifications)
         {
             foreach (var notification in deltaNotifications)
             {
@@ -184,7 +193,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             }
         }
 
-        private void UpdateRemoteNotifications(IReadOnlyCollection<ApolloConfigNotification> deltaNotifications)
+        private void UpdateRemoteNotifications(IEnumerable<ApolloConfigNotification> deltaNotifications)
         {
             foreach (var notification in deltaNotifications)
             {
