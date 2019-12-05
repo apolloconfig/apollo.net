@@ -15,7 +15,7 @@ namespace Apollo.Tests
         {
             var moq = new Mock<IApolloOptions>();
             moq.SetupGet(o => o.AppId).Returns("apollo-client");
-            moq.SetupGet(o => o.MetaServer).Returns("http://106.12.25.204:8080/");
+            moq.SetupGet(o => o.MetaServer).Returns("http://106.54.227.205:8080/");
             moq.SetupGet(o => o.ConfigServer).Returns(new string[0]);
 
             var options = moq.Object;
@@ -32,7 +32,7 @@ namespace Apollo.Tests
         public async Task ConfigServerTest()
         {
             var moq = new Mock<IApolloOptions>();
-            moq.SetupGet(o => o.ConfigServer).Returns(new[] { "http://106.12.25.204:8080/" });
+            moq.SetupGet(o => o.ConfigServer).Returns(new[] { "http://106.54.227.205:8080/" });
 
             var options = moq.Object;
 
