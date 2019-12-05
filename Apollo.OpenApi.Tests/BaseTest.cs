@@ -13,7 +13,7 @@ namespace Com.Ctrip.Framework.Apollo
 
         public static IOpenApiFactory Factory { get; } = new OpenApiFactory(new OpenApiOptions
         {
-            PortalUrl = new Uri("http://106.12.25.204:8070"),
+            PortalUrl = new Uri("http://106.54.227.205:8070"),
             Token = "19419f7d3e5a1b0b0cfe3e238b36e09718fb8e94"
         });
 
