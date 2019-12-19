@@ -3,7 +3,9 @@
 
   <PropertyGroup>
     <AssemblyName>Com.Ctrip.Framework.Apollo.ConfigurationManager</AssemblyName>
-    <PackageReleaseNotes>2.2.0:
+    <PackageReleaseNotes>2.3.0:
+      1. 添加ICacheFileProvider支持自定义配置缓存方式（比如本地加密存储）
+2.2.0:
       1. 使用C# 8、添加nullable
       2. 添加net40支持
 2.1.0:
@@ -34,7 +36,7 @@ $(PackageReleaseNotes)</Description>
     <PackageTags>$(PackageTags) ConfigurationBuilder ConfigurationManager</PackageTags>
     <RootNamespace>Com.Ctrip.Framework.Apollo</RootNamespace>
     <TargetFrameworks>net471;net45;net40;netstandard2.0</TargetFrameworks>
-    <Version>2.2.0</Version>
+    <Version>2.3.0</Version>
   </PropertyGroup>
 
   <ItemGroup>

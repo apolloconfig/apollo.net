@@ -86,5 +86,7 @@ namespace Com.Ctrip.Framework.Apollo
         public IDictionary<string, string> Meta { get; set; } = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
         public Func<HttpMessageHandler>? HttpMessageHandlerFactory { get; set; }
+
+        public ICacheFileProvider CacheFileProvider { get; set; } = new LocalPlaintextCacheFileProvider();
     }
 }
