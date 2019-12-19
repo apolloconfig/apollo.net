@@ -2,7 +2,9 @@
 
   <PropertyGroup>
     <AssemblyName>Com.Ctrip.Framework.Apollo</AssemblyName>
-    <PackageReleaseNotes>2.2.0:
+    <PackageReleaseNotes>2.3.0:
+      1. 添加ICacheFileProvider支持自定义本地缓存存储方式（比如加密）
+2.2.0:
       1. 使用C# 8、添加nullable
       2. 添加net40支持
       3. 修复 #96 `ConfigService 挂了，重启配置不能同步问题`

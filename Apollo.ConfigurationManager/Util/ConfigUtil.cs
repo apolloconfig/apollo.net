@@ -18,6 +18,7 @@ namespace Com.Ctrip.Framework.Apollo.Util
     {
         public static NameValueCollection? AppSettings { get; set; }
         private static Func<HttpMessageHandler>? _httpMessageHandlerFactory;
+        private static ICacheFileProvider? _cacheFileProvider;
         private static readonly Func<Action<LogLevel, string, Exception?>> Logger = () => LogManager.CreateLogger(typeof(ConfigUtil));
 
         private int _refreshInterval = 5 * 60 * 1000; //5 minutes
@@ -158,6 +159,10 @@ namespace Com.Ctrip.Framework.Apollo.Util
 
         public Func<HttpMessageHandler>? HttpMessageHandlerFactory => _httpMessageHandlerFactory;
 
+        public ICacheFileProvider CacheFileProvider => _cacheFileProvider ??= new LocalCacheFileProvider();
+
         public static void UseHttpMessageHandlerFactory(Func<HttpMessageHandler> factory) => Interlocked.CompareExchange(ref _httpMessageHandlerFactory, factory, null);
+
+        public static void UseCacheFileProvider(ICacheFileProvider cacheFileProvider) => Interlocked.CompareExchange(ref _cacheFileProvider, cacheFileProvider, null);
     }
 }

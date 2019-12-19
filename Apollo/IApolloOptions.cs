@@ -44,5 +44,7 @@ namespace Com.Ctrip.Framework.Apollo
         string? LocalCacheDir { get; }
 
         Func<HttpMessageHandler>? HttpMessageHandlerFactory { get; }
+
+        ICacheFileProvider CacheFileProvider { get; }
     }
 }

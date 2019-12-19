@@ -146,7 +146,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
             try
             {
-                var properties = new Properties(file);
+                var properties = _options.CacheFileProvider.Get(file);
 
                 Logger().Debug($"Loading local config file {file} successfully!");
 
@@ -167,7 +167,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
             try
             {
-                properties.Store(file);
+                _options.CacheFileProvider.Save(file, properties);
             }
             catch (Exception ex)
             {

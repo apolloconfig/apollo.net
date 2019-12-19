@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace Com.Ctrip.Framework.Apollo.Core.Utils
 {
@@ -17,18 +16,14 @@ namespace Com.Ctrip.Framework.Apollo.Core.Utils
                 ? new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
                 : new Dictionary<string, string>(dictionary, StringComparer.OrdinalIgnoreCase);
 
-        public Properties( Properties source) => _dict = source._dict;
+        public Properties(Properties source) => _dict = source._dict;
 
-        public Properties( string filePath)
+        public Properties(TextReader textReader)
         {
-            if (File.Exists(filePath))
-            {
-                using var file = new StreamReader(filePath, Encoding.UTF8);
-                using var reader = new JsonTextReader(file);
-                _dict = new Dictionary<string, string>(new JsonSerializer().Deserialize<IDictionary<string, string>>(reader), StringComparer.OrdinalIgnoreCase);
-            }
-            else
-                _dict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            if (textReader == null) throw new ArgumentNullException(nameof(textReader));
+
+            using var reader = new JsonTextReader(textReader);
+            _dict = new Dictionary<string, string>(new JsonSerializer().Deserialize<IDictionary<string, string>>(reader), StringComparer.OrdinalIgnoreCase);
         }
 
         public bool ContainsKey(string key) => _dict.ContainsKey(key);
@@ -42,10 +37,11 @@ namespace Com.Ctrip.Framework.Apollo.Core.Utils
 
         public ISet<string> GetPropertyNames() => new HashSet<string>(_dict.Keys);
 
-        public void Store(string filePath)
+        public void Store(TextWriter textWriter)
         {
-            using var file = new StreamWriter(filePath, false, Encoding.UTF8);
-            new JsonSerializer().Serialize(file, _dict);
+            if (textWriter == null) throw new ArgumentNullException(nameof(textWriter));
+
+            new JsonSerializer().Serialize(textWriter, _dict);
         }
     }
 }
