@@ -87,6 +87,6 @@ namespace Com.Ctrip.Framework.Apollo
 
         public Func<HttpMessageHandler>? HttpMessageHandlerFactory { get; set; }
 
-        public ICacheFileProvider CacheFileProvider { get; set; } = new LocalCacheFileProvider();
+        public ICacheFileProvider CacheFileProvider { get; set; } = new LocalPlaintextCacheFileProvider();
     }
 }

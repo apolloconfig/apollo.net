@@ -3,7 +3,7 @@
   <PropertyGroup>
     <AssemblyName>Com.Ctrip.Framework.Apollo.Configuration</AssemblyName>
     <PackageReleaseNotes>2.3.0:
-      1. 添加ICacheFileProvider支持自定义本地缓存存储方式（比如加密）
+      1. 添加ICacheFileProvider支持自定义配置缓存方式（比如本地加密存储）
 2.2.0:
       1. 使用C# 8、添加nullable
 2.1.0:

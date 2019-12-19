@@ -159,7 +159,7 @@ namespace Com.Ctrip.Framework.Apollo.Util
 
         public Func<HttpMessageHandler>? HttpMessageHandlerFactory => _httpMessageHandlerFactory;
 
-        public ICacheFileProvider CacheFileProvider => _cacheFileProvider ??= new LocalCacheFileProvider();
+        public ICacheFileProvider CacheFileProvider => _cacheFileProvider ??= new LocalPlaintextCacheFileProvider();
 
         public static void UseHttpMessageHandlerFactory(Func<HttpMessageHandler> factory) => Interlocked.CompareExchange(ref _httpMessageHandlerFactory, factory, null);
 

@@ -12,7 +12,7 @@ namespace Com.Ctrip.Framework.Apollo
         void Save(string configFile, Properties properties);
     }
 
-    public class LocalCacheFileProvider : ICacheFileProvider
+    public class LocalPlaintextCacheFileProvider : ICacheFileProvider
     {
         public Properties Get(string configFile)
         {
