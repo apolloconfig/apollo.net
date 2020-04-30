@@ -1,6 +1,7 @@
 ﻿using Com.Ctrip.Framework.Apollo;
 using Com.Ctrip.Framework.Apollo.ConfigAdapter;
 using Com.Ctrip.Framework.Apollo.Enums;
+using Com.Ctrip.Framework.Apollo.Logging;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -13,6 +14,8 @@ namespace Apollo.AspNetCore.Demo
         {
             YamlConfigAdapter.Register();
 
+            LogManager.UseConsoleLogging(LogLevel.Debug);
+
             CreateWebHostBuilder(args).Build().Run();
         }
 
@@ -22,10 +25,10 @@ namespace Apollo.AspNetCore.Demo
                //     .AddApollo(context.Configuration.GetSection("apollo"))
                .ConfigureAppConfiguration(builder => builder //普通方式，一般配置在appsettings.json中
                    .AddApollo(builder.Build().GetSection("apollo"))
-                    .AddDefault(ConfigFileFormat.Xml)
-                    .AddDefault(ConfigFileFormat.Json)
-                    .AddDefault(ConfigFileFormat.Yml)
-                    .AddDefault(ConfigFileFormat.Yaml)
+                    //.AddDefault(ConfigFileFormat.Xml)
+                    //.AddDefault(ConfigFileFormat.Json)
+                    //.AddDefault(ConfigFileFormat.Yml)
+                    //.AddDefault(ConfigFileFormat.Yaml)
                     .AddDefault())
                 .UseStartup<Startup>();
     }

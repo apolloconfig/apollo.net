@@ -37,6 +37,16 @@ namespace Com.Ctrip.Framework.Apollo.Util.Http
 #endif
                 var httpClient = new HttpClient(_httpMessageHandler, false) { Timeout = TimeSpan.FromMilliseconds(timeout > 0 ? timeout : _options.Timeout) };
 
+                if (string.IsNullOrWhiteSpace(_options.Secret) == false)
+                {
+                    var headers = Signature.Signature.BuildHttpHeaders(url, _options.AppId, _options.Secret ?? throw new NullReferenceException(nameof(_options.Secret)));
+
+                    foreach (var header in headers)
+                    {
+                        httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
+                    }
+                }
+
                 response = await Timeout(httpClient.GetAsync(url, cts.Token), timeout, cts).ConfigureAwait(false);
                 if (response.StatusCode == HttpStatusCode.OK)
                 {

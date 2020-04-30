@@ -73,6 +73,8 @@ namespace Com.Ctrip.Framework.Apollo
             set => _metaServer = ConfigConsts.DefaultMetaServerUrl == value ? null : value;
         }
 
+        public string? Secret { get; set; } = string.Empty;
+
         public IReadOnlyCollection<string>? ConfigServer { get; set; }
 
         /// <summary>ms. Default 5000ms</summary>

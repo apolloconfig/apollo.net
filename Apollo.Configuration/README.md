@@ -227,3 +227,22 @@ services.ConfigureJsonValue<Options>(/*name, */config.GetSection("somePrefix:Jso
     }
 }
 ```
+
+## 4.4 如何使用访问密钥
+
+> 配置对应的环境的Secret即可
+
+``` diff
+{
+    "apollo": {
+     "AppId": "good",
+     "Secret": "a6f1aee5db86457894ad344c037ac770",
+     "Env": "DEV",
+     "Meta": {
+       "DEV": "http://106.54.227.205:8080/",
+       "FAT": "http://106.54.227.205:8080/",
+       "UAT": "http://106.54.227.205:8080/",
+       "PRO": "http://106.54.227.205:8080/"
+     }
+    }
+}
