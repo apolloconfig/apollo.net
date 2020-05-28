@@ -19,12 +19,12 @@ AppId是应用的身份信息，是从服务端获取配置的一个重要信息
 <configuration>
     <appSettings>
         <!-- Change to the actual app id -->
-        <add key="Apollo.AppId" value="SampleApp"/>
+        <add key="Apollo:AppId" value="SampleApp"/>
     </appSettings>
 </configuration>
 ```
 
-> 注：Apollo.AppId是用来标识应用身份的唯一id，格式为string。
+> 注：Apollo:AppId是用来标识应用身份的唯一id，格式为string。
 
 ### 1.2.2 Environment
 
@@ -36,7 +36,7 @@ Apollo支持应用在不同的环境有不同的配置，所以Environment是另
 <?xml version="1.0"?>
 <configuration>
     <appSettings>
-        <add key="Apollo.Env" value="Dev" />
+        <add key="Apollo:Env" value="Dev" />
     </appSettings>
 </configuration>
 ```
@@ -52,28 +52,28 @@ Apollo支持应用在不同的环境有不同的配置，所以Environment是另
   * Production environment
 
 ### 1.2.3 服务地址
-Apollo客户端针对不同的环境会从不同的服务器获取配置，所以请确保在app.config或web.config正确配置了服务器地址(Apollo.{ENV}.Meta)，其中内容形如：
+Apollo客户端针对不同的环境会从不同的服务器获取配置，所以请确保在app.config或web.config正确配置了服务器地址(Apollo:{ENV}:Meta)，其中内容形如：
 
 ```xml
 <?xml version="1.0"?>
 <configuration>
     <appSettings>
         <!-- Should change the apollo config service url for each environment -->
-        <add key="Apollo.DEV.Meta" value="http://localhost:8080"/>
-        <add key="Apollo.FAT.Meta" value="http://localhost:8080"/>
-        <add key="Apollo.UAT.Meta" value="http://localhost:8080"/>
-        <add key="Apollo.PRO.Meta" value="http://localhost:8080"/>
+        <add key="Apollo:DEV:Meta" value="http://localhost:8080"/>
+        <add key="Apollo:FAT:Meta" value="http://localhost:8080"/>
+        <add key="Apollo:UAT:Meta" value="http://localhost:8080"/>
+        <add key="Apollo:PRO:Meta" value="http://localhost:8080"/>
     </appSettings>
 </configuration>
 ```
 
-或者直接Apollo.MetaServer(优先级高于上面，该方式不需要配置Apollo.Env)
+或者直接Apollo:MetaServer(优先级高于上面，该方式不需要配置Apollo:Env)
 
 ```xml
 <?xml version="1.0"?>
 <configuration>
     <appSettings>
-        <add key="Apollo.MetaServer" value="http://localhost:8080" />
+        <add key="Apollo:MetaServer" value="http://localhost:8080" />
     </appSettings>
 </configuration>
 ```
@@ -89,26 +89,26 @@ Apollo客户端会把从服务端获取到的配置在本地文件系统缓存�
 
 Apollo支持配置按照集群划分，也就是说对于一个appId和一个环境，对不同的集群可以有不同的配置。
 
-* 我们可以在App.config或Web.Config文件中设置Apollo.Cluster来指定运行时集群（注意大小写）
+* 我们可以在App.config或Web.Config文件中设置Apollo:Cluster来指定运行时集群（注意大小写）
 * 例如，下面的截图配置指定了运行时的集群为SomeCluster
 * ![apollo-net-apollo-cluster](https://raw.githubusercontent.com/ctripcorp/apollo/master/doc/images/apollo-net-apollo-cluster.png)
 
 **Cluster Precedence**（集群顺序）
 
-1. 如果`Apollo.Cluster`和`Apollo.DataCenter`同时指定：
-    * 我们会首先尝试从`Apollo.Cluster`指定的集群加载配置
-    * 如果没找到任何配置，会尝试从`Apollo.DataCenter`指定的集群加载配置
+1. 如果`Apollo:Cluster`和`Apollo:DataCenter`同时指定：
+    * 我们会首先尝试从`Apollo:Cluster`指定的集群加载配置
+    * 如果没找到任何配置，会尝试从`Apollo:DataCenter`指定的集群加载配置
     * 如果还是没找到，会从默认的集群（`default`）加载
 
-2. 如果只指定了`Apollo.Cluster`：
-    * 我们会首先尝试从`Apollo.Cluster`指定的集群加载配置
+2. 如果只指定了`Apollo:Cluster`：
+    * 我们会首先尝试从`Apollo:Cluster`指定的集群加载配置
     * 如果没找到，会从默认的集群（`default`）加载
 
-3. 如果只指定了`Apollo.DataCenter`：
-    * 我们会首先尝试从`Apollo.DataCenter`指定的集群加载配置
+3. 如果只指定了`Apollo:DataCenter`：
+    * 我们会首先尝试从`Apollo:DataCenter`指定的集群加载配置
     * 如果没找到，会从默认的集群（`default`）加载
 
-4. 如果`Apollo.Cluster`和`Apollo.DataCenter`都没有指定：
+4. 如果`Apollo:Cluster`和`Apollo:DataCenter`都没有指定：
     * 我们会从默认的集群（`default`）加载配置
 
 ## 1.3 使用非Properies格式的namespace
@@ -238,10 +238,21 @@ ConfigUtil.UseHttpMessageHandlerFactory(() => new HttpClientHandler
 
 ## 4.2 如何跳过meta service的服务发现
 
-在配置文件中添加Apollo.ConfigServer
+在配置文件中添加Apollo:ConfigServer
 
 ``` diff
 <appSettings>
-+   <add key="Apollo.ConfigServer" value="多个值可以使用,或者;连接" />
++   <add key="Apollo:ConfigServer" value="多个值可以使用,或者;连接" />
+</appSettings>
+```
+
+
+## 4.3 如何使用访问密钥
+
+配置对应的环境的Secret即可
+
+``` diff
+<appSettings>
++   <add key="Apollo:Secret" value="服务端配置的值" />
 </appSettings>
 ```

@@ -30,6 +30,8 @@ namespace Com.Ctrip.Framework.Apollo
         string LocalIp { get; }
 
         string? MetaServer { get; }
+
+        string? Secret { get; }
 #if NET40
         ReadOnlyCollection<string>? ConfigServer { get; }
 #else

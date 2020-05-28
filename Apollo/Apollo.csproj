@@ -2,7 +2,9 @@
 
   <PropertyGroup>
     <AssemblyName>Com.Ctrip.Framework.Apollo</AssemblyName>
-    <PackageReleaseNotes>2.3.0:
+    <PackageReleaseNotes>2.4.0:
+      1. 添加apollo 1.6访问密钥
+2.3.0:
       1. 添加ICacheFileProvider支持自定义配置缓存方式（比如本地加密存储）
 2.2.0:
       1. 使用C# 8、添加nullable
@@ -38,7 +40,7 @@ $(PackageReleaseNotes)</Description>
     <PackageProjectUrl>$(RepositoryUrl)/$(AssemblyName)</PackageProjectUrl>
     <RootNamespace>Com.Ctrip.Framework.Apollo</RootNamespace>
     <TargetFrameworks>net40;net45;netstandard2.0</TargetFrameworks>
-    <Version>2.3.0</Version>
+    <Version>2.4.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -79,12 +81,13 @@ $(PackageReleaseNotes)</Description>
     </Compile>
 
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.*" Condition="'$(TargetFramework)' != 'net40'" />
-    <Reference Include="System.Web" Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
     <PackageReference Include="Microsoft.Bcl.Async" Version="1.*" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="4.*" />
+
+    <Reference Include="System.Web" />
   </ItemGroup>
 
 </Project>

@@ -111,7 +111,9 @@ namespace Com.Ctrip.Framework.Apollo.Util
 
         public string LocalIp { get; set; } = NetworkInterfaceManager.HostIp;
 
-        public string MetaServer => GetAppConfig(nameof(MetaServer)) ?? MetaDomainConsts.GetDomain(Env);
+        public string MetaServer => GetAppConfig(nameof(MetaServer)) ?? MetaDomainHelper.GetDomain(Env);
+
+        public string? Secret => GetAppConfig(nameof(Secret));
 #if NET40
         public ReadOnlyCollection<string>? ConfigServer
         {
