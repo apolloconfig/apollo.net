@@ -78,22 +78,13 @@ $(PackageReleaseNotes)</Description>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
 
-    <PackageReference Include="Newtonsoft.Json" Version="11.*" Condition="'$(TargetFrameworkIdentifier)' != '.NETFramework'" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net45'">
-    <PackageReference Include="Newtonsoft.Json" Version="6.*" />
-
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Web" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.*" Condition="'$(TargetFramework)' != 'net40'" />
+    <Reference Include="System.Web" Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
     <PackageReference Include="Microsoft.Bcl.Async" Version="1.*" />
-    <PackageReference Include="Microsoft.Net.Http" Version="2.*" />
-    <PackageReference Include="Newtonsoft.Json" Version="6.*" />
-
-    <Reference Include="System.Web" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="4.*" />
   </ItemGroup>
 
 </Project>
