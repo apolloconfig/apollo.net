@@ -19,7 +19,7 @@ namespace Com.Ctrip.Framework.Apollo.ConfigAdapter
         {
             var data = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
-            var readerSettings = new XmlReaderSettings()
+            var readerSettings = new XmlReaderSettings
             {
                 CloseInput = false, // caller will close the stream
                 DtdProcessing = DtdProcessing.Prohibit,
@@ -27,81 +27,80 @@ namespace Com.Ctrip.Framework.Apollo.ConfigAdapter
                 IgnoreWhitespace = true
             };
 
-            using (var reader = XmlReader.Create(stream, readerSettings))
+            using var reader = XmlReader.Create(stream, readerSettings);
+            var prefixStack = new Stack<string>();
+
+            SkipUntilRootElement(reader);
+
+            // We process the root element individually since it doesn't contribute to prefix
+            ProcessAttributes(reader, prefixStack, data, AddNamePrefix);
+            ProcessAttributes(reader, prefixStack, data, AddAttributePair);
+
+            var preNodeType = reader.NodeType;
+            while (reader.Read())
             {
-                var prefixStack = new Stack<string>();
-
-                SkipUntilRootElement(reader);
-
-                // We process the root element individually since it doesn't contribute to prefix
-                ProcessAttributes(reader, prefixStack, data, AddNamePrefix);
-                ProcessAttributes(reader, prefixStack, data, AddAttributePair);
-
-                var preNodeType = reader.NodeType;
-                while (reader.Read())
+                switch (reader.NodeType)
                 {
-                    switch (reader.NodeType)
-                    {
-                        case XmlNodeType.Element:
-                            prefixStack.Push(reader.LocalName);
-                            ProcessAttributes(reader, prefixStack, data, AddNamePrefix);
-                            ProcessAttributes(reader, prefixStack, data, AddAttributePair);
+                    case XmlNodeType.Element:
+                        prefixStack.Push(reader.LocalName);
+                        ProcessAttributes(reader, prefixStack, data, AddNamePrefix);
+                        ProcessAttributes(reader, prefixStack, data, AddAttributePair);
 
-                            // If current element is self-closing
-                            if (reader.IsEmptyElement)
-                            {
-                                prefixStack.Pop();
-                            }
-                            break;
+                        // If current element is self-closing
+                        if (reader.IsEmptyElement)
+                        {
+                            prefixStack.Pop();
+                        }
+                        break;
 
-                        case XmlNodeType.EndElement:
-                            if (prefixStack.Any())
-                            {
-                                // If this EndElement node comes right after an Element node,
-                                // it means there is no text/CDATA node in current element
-                                if (preNodeType == XmlNodeType.Element)
-                                {
-                                    var key = ConfigurationPath.Combine(prefixStack.Reverse());
-                                    data[key] = string.Empty;
-                                }
-
-                                prefixStack.Pop();
-                            }
-                            break;
-
-                        case XmlNodeType.CDATA:
-                        case XmlNodeType.Text:
+                    case XmlNodeType.EndElement:
+                        if (prefixStack.Any())
+                        {
+                            // If this EndElement node comes right after an Element node,
+                            // it means there is no text/CDATA node in current element
+                            if (preNodeType == XmlNodeType.Element)
                             {
                                 var key = ConfigurationPath.Combine(prefixStack.Reverse());
-                                if (data.ContainsKey(key))
-                                {
-                                    throw new FormatException($"A duplicate key '{key}' was found.{GetLineInfo(reader)}");
-                                }
-
-                                data[key] = reader.Value;
-                                break;
+                                data[key] = string.Empty;
                             }
-                        case XmlNodeType.XmlDeclaration:
-                        case XmlNodeType.ProcessingInstruction:
-                        case XmlNodeType.Comment:
-                        case XmlNodeType.Whitespace:
-                            // Ignore certain types of nodes
-                            break;
 
-                        default:
-                            throw new FormatException($"Unsupported node type '{reader.NodeType}' was found.{GetLineInfo(reader)}");
-                    }
-                    preNodeType = reader.NodeType;
-                    // If this element is a self-closing element,
-                    // we pretend that we just processed an EndElement node
-                    // because a self-closing element contains an end within itself
-                    if (preNodeType == XmlNodeType.Element &&
-                        reader.IsEmptyElement)
+                            prefixStack.Pop();
+                        }
+                        break;
+
+                    case XmlNodeType.CDATA:
+                    case XmlNodeType.Text:
                     {
-                        preNodeType = XmlNodeType.EndElement;
+                        var key = ConfigurationPath.Combine(prefixStack.Reverse());
+                        if (data.ContainsKey(key))
+                        {
+                            throw new FormatException($"A duplicate key '{key}' was found.{GetLineInfo(reader)}");
+                        }
+
+                        data[key] = reader.Value;
+                        break;
                     }
+                    case XmlNodeType.XmlDeclaration:
+                    case XmlNodeType.ProcessingInstruction:
+                    case XmlNodeType.Comment:
+                    case XmlNodeType.Whitespace:
+                        // Ignore certain types of nodes
+                        break;
+
+                    default:
+                        throw new FormatException($"Unsupported node type '{reader.NodeType}' was found.{GetLineInfo(reader)}");
+                }
+                preNodeType = reader.NodeType;
+                // If this element is a self-closing element,
+                // we pretend that we just processed an EndElement node
+                // because a self-closing element contains an end within itself
+                if (preNodeType == XmlNodeType.Element &&
+                    reader.IsEmptyElement)
+                {
+                    preNodeType = XmlNodeType.EndElement;
                 }
             }
+
             return data;
         }
 

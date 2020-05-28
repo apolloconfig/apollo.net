@@ -1,10 +1,7 @@
 ﻿using Com.Ctrip.Framework.Apollo.Exceptions;
-using Newtonsoft.Json;
 using System;
-using System.IO;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -26,7 +23,7 @@ namespace Com.Ctrip.Framework.Apollo.Util.Http
 
         public async Task<HttpResponse<T>> DoGetAsync<T>(string url, int timeout)
         {
-            HttpResponseMessage? response = null;
+            Exception e;
             try
             {
 #if NET40
@@ -37,30 +34,23 @@ namespace Com.Ctrip.Framework.Apollo.Util.Http
 #endif
                 var httpClient = new HttpClient(_httpMessageHandler, false) { Timeout = TimeSpan.FromMilliseconds(timeout > 0 ? timeout : _options.Timeout) };
 
-                response = await Timeout(httpClient.GetAsync(url, cts.Token), timeout, cts).ConfigureAwait(false);
-                if (response.StatusCode == HttpStatusCode.OK)
+                using var response = await Timeout(httpClient.GetAsync(url, cts.Token), timeout, cts).ConfigureAwait(false);
+                switch (response.StatusCode)
                 {
-                    using var s = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-                    using var sr = new StreamReader(s, Encoding.UTF8);
-                    using var jtr = new JsonTextReader(sr);
-                    return new HttpResponse<T>(response.StatusCode, JsonSerializer.Create().Deserialize<T>(jtr));
+                    case HttpStatusCode.OK:
+                        return new HttpResponse<T>(response.StatusCode, await response.Content.ReadAsAsync<T>().ConfigureAwait(false));
+                    case HttpStatusCode.NotModified:
+                        return new HttpResponse<T>(response.StatusCode);
                 }
 
-                if (response.StatusCode == HttpStatusCode.NotModified)
-                {
-                    return new HttpResponse<T>(response.StatusCode);
-                }
+                e = new ApolloConfigStatusCodeException(response.StatusCode, $"Get operation failed for {url}");
             }
             catch (Exception ex)
             {
-                throw new ApolloConfigException("Could not complete get operation", ex);
-            }
-            finally
-            {
-                response?.Dispose();
+                e = new ApolloConfigException("Could not complete get operation", ex);
             }
 
-            throw new ApolloConfigStatusCodeException(response.StatusCode, $"Get operation failed for {url}");
+            throw e;
         }
 
         public void Dispose() => _httpMessageHandler.Dispose();
