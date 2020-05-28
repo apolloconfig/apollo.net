@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 namespace Com.Ctrip.Framework.Apollo.Core.Utils
@@ -26,7 +27,7 @@ namespace Com.Ctrip.Framework.Apollo.Core.Utils
             _dict = new Dictionary<string, string>(new JsonSerializer().Deserialize<IDictionary<string, string>>(reader), StringComparer.OrdinalIgnoreCase);
         }
 
-        public bool ContainsKey(string key) => _dict.ContainsKey(key);
+        public bool TryGetProperty(string key, [NotNullWhen(true)] out string? value) => _dict.TryGetValue(key, out value);
 
         public string? GetProperty(string key)
         {
