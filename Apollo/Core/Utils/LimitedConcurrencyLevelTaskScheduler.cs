@@ -17,16 +17,15 @@ namespace Com.Ctrip.Framework.Apollo.Core.Utils
         private readonly LinkedList<Task> _tasks = new LinkedList<Task>(); // protected by lock(_tasks)
 
         // The maximum concurrency level allowed by this scheduler.
-        private readonly int _maxDegreeOfParallelism;
 
         // Indicates whether the scheduler is currently processing work items.
-        private int _delegatesQueuedOrRunning = 0;
+        private int _delegatesQueuedOrRunning;
 
         // Creates a new instance with the specified degree of parallelism.
         public LimitedConcurrencyLevelTaskScheduler(int maxDegreeOfParallelism)
         {
-            if (maxDegreeOfParallelism < 1) throw new ArgumentOutOfRangeException("maxDegreeOfParallelism");
-            _maxDegreeOfParallelism = maxDegreeOfParallelism;
+            if (maxDegreeOfParallelism < 1) throw new ArgumentOutOfRangeException(nameof(maxDegreeOfParallelism));
+            MaximumConcurrencyLevel = maxDegreeOfParallelism;
         }
 
         // Queues a task to the scheduler.
@@ -37,7 +36,7 @@ namespace Com.Ctrip.Framework.Apollo.Core.Utils
             lock (_tasks)
             {
                 _tasks.AddLast(task);
-                if (_delegatesQueuedOrRunning < _maxDegreeOfParallelism)
+                if (_delegatesQueuedOrRunning < MaximumConcurrencyLevel)
                 {
                     ++_delegatesQueuedOrRunning;
                     NotifyThreadPoolOfPendingWork();
@@ -92,12 +91,9 @@ namespace Com.Ctrip.Framework.Apollo.Core.Utils
             // If the task was previously queued, remove it from the queue
             if (taskWasPreviouslyQueued)
                 // Try to run the task.
-                if (TryDequeue(task))
-                    return TryExecuteTask(task);
-                else
-                    return false;
-            else
-                return TryExecuteTask(task);
+                return TryDequeue(task) && TryExecuteTask(task);
+
+            return TryExecuteTask(task);
         }
 
         // Attempt to remove a previously scheduled task from the scheduler.
@@ -107,7 +103,7 @@ namespace Com.Ctrip.Framework.Apollo.Core.Utils
         }
 
         // Gets the maximum concurrency level supported by this scheduler.
-        public sealed override int MaximumConcurrencyLevel => _maxDegreeOfParallelism;
+        public sealed override int MaximumConcurrencyLevel { get; }
 
         // Gets an enumerable of the tasks currently scheduled on this scheduler.
         protected sealed override IEnumerable<Task> GetScheduledTasks()

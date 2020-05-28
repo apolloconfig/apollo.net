@@ -121,7 +121,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             throw new ApolloConfigException($"Get config services failed from {url}", exception!);
         }
 
-        private string AssembleMetaServiceUrl()
+        private Uri AssembleMetaServiceUrl()
         {
             var domainName = _options.MetaServer;
             var appId = _options.AppId;
@@ -138,7 +138,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
             uriBuilder.Query = QueryUtils.Build(query);
 
-            return uriBuilder.ToString();
+            return uriBuilder.Uri;
         }
 
         public void Dispose() => _timer?.Dispose();

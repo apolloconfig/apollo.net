@@ -46,17 +46,8 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             return new Properties(dic);
         }
 
-        public override bool TryGetProperty(string key, [NotNullWhen(true)] out string? value)
-        {
-            value = null;
-
-            var properties = _configProperties;
-            if (!properties.ContainsKey(key)) return false;
-
-            value = properties.GetProperty(key);
-
-            return true;
-        }
+        public override bool TryGetProperty(string key, [NotNullWhen(true)] out string? value) =>
+            _configProperties.TryGetProperty(key, out value);
 
         public override IEnumerable<string> GetPropertyNames() => _configProperties.GetPropertyNames();
 

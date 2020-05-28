@@ -19,9 +19,9 @@ namespace Com.Ctrip.Framework.Apollo.Util.Http
             _httpMessageHandler = _options.HttpMessageHandlerFactory == null ? new HttpClientHandler() : _options.HttpMessageHandlerFactory();
         }
 
-        public Task<HttpResponse<T>> DoGetAsync<T>(string url) => DoGetAsync<T>(url, _options.Timeout);
+        public Task<HttpResponse<T>> DoGetAsync<T>(Uri url) => DoGetAsync<T>(url, _options.Timeout);
 
-        public async Task<HttpResponse<T>> DoGetAsync<T>(string url, int timeout)
+        public async Task<HttpResponse<T>> DoGetAsync<T>(Uri url, int timeout)
         {
             Exception e;
             try

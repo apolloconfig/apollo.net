@@ -104,7 +104,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             var configServices = await _serviceLocator.GetConfigServices().ConfigureAwait(false);
 
             Exception? exception = null;
-            string? url = null;
+            Uri? url = null;
 
             var notFound = false;
             for (var i = 0; i < (isFirst ? 1 : 2); i++)
@@ -178,7 +178,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             throw new ApolloConfigException(fallbackMessage, exception!);
         }
 
-        private string AssembleQueryConfigUrl(string uri,
+        private Uri AssembleQueryConfigUrl(string uri,
             string appId,
             string cluster,
             string? namespaceName,
@@ -218,7 +218,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
             uriBuilder.Query = QueryUtils.Build(query);
 
-            return uriBuilder.ToString();
+            return uriBuilder.Uri;
         }
 
         private static readonly JsonSerializerSettings JsonSettings = new JsonSerializerSettings
