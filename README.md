@@ -63,7 +63,3 @@ appId就是应用的appId，如100004458。
     "batch":"2000"
 }
 ```
-
-# 五、v2更新日志
-
-[v2](https://github.com/ctripcorp/apollo.net/releases/tag/v2.0.0)

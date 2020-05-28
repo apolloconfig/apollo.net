@@ -227,3 +227,13 @@ services.ConfigureJsonValue<Options>(/*name, */config.GetSection("somePrefix:Jso
     }
 }
 ```
+
+## 4.4 如何使用访问密钥
+
+> 配置对应的环境的Secret即可
+``` diff
+{
+    "apollo": {
+        "Secret": "服务端配置的值"
+    }
+}
