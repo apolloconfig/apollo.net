@@ -79,7 +79,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             while (!cancellationToken.IsCancellationRequested)
             {
                 var sleepTime = 50; //default 50 ms
-                string? url = null;
+                Uri? url = null;
                 try
                 {
                     if (lastServiceDto == null)
@@ -205,7 +205,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             }
         }
 
-        private string AssembleLongPollRefreshUrl(string uri, string appId, string cluster, string? dataCenter)
+        private Uri AssembleLongPollRefreshUrl(string uri, string appId, string cluster, string? dataCenter)
         {
             if (!uri.EndsWith("/", StringComparison.Ordinal)) uri += "/";
 
@@ -228,7 +228,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
             uriBuilder.Query = QueryUtils.Build(query);
 
-            return uriBuilder.ToString();
+            return uriBuilder.Uri;
         }
 
         private static readonly JsonSerializerSettings JsonSettings = new JsonSerializerSettings
