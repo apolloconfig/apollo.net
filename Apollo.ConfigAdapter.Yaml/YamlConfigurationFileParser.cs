@@ -22,7 +22,7 @@ namespace Com.Ctrip.Framework.Apollo.ConfigAdapter
 
             if (yamlStream.Documents.Count > 0 && yamlStream.Documents[0].RootNode is YamlMappingNode mappingNode)
                 foreach (var node in mappingNode.Children)
-                    if (node.Key is YamlScalarNode ysn)
+                    if (node.Key is YamlScalarNode ysn && ysn.Value != null)
                         VisitYamlNode(ysn.Value, node.Value);
                     else
                         throw UnsupportedKeyType(node.Key, _currentPath);
@@ -63,7 +63,7 @@ namespace Com.Ctrip.Framework.Apollo.ConfigAdapter
 
             if (_data.ContainsKey(_currentPath)) throw new FormatException($"A duplicate key '{_currentPath}' was found.");
 
-            _data[_currentPath] = IsNullValue(scalarNode) ? "" : scalarNode.Value;
+            _data[_currentPath] = IsNullValue(scalarNode) ? "" : scalarNode.Value!;
 
             ExitContext();
         }
@@ -96,7 +96,7 @@ namespace Com.Ctrip.Framework.Apollo.ConfigAdapter
                             default:
                                 throw UnsupportedMergeKeys(node.Value, node.Value, _currentPath);
                         }
-                    else
+                    else if (ysn.Value != null)
                         dic[ysn.Value] = node.Value;
                 }
             }
@@ -135,6 +135,7 @@ namespace Com.Ctrip.Framework.Apollo.ConfigAdapter
         private static bool IsNullValue(YamlScalarNode yamlValue) =>
             yamlValue.Style == ScalarStyle.Plain
                 && (yamlValue.Value == "~"
+                    || yamlValue.Value == null
                     || yamlValue.Value == "null"
                     || yamlValue.Value == "Null"
                     || yamlValue.Value == "NULL");
