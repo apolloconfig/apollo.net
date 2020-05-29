@@ -5,7 +5,7 @@
     <PackageReleaseNotes></PackageReleaseNotes>
     <Description>携程Apollo的OpenApi客户端，入口接口IOpenApiFactory</Description>
     <PackageIconUrl>https://raw.githubusercontent.com/ctripcorp/apollo/master/apollo-portal/src/main/resources/static/img/config.png</PackageIconUrl>
-    <PackageProjectUrl>$(RepositoryUrl)/$(AssemblyName)</PackageProjectUrl>
+    <PackageProjectUrl>$(RepositoryUrl)/$(MSBuildProjectName)</PackageProjectUrl>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Version>2.0.0</Version>
     <RootNamespace>Com.Ctrip.Framework.Apollo.OpenApi</RootNamespace>

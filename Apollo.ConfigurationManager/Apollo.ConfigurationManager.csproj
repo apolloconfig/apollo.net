@@ -34,7 +34,7 @@
 
 $(PackageReleaseNotes)</Description>
     <PackageIconUrl>https://raw.githubusercontent.com/ctripcorp/apollo/master/apollo-portal/src/main/resources/static/img/config.png</PackageIconUrl>
-    <PackageProjectUrl>$(RepositoryUrl)/$(AssemblyName)</PackageProjectUrl>
+    <PackageProjectUrl>$(RepositoryUrl)/$(MSBuildProjectName)</PackageProjectUrl>
     <PackageTags>$(PackageTags) ConfigurationBuilder ConfigurationManager</PackageTags>
     <RootNamespace>Com.Ctrip.Framework.Apollo</RootNamespace>
     <TargetFrameworks>net471;net45;net40;netstandard2.0</TargetFrameworks>
