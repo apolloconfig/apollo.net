@@ -15,6 +15,10 @@ namespace Com.Ctrip.Framework.Apollo.OpenApi.Model
 
     public class NamespaceGrayDelRelease : NamespaceRelease
     {
+#if NET40
+        public ICollection<string>? GrayDelKeys { get; set; }
+#else
         public IReadOnlyCollection<string>? GrayDelKeys { get; set; }
+#endif
     }
 }

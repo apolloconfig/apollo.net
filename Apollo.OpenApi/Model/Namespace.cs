@@ -15,7 +15,10 @@ namespace Com.Ctrip.Framework.Apollo.OpenApi.Model
         public string? Format { get; set; }
 
         public bool IsPublic { get; set; }
-
+#if NET40
+        public IList<Item>? Items { get; set; }
+#else
         public IReadOnlyList<Item>? Items { get; set; }
+#endif
     }
 }
