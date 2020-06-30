@@ -123,11 +123,13 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
         private Uri AssembleMetaServiceUrl()
         {
-            var domainName = _options.MetaServer;
+            var uri = _options.MetaServer ?? ConfigConsts.DefaultMetaServerUrl;
             var appId = _options.AppId;
             var localIp = _options.LocalIp;
 
-            var uriBuilder = new UriBuilder(domainName + "/services/config");
+            if (!uri.EndsWith("/", StringComparison.Ordinal)) uri += "/";
+
+            var uriBuilder = new UriBuilder(uri + "services/config");
             var query = new Dictionary<string, string>();
 
             query["appId"] = appId;
