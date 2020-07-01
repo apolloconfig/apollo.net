@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Apollo\Apollo.csproj" />
-    <PackageReference Include="YamlDotNet" Version="6.*" />
+    <PackageReference Include="YamlDotNet" Version="8.*" />
   </ItemGroup>
 
 </Project>
