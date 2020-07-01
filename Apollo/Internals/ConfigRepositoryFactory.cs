@@ -10,11 +10,15 @@ namespace Com.Ctrip.Framework.Apollo.Internals
         private readonly HttpUtil _httpUtil;
         private readonly ConcurrentDictionary<string, IConfigRepository> _configRepositories = new ConcurrentDictionary<string, IConfigRepository>();
         private readonly IApolloOptions _options;
+        private readonly RemoteConfigLongPollService _remoteConfigLongPollService;
+        private readonly ConfigServiceLocator _serviceLocator;
 
         public ConfigRepositoryFactory(IApolloOptions options, HttpUtil? httpUtil = null)
         {
             _options = options;
             _httpUtil = httpUtil ?? new HttpUtil(options);
+            _serviceLocator = new ConfigServiceLocator(_httpUtil, _options);
+            _remoteConfigLongPollService = new RemoteConfigLongPollService(_serviceLocator, _httpUtil, _options);
         }
 
         public IConfigRepository GetConfigRepository(string @namespace) =>
@@ -28,10 +32,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                 return new LocalFileConfigRepository(@namespace, _options);
             }
 
-            var locator = new ConfigServiceLocator(_httpUtil, _options);
-            var pollService = new RemoteConfigLongPollService(locator, _httpUtil, _options);
-
-            return new LocalFileConfigRepository(@namespace, _options, new RemoteConfigRepository(@namespace, _options, _httpUtil, locator, pollService));
+            return new LocalFileConfigRepository(@namespace, _options, new RemoteConfigRepository(@namespace, _options, _httpUtil, _serviceLocator, _remoteConfigLongPollService));
         }
     }
 }
