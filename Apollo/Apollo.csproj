@@ -2,7 +2,9 @@
 
   <PropertyGroup>
     <AssemblyName>Com.Ctrip.Framework.Apollo</AssemblyName>
-    <PackageReleaseNotes>2.4.0:
+    <PackageReleaseNotes>2.4.1:
+      1. 修复多namespace下长连接过多的问题
+2.4.0:
       1. 添加apollo 1.6访问密钥
 2.3.0:
       1. 添加ICacheFileProvider支持自定义配置缓存方式（比如本地加密存储）
