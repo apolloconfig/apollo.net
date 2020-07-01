@@ -258,7 +258,6 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
             if (disposing)
             {
-                _remoteConfigLongPollService.Dispose();
                 _timer.Dispose();
             }
 
