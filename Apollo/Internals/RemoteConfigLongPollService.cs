@@ -21,7 +21,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
     public class RemoteConfigLongPollService : IDisposable
     {
         private static readonly Func<Action<LogLevel, string, Exception?>> Logger = () => LogManager.CreateLogger(typeof(RemoteConfigLongPollService));
-        private static readonly long InitNotificationId = -1;
+        private const long InitNotificationId = -1;
         private readonly ConfigServiceLocator _serviceLocator;
         private readonly HttpUtil _httpUtil;
         private readonly IApolloOptions _options;
@@ -54,7 +54,6 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
             if (_cts == null) StartLongPolling();
         }
-
 
         private void StartLongPolling()
         {
@@ -236,15 +235,14 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             NullValueHandling = NullValueHandling.Ignore,
             ContractResolver = new CamelCasePropertyNamesContractResolver()
         };
-        private string AssembleNotifications(IDictionary<string, long?> notificationsMap)
-        {
-            return JsonConvert.SerializeObject(notificationsMap
+
+        private static string AssembleNotifications(IDictionary<string, long?> notificationsMap) =>
+            JsonConvert.SerializeObject(notificationsMap
                 .Select(kvp => new ApolloConfigNotification
                 {
                     NamespaceName = kvp.Key,
                     NotificationId = kvp.Value.GetValueOrDefault(InitNotificationId)
                 }), JsonSettings);
-        }
 
         public void Dispose()
         {

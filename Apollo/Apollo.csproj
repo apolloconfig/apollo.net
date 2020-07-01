@@ -2,7 +2,9 @@
 
   <PropertyGroup>
     <AssemblyName>Com.Ctrip.Framework.Apollo</AssemblyName>
-    <PackageReleaseNotes>2.4.0:
+    <PackageReleaseNotes>2.4.1:
+      1. 修复 #120 `.net 客户端，AddNameSpace导致TCP链接过多，阿波罗服务器资源耗尽！`
+2.4.0:
       1. 添加apollo 1.6访问密钥
 2.3.0:
       1. 添加ICacheFileProvider支持自定义配置缓存方式（比如本地加密存储）
@@ -40,7 +42,7 @@ $(PackageReleaseNotes)</Description>
     <PackageProjectUrl>$(RepositoryUrl)/$(MSBuildProjectName)</PackageProjectUrl>
     <RootNamespace>Com.Ctrip.Framework.Apollo</RootNamespace>
     <TargetFrameworks>net40;net45;netstandard2.0</TargetFrameworks>
-    <Version>2.4.0</Version>
+    <Version>2.4.1</Version>
   </PropertyGroup>
 
   <ItemGroup>

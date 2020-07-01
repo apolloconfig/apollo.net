@@ -12,7 +12,7 @@
     <NoWarn>1591</NoWarn>
     <PackageTags>apollo configcenter configuration ctrip</PackageTags>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/ctripcorp/apollo.net/tree/dotnet-core</RepositoryUrl>
+    <RepositoryUrl Condition="'$(TargetFramework)' != 'net40'">https://github.com/ctripcorp/apollo.net/tree/dotnet-core</RepositoryUrl>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
 

@@ -5,7 +5,7 @@ using System.Collections.Concurrent;
 
 namespace Com.Ctrip.Framework.Apollo.Internals
 {
-    public class ConfigRepositoryFactory : IConfigRepositoryFactory
+    public class ConfigRepositoryFactory : IConfigRepositoryFactory, IDisposable
     {
         private readonly HttpUtil _httpUtil;
         private readonly ConcurrentDictionary<string, IConfigRepository> _configRepositories = new ConcurrentDictionary<string, IConfigRepository>();
@@ -33,6 +33,13 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             }
 
             return new LocalFileConfigRepository(@namespace, _options, new RemoteConfigRepository(@namespace, _options, _httpUtil, _serviceLocator, _remoteConfigLongPollService));
+        }
+
+        public void Dispose()
+        {
+            _remoteConfigLongPollService.Dispose();
+            _serviceLocator.Dispose();
+            _httpUtil.Dispose();
         }
     }
 }
