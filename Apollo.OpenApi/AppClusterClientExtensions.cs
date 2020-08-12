@@ -42,6 +42,28 @@ namespace Com.Ctrip.Framework.Apollo.OpenApi
             return list?.FirstOrDefault();
         }
 
+        /// <summary>获取集群</summary>
+        public static Task<Cluster?> GetCluster(this IAppClusterClient client, string env,
+            string clusterName = ConfigConsts.ClusterNameDefault,
+            CancellationToken cancellationToken = default)
+        {
+            if (client == null) throw new ArgumentNullException(nameof(client));
+            if (env == null) throw new ArgumentNullException(nameof(env));
+
+            return client.Get<Cluster>($"envs/{env}/apps/{client.AppId}/clusters/{clusterName}", cancellationToken);
+        }
+
+        /// <summary>创建集群</summary>
+        public static Task CreateCluster(this IAppClusterClient client, string env,
+            Cluster cluster,
+            CancellationToken cancellationToken = default)
+        {
+            if (client == null) throw new ArgumentNullException(nameof(client));
+            if (env == null) throw new ArgumentNullException(nameof(env));
+
+            return client.Post<Cluster>($"envs/{env}/apps/{client.AppId}/clusters", cluster, cancellationToken);
+        }
+
         /// <summary>获取App信息</summary>
 #if NET40
         public static Task<IList<AppInfo>?> GetAppsInfo(this IAppClusterClient client,
@@ -66,7 +88,7 @@ namespace Com.Ctrip.Framework.Apollo.OpenApi
         }
 
         /// <summary>获取集群下所有Namespace信息</summary>
-        #if NET40
+#if NET40
         public static Task<IList<Namespace>?> GetNamespaces(this IAppClusterClient client, string env,
 #else
         public static Task<IReadOnlyList<Namespace>?> GetNamespaces(this IAppClusterClient client, string env,
@@ -83,7 +105,7 @@ namespace Com.Ctrip.Framework.Apollo.OpenApi
 #endif
         }
 
-        /// <summary>创建Namespace</summary>
+        /// <summary>创建Namespace，可以通过此接口创建Namespace，调用此接口需要授予第三方APP对目标APP的管理权限。</summary>
         public static Task<AppNamespace> CreateAppNamespace(this IAppClusterClient client,
              AppNamespace appNamespace, CancellationToken cancellationToken = default)
         {

@@ -28,6 +28,18 @@ namespace Com.Ctrip.Framework.Apollo
         }
 
         [Fact]
+        public async Task GetCluster()
+        {
+            var result = await CreateAppClusterClient().GetCluster("DEV").ConfigureAwait(false);
+
+            Dump(result);
+
+            Assert.NotNull(result);
+
+            Assert.Equal("apollo-client", result!.AppId);
+        }
+
+        [Fact]
         public async Task GetAppInfo()
         {
             var result = await CreateAppClusterClient().GetAppInfo().ConfigureAwait(false);

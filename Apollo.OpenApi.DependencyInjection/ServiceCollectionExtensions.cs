@@ -13,7 +13,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
 
-            services.AddOptions().AddHttpClient()
+            services.AddHttpClient()
                 .TryAddSingleton<IOpenApiFactory>(provider => new OpenApiFactory(
                     provider.GetRequiredService<IOptions<OpenApiOptions>>().Value,
                     provider.GetRequiredService<IHttpMessageHandlerFactory>().CreateHandler));

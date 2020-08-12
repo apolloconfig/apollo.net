@@ -118,9 +118,11 @@ namespace Com.Ctrip.Framework.Apollo
             Assert.Equal(client.Namespace, result.NamespaceName);
             Assert.Equal(result.Comment, result.Comment);
             Assert.NotNull(result.Configurations);
-            Assert.NotEmpty(result.Configurations);
+            Assert.NotEmpty(result.Configurations!);
 
             Assert.NotNull(await client.GetLatestActiveRelease().ConfigureAwait(false));
+
+            await client.Rollback("apollo", 26864).ConfigureAwait(false);
         }
     }
 }
