@@ -144,6 +144,18 @@ Apollo支持配置按照集群划分，也就是说对于一个appId和一个环
 
 # 三、客户端用法
 
+> 参考配置
+``` json
+{
+  "apollo": {
+    "AppId": "apollo-client",
+    "MetaServer": "http://localhost:8080/",
+    "Namespaces": [ "some namespace", "application.json", "application" ]
+  }
+}
+
+```
+
 ## 3.1 修改Program.cs文件
 
 ### 3.1.1 配置在appsettings.json中
@@ -151,9 +163,7 @@ Apollo支持配置按照集群划分，也就是说对于一个appId和一个环
 ``` diff
     WebHost.CreateDefaultBuilder(args)
 +       .ConfigureAppConfiguration(builder => builder
-+           .AddApollo(builder.Build().GetSection("apollo"))
-+           .AddNamespace("Some namespace")
-+           .AddDefault())
++           .AddApollo(builder.Build().GetSection("apollo")))
         .UseStartup<Startup>()
 ```
 
@@ -162,9 +172,7 @@ Apollo支持配置按照集群划分，也就是说对于一个appId和一个环
 ``` diff
     WebHost.CreateDefaultBuilder(args)
 +       .ConfigureAppConfiguration((cotnext, builder) => builder
-+           .AddApollo(cotnext.Configuration.GetSection("apollo"))
-+           .AddNamespace("Some namespace")
-+           .AddDefault())
++           .AddApollo(cotnext.Configuration.GetSection("apollo")))
         .UseStartup<Startup>()
 ```
 

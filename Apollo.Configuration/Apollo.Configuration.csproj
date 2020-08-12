@@ -2,7 +2,9 @@
 
   <PropertyGroup>
     <AssemblyName>Com.Ctrip.Framework.Apollo.Configuration</AssemblyName>
-    <PackageReleaseNotes>2.4.0:
+    <PackageReleaseNotes>2.4.1:
+      1. 支持从配置中读取apollo namespace（key apollo:Namespaces，值为数组，后面优先）
+2.4.0:
       1. 添加apollo 1.6访问密钥
 2.3.0:
       1. 添加ICacheFileProvider支持自定义配置缓存方式（比如本地加密存储）
@@ -28,7 +30,7 @@ $(PackageReleaseNotes)</Description>
     <PackageProjectUrl>$(RepositoryUrl)/$(MSBuildProjectName)</PackageProjectUrl>
     <RootNamespace>Com.Ctrip.Framework.Apollo</RootNamespace>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>2.4.0</Version>
+    <Version>2.4.1</Version>
   </PropertyGroup>
 
   <ItemGroup>

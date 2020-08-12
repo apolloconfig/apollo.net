@@ -52,6 +52,8 @@ namespace Com.Ctrip.Framework.Apollo
         /// <returns> the cluster name, or "default" if not specified </returns>
         public virtual string Cluster { get => _cluster ?? ConfigConsts.ClusterNameDefault; set => _cluster = value; }
 
+        public IEnumerable<string>? Namespaces { get; set; }
+
         /// <summary>Default Dev</summary>
         public virtual Env Env { get; set; } = Env.Dev;
 
