@@ -23,7 +23,11 @@ namespace Microsoft.Extensions.Configuration
 #pragma warning disable 618
             ApolloConfigurationManager.SetApolloOptions(repositoryFactory);
 #pragma warning restore 618
-            return new ApolloConfigurationBuilder(builder, repositoryFactory);
+            var acb = new ApolloConfigurationBuilder(builder, repositoryFactory);
+            if (options is ApolloOptions ao && ao.Namespaces != null)
+                foreach (var ns in ao.Namespaces) acb.AddNamespace(ns);
+
+            return acb;
         }
     }
 }
