@@ -110,5 +110,14 @@ namespace Com.Ctrip.Framework.Apollo.OpenApi
 
             return client.Get<Release>($"envs/{client.Env}/apps/{client.AppId}/clusters/{client.Cluster}/namespaces/{client.Namespace}/releases/latest", cancellationToken);
         }
+
+        /// <summary>回滚已发布配置接口</summary>
+        public static Task<bool> Rollback(this INamespaceClient client, string @operator, int releaseId,
+            CancellationToken cancellationToken = default)
+        {
+            if (client == null) throw new ArgumentNullException(nameof(client));
+
+            return client.Put($"envs/{client.Env}/releases/{releaseId}/rollback?operator={WebUtility.UrlEncode(@operator)}", cancellationToken);
+        }
     }
 }

@@ -14,5 +14,12 @@ namespace Com.Ctrip.Framework.Apollo.OpenApi
             Status = status;
             Reason = reason;
         }
+
+        public ApolloOpenApiException(HttpStatusCode status, string reason, string message, Exception innerException)
+            : base($"Request to apollo open api failed, status code: {(int)status}, reason: {(string.IsNullOrEmpty(reason) ? status.ToString() : reason)}, message:{message}", innerException)
+        {
+            Status = status;
+            Reason = reason;
+        }
     }
 }

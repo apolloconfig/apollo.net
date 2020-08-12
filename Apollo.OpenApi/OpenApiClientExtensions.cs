@@ -70,6 +70,21 @@ namespace Com.Ctrip.Framework.Apollo.OpenApi
 #endif
         }
 
+        public static async Task<bool> Put(this IOpenApiClient client, string url, CancellationToken cancellationToken)
+        {
+            if (url == null) throw new ArgumentNullException(nameof(url));
+
+            using var httpClient = client.CreateHttpClient();
+            using var request = new HttpRequestMessage(HttpMethod.Put, url);
+            using var response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+
+            if (response.StatusCode == HttpStatusCode.NotFound) return false;
+
+            await AssertResponse(response).ConfigureAwait(false);
+
+            return true;
+        }
+
         public static async Task<TResponse> Put<TResponse>(this IOpenApiClient client, string url, object data, CancellationToken cancellationToken)
         {
             if (url == null) throw new ArgumentNullException(nameof(url));
@@ -105,9 +120,9 @@ namespace Com.Ctrip.Framework.Apollo.OpenApi
 
                 ex = new ApolloOpenApiException(response.StatusCode, string.IsNullOrEmpty(response.ReasonPhrase) ? exception : response.ReasonPhrase, message);
             }
-            catch
+            catch (Exception e)
             {
-                ex = new ApolloOpenApiException(response.StatusCode, response.ReasonPhrase, body);
+                ex = new ApolloOpenApiException(response.StatusCode, response.ReasonPhrase, body, e);
             }
 
             throw ex;
