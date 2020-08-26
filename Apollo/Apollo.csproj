@@ -82,14 +82,20 @@ $(PackageReleaseNotes)</Description>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
 
-    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.*" Condition="'$(TargetFramework)' != 'net40'" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
     <PackageReference Include="Microsoft.Bcl.Async" Version="1.*" />
-    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="4.*" />
-
+    <PackageReference Include="Microsoft.Net.Http" Version="2.0.*" />
+    <PackageReference Include="Newtonsoft.Json" Version="4.5.6"/>
+    
     <Reference Include="System.Web" />
   </ItemGroup>
-
+  <ItemGroup Condition="'$(TargetFramework)' == 'net45'">
+    <PackageReference Include="Newtonsoft.Json" Version="6.0.4"/>
+    <Reference Include="System.Net.Http" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.1"/>
+  </ItemGroup>
 </Project>

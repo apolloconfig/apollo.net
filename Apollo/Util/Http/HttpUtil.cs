@@ -42,11 +42,7 @@ namespace Com.Ctrip.Framework.Apollo.Util.Http
                 switch (response.StatusCode)
                 {
                     case HttpStatusCode.OK:
-#if NET40
-                        return new HttpResponse<T>(response.StatusCode, await response.Content.ReadAsAsync<T>().ConfigureAwait(false));
-#else
                         return new HttpResponse<T>(response.StatusCode, await response.Content.ReadAsAsync<T>(cts.Token).ConfigureAwait(false));
-#endif
                     case HttpStatusCode.NotModified:
                         return new HttpResponse<T>(response.StatusCode);
                 }
