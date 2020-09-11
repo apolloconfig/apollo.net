@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>Com.Ctrip.Framework.Apollo.ExtensionsHosting</AssemblyName>
+    <PackageReleaseNotes>2.4.1:
+    与Microsoft.Extensions.Hosting集成</PackageReleaseNotes>
+    <Description>携程Apollo客户端
+
+　　与Microsoft.Extensions.Configuration集成请使用Com.Ctrip.Framework.Apollo.Configuration包
+　　与System.Configuration.ConfigurationManager集成(.net 4.7.1及以后版本)请使用Com.Ctrip.Framework.Apollo.ConfigurationManager包
+　　直接使用ApolloConfigurationManager请使用Com.Ctrip.Framework.Apollo.Configuration或者Com.Ctrip.Framework.Apollo.ConfigurationManager
+
+$(PackageReleaseNotes)</Description>
+    <PackageIconUrl>https://raw.githubusercontent.com/ctripcorp/apollo/master/apollo-portal/src/main/resources/static/img/config.png</PackageIconUrl>
+    <PackageProjectUrl>$(RepositoryUrl)/$(MSBuildProjectName)</PackageProjectUrl>
+    <RootNamespace>Microsoft.Extensions.Hosting</RootNamespace>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Version>2.4.1</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Apollo.Configuration\Apollo.Configuration.csproj" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="2.1.1" />
+  </ItemGroup>
+
+</Project>
