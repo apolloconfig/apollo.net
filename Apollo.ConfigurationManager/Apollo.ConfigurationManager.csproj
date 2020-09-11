@@ -4,12 +4,12 @@
   <PropertyGroup>
     <AssemblyName>Com.Ctrip.Framework.Apollo.ConfigurationManager</AssemblyName>
     <PackageReleaseNotes>2.4.0:
-      1. 添加apollo 1.6访问密钥
+    1. 添加apollo 1.6访问密钥
 2.3.0:
-      1. 添加ICacheFileProvider支持自定义配置缓存方式（比如本地加密存储）
+    1. 添加ICacheFileProvider支持自定义配置缓存方式（比如本地加密存储）
 2.2.0:
-      1. 使用C# 8、添加nullable
-      2. 添加net40支持
+    1. 使用C# 8、添加nullable
+    2. 添加net40支持
 2.1.0:
     1. 无
 2.0.5:
