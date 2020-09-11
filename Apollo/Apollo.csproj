@@ -3,17 +3,17 @@
   <PropertyGroup>
     <AssemblyName>Com.Ctrip.Framework.Apollo</AssemblyName>
     <PackageReleaseNotes>2.4.1:
-      1. 修复 #120 `.net 客户端，AddNameSpace导致TCP链接过多，阿波罗服务器资源耗尽！`
+    1. 修复 #120 `.net 客户端，AddNameSpace导致TCP链接过多，阿波罗服务器资源耗尽！`
 2.4.0:
-      1. 添加apollo 1.6访问密钥
+    1. 添加apollo 1.6访问密钥
 2.3.0:
-      1. 添加ICacheFileProvider支持自定义配置缓存方式（比如本地加密存储）
+    1. 添加ICacheFileProvider支持自定义配置缓存方式（比如本地加密存储）
 2.2.0:
-      1. 使用C# 8、添加nullable
-      2. 添加net40支持
-      3. 修复 #96 `ConfigService 挂了，重启配置不能同步问题`
+    1. 使用C# 8、添加nullable
+    2. 添加net40支持
+    3. 修复 #96 `ConfigService 挂了，重启配置不能同步问题`
 2.1.0:
-      1. 修复ConfigServiceLocator不能刷新的bug
+    1. 修复ConfigServiceLocator不能刷新的bug
 2.0.5:
     1. LogManager.CreateLogger异常时返回结果
 2.0.4:

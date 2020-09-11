@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>Com.Ctrip.Framework.Apollo.AspNetCoreHosting</AssemblyName>
+    <DefineConstants>$(DefineConstants);AspNetCoreHosting</DefineConstants>
+    <PackageReleaseNotes>2.4.1:
+    与Microsoft.AspNetCore.Hosting集成</PackageReleaseNotes>
+    <Description>携程Apollo客户端
+
+　　与Microsoft.Extensions.Configuration集成请使用Com.Ctrip.Framework.Apollo.Configuration包
+　　与System.Configuration.ConfigurationManager集成(.net 4.7.1及以后版本)请使用Com.Ctrip.Framework.Apollo.ConfigurationManager包
+　　直接使用ApolloConfigurationManager请使用Com.Ctrip.Framework.Apollo.Configuration或者Com.Ctrip.Framework.Apollo.ConfigurationManager
+
+$(PackageReleaseNotes)</Description>
+    <PackageIconUrl>https://raw.githubusercontent.com/ctripcorp/apollo/master/apollo-portal/src/main/resources/static/img/config.png</PackageIconUrl>
+    <PackageProjectUrl>$(RepositoryUrl)/$(MSBuildProjectName)</PackageProjectUrl>
+    <RootNamespace>Microsoft.AspNetCore.Hosting</RootNamespace>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Version>2.4.1</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="../Apollo.ExtensionsHosting/HostingBuilderExtensions.cs" />
+    <ProjectReference Include="..\Apollo.ExtensionsHosting\Apollo.ExtensionsHosting.csproj" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.1.1" />
+  </ItemGroup>
+
+</Project>

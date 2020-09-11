@@ -1,25 +1,20 @@
 ﻿using Com.Ctrip.Framework.Apollo.ConfigAdapter;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
+using System.Threading.Tasks;
 
 namespace Apollo.AspNetCore.Demo
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static Task Main(string[] args)
         {
             YamlConfigAdapter.Register();
 
-            CreateWebHostBuilder(args).Build().Run();
+            return CreateWebHostBuilder(args).Build().RunAsync();
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-               //.ConfigureAppConfiguration((context, builder) => builder //使用环境变量、命令行之类，建议Docker中运行使用此方式
-               //     .AddApollo(context.Configuration.GetSection("apollo"))
-               .ConfigureAppConfiguration(builder => builder //普通方式，一般配置在appsettings.json中
-                   .AddApollo(builder.Build().GetSection("apollo")))
-                .UseStartup<Startup>();
+            WebHost.CreateDefaultBuilder<Startup>(args).AddApollo();
     }
 }
