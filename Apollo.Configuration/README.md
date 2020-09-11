@@ -1,5 +1,7 @@
 ﻿# 一、准备工作
 
+> 如果想将传统的config配置（如web.config）转成json配置，可以使用[config2json](https://github.com/andrewlock/dotnet-config2json)工具
+
 ## 1.1 环境要求
 
 * [NETStandard 2.0](https://github.com/dotnet/standard/blob/master/docs/versions/netstandard2.0.md#platform-support)
