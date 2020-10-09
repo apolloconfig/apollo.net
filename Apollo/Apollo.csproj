@@ -3,7 +3,7 @@
   <PropertyGroup>
     <AssemblyName>Com.Ctrip.Framework.Apollo</AssemblyName>
     <PackageReleaseNotes>2.4.2:
-    1. MetaServer支持使用英文逗号和英文分号分割的多个URI
+    1. #135 MetaServer支持使用英文逗号和英文分号分割的多个URI
 2.4.1:
     1. 修复 #120 `.net 客户端，AddNameSpace导致TCP链接过多，阿波罗服务器资源耗尽！`
 2.4.0:
