@@ -1,4 +1,4 @@
-﻿{
+{
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
@@ -10,9 +10,16 @@
   "profiles": {
     "IIS Express": {
       "commandName": "IISExpress",
-      "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "DOTNET_Apollo:MetaServer": "http://106.54.227.205:8080/",
+        "DOTNET_Apollo:Secret": "ffd9d01130ee4329875ac3441c0bedda",
+        "DOTNET_ENVIRONMENT": "Development",
+        "DOTNET_Apollo:AppId": "apollo-client",
+        "DOTNET_Apollo:Namespaces:4": "application",
+        "DOTNET_Apollo:Namespaces:3": "application.yaml",
+        "DOTNET_Apollo:Namespaces:2": "application.yml",
+        "DOTNET_Apollo:Namespaces:1": "application.json",
+        "DOTNET_Apollo:Namespaces:0": "application.xml"
       }
     }
   }

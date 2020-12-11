@@ -10,14 +10,14 @@ namespace Apollo.AspNet.Demo
 {
     public class Global : HttpApplication
     {
-        public static IConfiguration Configuration { get; private set; }
+        public static IConfiguration Configuration { get; private set; } = default!;
 
         protected void Application_Start(object sender, EventArgs e)
         {
             YamlConfigAdapter.Register();
 
             Configuration = new Microsoft.Extensions.Configuration.ConfigurationBuilder()
-                .AddApollo(ConfigurationManager.AppSettings["Apollo.AppId"], ConfigurationManager.AppSettings["Apollo.MetaServer"])
+                .AddApollo(ConfigurationManager.AppSettings["Apollo:AppId"], ConfigurationManager.AppSettings["Apollo:MetaServer"])
                 .AddDefault(ConfigFileFormat.Xml)
                 .AddDefault(ConfigFileFormat.Json)
                 .AddDefault(ConfigFileFormat.Yml)

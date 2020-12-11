@@ -1,6 +1,6 @@
 ﻿using Com.Ctrip.Framework.Apollo.ConfigAdapter;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 using System.Threading.Tasks;
 
 namespace Apollo.AspNetCore.Demo
@@ -11,10 +11,12 @@ namespace Apollo.AspNetCore.Demo
         {
             YamlConfigAdapter.Register();
 
-            return CreateWebHostBuilder(args).Build().RunAsync();
+            return CreateHostBuilder(args).Build().RunAsync();
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder<Startup>(args).AddApollo();
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .AddApollo(false)
+                .ConfigureWebHostDefaults(builder => builder.UseStartup<Startup>());
     }
 }
