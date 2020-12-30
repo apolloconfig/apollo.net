@@ -3,7 +3,9 @@
 
   <PropertyGroup>
     <AssemblyName>Com.Ctrip.Framework.Apollo.ConfigurationManager</AssemblyName>
-    <PackageReleaseNotes>2.4.0:
+    <PackageReleaseNotes>2.4.1:
+    1. 通过重置ConfigurationManager.s_initState值强制刷新ConfigurationManager配置
+2.4.0:
     1. 添加apollo 1.6访问密钥
 2.3.0:
     1. 添加ICacheFileProvider支持自定义配置缓存方式（比如本地加密存储）
@@ -38,7 +40,7 @@ $(PackageReleaseNotes)</Description>
     <PackageTags>$(PackageTags) ConfigurationBuilder ConfigurationManager</PackageTags>
     <RootNamespace>Com.Ctrip.Framework.Apollo</RootNamespace>
     <TargetFrameworks>net471;net45;net40;netstandard2.0</TargetFrameworks>
-    <Version>2.4.0</Version>
+    <Version>2.4.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
