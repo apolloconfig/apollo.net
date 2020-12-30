@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Com.Ctrip.Framework.Apollo
 {
-    public class ApolloConfigurationProvider : ConfigurationProvider, IRepositoryChangeListener, IConfigurationSource
+    public class ApolloConfigurationProvider : ConfigurationProvider, IRepositoryChangeListener, IConfigurationSource, IDisposable
     {
         internal string? SectionKey { get; }
         internal IConfigRepository ConfigRepository { get; }
@@ -52,5 +52,7 @@ namespace Com.Ctrip.Framework.Apollo
         }
 
         IConfigurationProvider IConfigurationSource.Build(IConfigurationBuilder builder) => this;
+
+        public void Dispose() => ConfigRepository.RemoveChangeListener(this);
     }
 }

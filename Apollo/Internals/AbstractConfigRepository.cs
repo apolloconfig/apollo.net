@@ -1,9 +1,7 @@
 ﻿using Com.Ctrip.Framework.Apollo.Core.Utils;
-using Com.Ctrip.Framework.Apollo.Enums;
 using Com.Ctrip.Framework.Apollo.Logging;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace Com.Ctrip.Framework.Apollo.Internals
@@ -24,10 +22,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
         public void AddChangeListener(IRepositoryChangeListener listener)
         {
             lock (_listeners)
-                if (!_listeners.Contains(listener))
-                {
-                    _listeners.Add(listener);
-                }
+                if (!_listeners.Contains(listener)) _listeners.Add(listener);
         }
 
         public void RemoveChangeListener(IRepositoryChangeListener listener)
