@@ -1,11 +1,10 @@
 ﻿using Com.Ctrip.Framework.Apollo;
-using Com.Ctrip.Framework.Apollo.Enums;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
-using Microsoft.Extensions.Hosting;
 
 namespace Apollo.Configuration.Demo
 {

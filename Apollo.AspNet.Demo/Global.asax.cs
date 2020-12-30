@@ -17,7 +17,12 @@ namespace Apollo.AspNet.Demo
             YamlConfigAdapter.Register();
 
             Configuration = new Microsoft.Extensions.Configuration.ConfigurationBuilder()
-                .AddApollo(ConfigurationManager.AppSettings["Apollo:AppId"], ConfigurationManager.AppSettings["Apollo:MetaServer"])
+                .AddApollo(new ApolloOptions
+                {
+                    AppId = ConfigurationManager.AppSettings["Apollo:AppId"],
+                    MetaServer = ConfigurationManager.AppSettings["Apollo:MetaServer"],
+                    Secret = ConfigurationManager.AppSettings["Apollo:Secret"]
+                })
                 .AddDefault(ConfigFileFormat.Xml)
                 .AddDefault(ConfigFileFormat.Json)
                 .AddDefault(ConfigFileFormat.Yml)
