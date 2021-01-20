@@ -3,7 +3,9 @@
 
   <PropertyGroup>
     <AssemblyName>Com.Ctrip.Framework.Apollo.ConfigurationManager</AssemblyName>
-    <PackageReleaseNotes>2.4.1:
+    <PackageReleaseNotes>2.4.2:
+    1. 修复AppSettingsSectionBuilder丢失value长度为0的key
+2.4.1:
     1. 通过重置ConfigurationManager.s_initState值强制刷新ConfigurationManager配置
 2.4.0:
     1. 添加apollo 1.6访问密钥
@@ -40,7 +42,7 @@ $(PackageReleaseNotes)</Description>
     <PackageTags>$(PackageTags) ConfigurationBuilder ConfigurationManager</PackageTags>
     <RootNamespace>Com.Ctrip.Framework.Apollo</RootNamespace>
     <TargetFrameworks>net471;net45;net40;netstandard2.0</TargetFrameworks>
-    <Version>2.4.1</Version>
+    <Version>2.4.2</Version>
   </PropertyGroup>
 
   <ItemGroup>
