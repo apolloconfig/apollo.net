@@ -59,7 +59,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
         {
             _syncException?.Throw();
 
-            return TransformApolloConfigToProperties(_configCache!);
+            return TransformApolloConfigToProperties(_configCache);
         }
 
         private async void SchedulePeriodicRefresh(object _) => await SchedulePeriodicRefresh(false).ConfigureAwait(false);
