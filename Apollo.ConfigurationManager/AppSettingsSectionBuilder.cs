@@ -19,7 +19,7 @@ namespace Com.Ctrip.Framework.Apollo
                 var config = GetConfig();
                 foreach (var key in config.GetPropertyNames())
                 {
-                    if (config.TryGetProperty(key, out var value) && !string.IsNullOrEmpty(value))
+                    if (config.TryGetProperty(key, out var value))
                         appSettings.Remove(key);
 
                     appSettings.Add(key, value);

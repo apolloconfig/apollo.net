@@ -39,8 +39,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             foreach (var config in _configs)
                 foreach (var name in config.GetPropertyNames())
                 {
-                    if (!dic.ContainsKey(name) && config.TryGetProperty(name, out var value) && !string.IsNullOrEmpty(value))
-                        dic[name] = value;
+                    if (!dic.ContainsKey(name) && config.TryGetProperty(name, out var value)) dic[name] = value;
                 }
 
             return new Properties(dic);

@@ -20,12 +20,11 @@ namespace Apollo.AspNetCore.Demo
                 if (string.IsNullOrWhiteSpace(key)) return Task.CompletedTask;
 
                 var value = context.RequestServices.GetRequiredService<IConfiguration>()[key];
-                if (string.IsNullOrWhiteSpace(value)) return Task.CompletedTask;
+                if (value != null) context.Response.StatusCode = 200;
 
-                context.Response.StatusCode = 200;
                 context.Response.Headers["Content-Type"] = "text/html; charset=utf-8";
 
-                return context.Response.WriteAsync(value);
+                return context.Response.WriteAsync(value ?? "undefined");
             });
         }
     }

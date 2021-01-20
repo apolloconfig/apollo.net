@@ -21,12 +21,11 @@ namespace Apollo.AspNet.Demo
 
                 var useLegend = DateTime.Now.Second % 2 == 1;
                 var value = useLegend ? ConfigurationManager.AppSettings[key] : Global.Configuration[key];
-                if (string.IsNullOrWhiteSpace(value)) return Task.CompletedTask;
+                if (value != null) context.Response.StatusCode = 200;
 
-                context.Response.StatusCode = 200;
                 context.Response.Headers["Content-Type"] = "text/html; charset=utf-8";
 
-                return context.Response.WriteAsync((useLegend ? "ConfigurationManager: " : "Configuration: ") + value);
+                return context.Response.WriteAsync((useLegend ? "ConfigurationManager: " : "Configuration: ") + (value ?? "undefined"));
             });
         }
     }
