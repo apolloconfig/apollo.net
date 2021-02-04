@@ -104,7 +104,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             {
                 try
                 {
-                    var response = await _httpUtil.DoGetAsync<IList<ServiceDto>?>(url[index % url.Count], 2000).ConfigureAwait(false);
+                    var response = await _httpUtil.DoGetAsync<IList<ServiceDto>?>(url[index % url.Count]).ConfigureAwait(false);
                     var services = response.Body;
                     if (services == null || services.Count == 0) continue;
 
