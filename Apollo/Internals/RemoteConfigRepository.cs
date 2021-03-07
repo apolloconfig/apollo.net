@@ -19,7 +19,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
     public class RemoteConfigRepository : AbstractConfigRepository
     {
         private static readonly Func<Action<LogLevel, string, Exception?>> Logger = () => LogManager.CreateLogger(typeof(RemoteConfigRepository));
-        private static readonly TaskFactory ExecutorService = new TaskFactory(new LimitedConcurrencyLevelTaskScheduler(5));
+        private static readonly TaskFactory ExecutorService = new(new LimitedConcurrencyLevelTaskScheduler(5));
 
         private readonly ConfigServiceLocator _serviceLocator;
         private readonly HttpUtil _httpUtil;
@@ -219,7 +219,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             return uriBuilder.Uri;
         }
 
-        private static readonly JsonSerializerSettings JsonSettings = new JsonSerializerSettings
+        private static readonly JsonSerializerSettings JsonSettings = new()
         {
             NullValueHandling = NullValueHandling.Ignore,
             ContractResolver = new CamelCasePropertyNamesContractResolver()

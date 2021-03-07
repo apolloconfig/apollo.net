@@ -139,13 +139,9 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
                 var uriBuilder = new UriBuilder(uri + "services/config");
 
-                var query = new Dictionary<string, string>();
+                var query = new Dictionary<string, string> {["appId"] = _options.AppId};
 
-                query["appId"] = _options.AppId;
-                if (!string.IsNullOrEmpty(_options.LocalIp))
-                {
-                    query["ip"] = _options.LocalIp;
-                }
+                if (!string.IsNullOrEmpty(_options.LocalIp)) query["ip"] = _options.LocalIp;
 
                 uriBuilder.Query = QueryUtils.Build(query);
 
