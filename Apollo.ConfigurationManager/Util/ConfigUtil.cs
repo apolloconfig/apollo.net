@@ -42,16 +42,13 @@ namespace Com.Ctrip.Framework.Apollo.Util
             var key2 = "Apollo:" + key;
 
             var appSettings = AppSettings ?? ConfigurationManager.AppSettings;
-
-            var value = appSettings[key1];
-            if (string.IsNullOrEmpty(value))
-                value = appSettings[key2];
-
-            if (string.IsNullOrEmpty(value))
-                value = Environment.GetEnvironmentVariable(key1);
-
+            var value = Environment.GetEnvironmentVariable(key1);
             if (string.IsNullOrEmpty(value))
                 value = Environment.GetEnvironmentVariable(key2);
+            if (string.IsNullOrEmpty(value))
+                value = appSettings[key1];
+            if (string.IsNullOrEmpty(value))
+                value = appSettings[key2];
 
             return string.IsNullOrEmpty(value) ? null : value;
         }
