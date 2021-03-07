@@ -226,7 +226,7 @@ apollo.net项目中有多个样例客户端的项目：
 
 # 五、FAQ
 
-## 4.1 Apollo内部HttpClient如何配置代理
+## 5.1 Apollo内部HttpClient如何配置代理
 
 在读取任何配置之前执行如下代码
 
@@ -238,7 +238,7 @@ ConfigUtil.UseHttpMessageHandlerFactory(() => new HttpClientHandler
 });
 ```
 
-## 4.2 如何跳过meta service的服务发现
+## 5.2 如何跳过meta service的服务发现
 
 在配置文件中添加Apollo:ConfigServer
 
@@ -248,8 +248,7 @@ ConfigUtil.UseHttpMessageHandlerFactory(() => new HttpClientHandler
 </appSettings>
 ```
 
-
-## 4.3 如何使用访问密钥
+## 5.3 如何使用访问密钥
 
 配置对应的环境的Secret即可
 
@@ -258,3 +257,7 @@ ConfigUtil.UseHttpMessageHandlerFactory(() => new HttpClientHandler
 +   <add key="Apollo:Secret" value="服务端配置的值" />
 </appSettings>
 ```
+
+## 5.3 如何优先使用环境变量
+
+配置Apollo.EnvironmentVariablePriority或者Apollo:EnvironmentVariablePriority值为1或者true（优先从环境变量中读取）后，则Apollo配置则优先从环境变量中读取（和现在读取顺序相反）
