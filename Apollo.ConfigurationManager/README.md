@@ -258,6 +258,6 @@ ConfigUtil.UseHttpMessageHandlerFactory(() => new HttpClientHandler
 </appSettings>
 ```
 
-## 5.3 如何优先使用环境变量
+## 5.4 如何优先使用环境变量
 
 配置Apollo.EnvironmentVariablePriority或者Apollo:EnvironmentVariablePriority值为1或者true（优先从环境变量中读取）后，则Apollo配置则优先从环境变量中读取（和现在读取顺序相反）
