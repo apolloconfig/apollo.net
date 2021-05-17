@@ -110,7 +110,7 @@ namespace Apollo.ConfigurationManager.Tests
         }
 
         [Fact]
-        public void Dot_Preferred_Colon()
+        public void UseDataCenterAsCluster()
         {
             try
             {
@@ -124,6 +124,30 @@ namespace Apollo.ConfigurationManager.Tests
             finally
             {
                 Environment.SetEnvironmentVariable("Apollo:DataCenter", null);
+            }
+        }
+
+        [Fact]
+        public void EnvironmentVariablePriorityTest()
+        {
+            try
+            {
+                Environment.SetEnvironmentVariable("Apollo:AppId", "Test");
+                Environment.SetEnvironmentVariable("Apollo:EnvironmentVariablePriority", "TRUE");
+
+                var appSettings = new NameValueCollection();
+                ConfigUtil.AppSettings = appSettings;
+
+                appSettings.Add("Apollo.AppId", "Other");
+
+                var options = new ConfigUtil();
+
+                Assert.Equal("Test", options.AppId);
+            }
+            finally
+            {
+                Environment.SetEnvironmentVariable("Apollo:DataCenter", null);
+                Environment.SetEnvironmentVariable("Apollo:EnvironmentVariablePriority", null);
             }
         }
     }

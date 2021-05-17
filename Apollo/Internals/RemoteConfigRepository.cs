@@ -8,8 +8,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
-using System.Reflection;
 using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,7 +19,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
     public class RemoteConfigRepository : AbstractConfigRepository
     {
         private static readonly Func<Action<LogLevel, string, Exception?>> Logger = () => LogManager.CreateLogger(typeof(RemoteConfigRepository));
-        private static readonly TaskFactory ExecutorService = new TaskFactory(new LimitedConcurrencyLevelTaskScheduler(5));
+        private static readonly TaskFactory ExecutorService = new(new LimitedConcurrencyLevelTaskScheduler(5));
 
         private readonly ConfigServiceLocator _serviceLocator;
         private readonly HttpUtil _httpUtil;
@@ -59,7 +59,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
         {
             _syncException?.Throw();
 
-            return TransformApolloConfigToProperties(_configCache!);
+            return TransformApolloConfigToProperties(_configCache);
         }
 
         private async void SchedulePeriodicRefresh(object _) => await SchedulePeriodicRefresh(false).ConfigureAwait(false);
@@ -109,8 +109,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             var notFound = false;
             for (var i = 0; i < (isFirst ? 1 : 2); i++)
             {
-                IList<ServiceDto> randomConfigServices = new List<ServiceDto>(configServices);
-                randomConfigServices.Shuffle();
+                IList<ServiceDto> randomConfigServices = configServices.OrderBy(_ => Guid.NewGuid()).ToList();
 
                 //Access the server which notifies the client first
                 var longPollServiceDto = Interlocked.Exchange(ref _longPollServiceDto, null);
@@ -127,7 +126,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
                     try
                     {
-                        var response = await _httpUtil.DoGetAsync<ApolloConfig>(url).ConfigureAwait(false);
+                        var response = await _httpUtil.DoGetAsync<ApolloConfig?>(url).ConfigureAwait(false);
 
                         if (response.StatusCode == HttpStatusCode.NotModified)
                         {
@@ -137,8 +136,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
                         var result = response.Body;
 
-                        Logger().Debug(
-                            $"Loaded config for {Namespace}: {result?.Configurations?.Count ?? 0}");
+                        Logger().Debug($"Loaded config for {Namespace}: {result?.Configurations?.Count ?? 0}");
 
                         return result;
                     }
@@ -183,8 +181,8 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             string cluster,
             string? namespaceName,
             string? dataCenter,
-            ApolloNotificationMessages remoteMessages,
-            ApolloConfig previousConfig)
+            ApolloNotificationMessages? remoteMessages,
+            ApolloConfig? previousConfig)
         {
             if (!uri.EndsWith("/", StringComparison.Ordinal))
             {
@@ -221,16 +219,14 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             return uriBuilder.Uri;
         }
 
-        private static readonly JsonSerializerSettings JsonSettings = new JsonSerializerSettings
+        private static readonly JsonSerializerSettings JsonSettings = new()
         {
             NullValueHandling = NullValueHandling.Ignore,
             ContractResolver = new CamelCasePropertyNamesContractResolver()
         };
 
-        private Properties TransformApolloConfigToProperties(ApolloConfig apolloConfig)
-        {
-            return apolloConfig == null ? new Properties() : new Properties(apolloConfig.Configurations);
-        }
+        private static Properties TransformApolloConfigToProperties(ApolloConfig? apolloConfig) =>
+            apolloConfig?.Configurations == null ? new Properties() : new Properties(apolloConfig.Configurations);
 
         public void OnLongPollNotified(ServiceDto longPollNotifiedServiceDto, ApolloNotificationMessages remoteMessages)
         {
@@ -270,15 +266,17 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 #if NET40
 namespace System.Runtime.ExceptionServices
 {
+    using Reflection;
+
     internal sealed class ExceptionDispatchInfo
     {
         private readonly object _source;
         private readonly string _stackTrace;
 
         private const BindingFlags PrivateInstance = BindingFlags.Instance | BindingFlags.NonPublic;
-        private static readonly FieldInfo RemoteStackTrace = typeof(Exception).GetField("_remoteStackTraceString", PrivateInstance);
-        private static readonly FieldInfo Source = typeof(Exception).GetField("_source", PrivateInstance);
-        private static readonly MethodInfo InternalPreserveStackTrace = typeof(Exception).GetMethod("InternalPreserveStackTrace", PrivateInstance);
+        private static readonly FieldInfo RemoteStackTrace = typeof(Exception).GetField("_remoteStackTraceString", PrivateInstance)!;
+        private static readonly FieldInfo Source = typeof(Exception).GetField("_source", PrivateInstance)!;
+        private static readonly MethodInfo InternalPreserveStackTrace = typeof(Exception).GetMethod("InternalPreserveStackTrace", PrivateInstance)!;
 
         private ExceptionDispatchInfo(Exception source)
         {

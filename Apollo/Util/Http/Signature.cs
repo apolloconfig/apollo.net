@@ -35,7 +35,7 @@ namespace Com.Ctrip.Framework.Apollo.Util.Http
 
         public static string SignString(string data, string secret)
         {
-            using var hmac =  new HMACSHA1(Encoding.UTF8.GetBytes(secret));
+            using var hmac = new HMACSHA1(Encoding.UTF8.GetBytes(secret));
 
             return Convert.ToBase64String(hmac.ComputeHash(Encoding.UTF8.GetBytes(data)));
         }

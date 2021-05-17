@@ -14,6 +14,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 {
     public class ConfigServiceLocator : IDisposable
     {
+        private static readonly char[] MetaServerSeparator = new[] { ',', ';' };
         private static readonly Func<Action<LogLevel, string, Exception?>> Logger = () => LogManager.CreateLogger(typeof(ConfigServiceLocator));
 
         private readonly HttpUtil _httpUtil;
@@ -30,7 +31,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
             var serviceDtos = GetCustomizedConfigService(configUtil);
 
-            if (serviceDtos == null)
+            if (serviceDtos == null || serviceDtos.Count < 1)
                 _timer = new Timer(SchedulePeriodicRefresh, null, 0, _options.RefreshInterval);
             else
                 _configServices = serviceDtos;
@@ -99,11 +100,11 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
             Exception? exception = null;
 
-            for (var i = 0; i < Math.Max(1, times); i++)
+            for (var index = 0; index < Math.Max(url.Count, times); index++)
             {
                 try
                 {
-                    var response = await _httpUtil.DoGetAsync<IList<ServiceDto>>(url, 2000).ConfigureAwait(false);
+                    var response = await _httpUtil.DoGetAsync<IList<ServiceDto>?>(url[index % url.Count]).ConfigureAwait(false);
                     var services = response.Body;
                     if (services == null || services.Count == 0) continue;
 
@@ -114,34 +115,40 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                 catch (Exception ex)
                 {
                     Logger().Warn(ex);
+
                     exception = ex;
                 }
             }
 
             throw new ApolloConfigException($"Get config services failed from {url}", exception!);
         }
-
-        private Uri AssembleMetaServiceUrl()
-        {
-            var uri = _options.MetaServer ?? ConfigConsts.DefaultMetaServerUrl;
-            var appId = _options.AppId;
-            var localIp = _options.LocalIp;
-
-            if (!uri.EndsWith("/", StringComparison.Ordinal)) uri += "/";
-
-            var uriBuilder = new UriBuilder(uri + "services/config");
-            var query = new Dictionary<string, string>();
-
-            query["appId"] = appId;
-            if (!string.IsNullOrEmpty(localIp))
+#if NET40
+        private IList<Uri> AssembleMetaServiceUrl() =>
+#else
+        private IReadOnlyList<Uri> AssembleMetaServiceUrl() =>
+#endif
+            (_options.MetaServer?
+                .Split(MetaServerSeparator, StringSplitOptions.RemoveEmptyEntries)
+                .Select(uri => Uri.TryCreate(uri, UriKind.Absolute, out _) ? uri : default!)
+                .Where(uri => uri != default!)
+                .DefaultIfEmpty(ConfigConsts.DefaultMetaServerUrl)
+                .ToArray() ?? new[] { ConfigConsts.DefaultMetaServerUrl })
+            .Select(uri =>
             {
-                query["ip"] = localIp;
-            }
+                if (uri[uri.Length - 1] != '/') uri += "/";
 
-            uriBuilder.Query = QueryUtils.Build(query);
+                var uriBuilder = new UriBuilder(uri + "services/config");
 
-            return uriBuilder.Uri;
-        }
+                var query = new Dictionary<string, string> {["appId"] = _options.AppId};
+
+                if (!string.IsNullOrEmpty(_options.LocalIp)) query["ip"] = _options.LocalIp;
+
+                uriBuilder.Query = QueryUtils.Build(query);
+
+                return uriBuilder.Uri;
+            })
+            .OrderBy(_ => Guid.NewGuid())
+            .ToArray();
 
         public void Dispose() => _timer?.Dispose();
     }

@@ -1,16 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore" Version="2.1.1" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Apollo.ConfigAdapter.Yaml\Apollo.ConfigAdapter.Yaml.csproj" />
-    <ProjectReference Include="..\Apollo.Configuration\Apollo.Configuration.csproj" />
+    <ProjectReference Include="..\Apollo.ExtensionsHosting\Apollo.ExtensionsHosting.csproj" />
   </ItemGroup>
 
 </Project>

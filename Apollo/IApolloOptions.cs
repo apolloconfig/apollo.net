@@ -37,10 +37,10 @@ namespace Com.Ctrip.Framework.Apollo
 #else
         IReadOnlyCollection<string>? ConfigServer { get; }
 #endif
-        /// <summary>ms</summary>
+        /// <summary>Load config timeout. ms</summary>
         int Timeout { get; }
 
-        /// <summary>ms</summary>
+        /// <summary>Refresh interval. ms</summary>
         int RefreshInterval { get; }
 
         string? LocalCacheDir { get; }

@@ -38,20 +38,34 @@ namespace Com.Ctrip.Framework.Apollo.Util
         /// <returns> the value or null if not found </returns>
         public static string? GetAppConfig(string key)
         {
+            var environmentVariablePriority = key == "EnvironmentVariablePriority" ? "1" : GetAppConfig("EnvironmentVariablePriority");
+
             var key1 = "Apollo." + key;
             var key2 = "Apollo:" + key;
 
             var appSettings = AppSettings ?? ConfigurationManager.AppSettings;
 
-            var value = appSettings[key1];
-            if (string.IsNullOrEmpty(value))
-                value = appSettings[key2];
-
-            if (string.IsNullOrEmpty(value))
+            string? value;
+            if (environmentVariablePriority == "1" || string.Compare("true", environmentVariablePriority, StringComparison.OrdinalIgnoreCase) == 0)
+            {
                 value = Environment.GetEnvironmentVariable(key1);
 
-            if (string.IsNullOrEmpty(value))
-                value = Environment.GetEnvironmentVariable(key2);
+                if (string.IsNullOrEmpty(value)) value = Environment.GetEnvironmentVariable(key2);
+
+                if (string.IsNullOrEmpty(value)) value = appSettings[key1];
+
+                if (string.IsNullOrEmpty(value)) value = appSettings[key2];
+            }
+            else
+            {
+                value = appSettings[key1];
+
+                if (string.IsNullOrEmpty(value)) value = appSettings[key2];
+
+                if (string.IsNullOrEmpty(value)) value = Environment.GetEnvironmentVariable(key1);
+
+                if (string.IsNullOrEmpty(value)) value = Environment.GetEnvironmentVariable(key2);
+            }
 
             return string.IsNullOrEmpty(value) ? null : value;
         }
@@ -87,12 +101,10 @@ namespace Com.Ctrip.Framework.Apollo.Util
             var cluster = GetAppConfig(nameof(Cluster));
 
             //Use data center as cluster
-            if (string.IsNullOrWhiteSpace(cluster))
-                cluster = DataCenter;
+            if (string.IsNullOrWhiteSpace(cluster)) cluster = DataCenter;
 
             //Use default cluster
-            if (string.IsNullOrWhiteSpace(cluster))
-                cluster = ConfigConsts.ClusterNameDefault;
+            if (string.IsNullOrWhiteSpace(cluster)) cluster = ConfigConsts.ClusterNameDefault;
 
             Cluster = cluster!;
         }
