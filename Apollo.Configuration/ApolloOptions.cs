@@ -66,7 +66,7 @@ namespace Com.Ctrip.Framework.Apollo
             {
                 if (!string.IsNullOrWhiteSpace(_metaServer)) return _metaServer;
 
-                if (Meta != null && Meta.TryGetValue(Env.ToString(), out var meta)
+                if (Meta != default! && Meta.TryGetValue(Env.ToString(), out var meta)
                     && !string.IsNullOrWhiteSpace(meta)) return meta;
 
                 return ConfigConsts.DefaultMetaServerUrl;
