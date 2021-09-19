@@ -1,9 +1,9 @@
-﻿[Apollo配置中心](https://github.com/ctripcorp/apollo)的.Net客户端，更多关于Apollo配置中心的介绍，可以查看[Apollo配置中心Wiki](https://github.com/ctripcorp/apollo/wiki)。
+﻿[Apollo配置中心](https://github.com/apolloconfig/apollo)的.Net客户端，更多关于Apollo配置中心的介绍，可以查看[Apollo配置中心Wiki](https://github.com/apolloconfig/apollo/wiki)。
 
 # 一、框架集成
 
-1. 与[Microsoft.Extensions.Configuration](https://docs.microsoft.com/zh-cn/aspnet/core/fundamentals/configuration/)集成请参考[Apollo.Configuration](https://github.com/ctripcorp/apollo.net/blob/dotnet-core/Apollo.Configuration/README.md)，完全支持IConfiguration的变动通知
-2. 与[System.Configuration.ConfigurationManager](https://docs.microsoft.com/zh-cn/dotnet/api/system.configuration.configurationbuilder)集成(.net 4.7.1及以后版本，只支持动态修改ConfigurationManager.AppSettings)或直接使用ApolloConfigurationManager请参考[Apollo.ConfigurationManager](https://github.com/ctripcorp/apollo.net/blob/dotnet-core/Apollo.ConfigurationManager/README.md)
+1. 与[Microsoft.Extensions.Configuration](https://docs.microsoft.com/zh-cn/aspnet/core/fundamentals/configuration/)集成请参考[Apollo.Configuration](https://github.com/apolloconfig/apollo.net/blob/dotnet-core/Apollo.Configuration/README.md)，完全支持IConfiguration的变动通知
+2. 与[System.Configuration.ConfigurationManager](https://docs.microsoft.com/zh-cn/dotnet/api/system.configuration.configurationbuilder)集成(.net 4.7.1及以后版本，只支持动态修改ConfigurationManager.AppSettings)或直接使用ApolloConfigurationManager请参考[Apollo.ConfigurationManager](https://github.com/apolloconfig/apollo.net/blob/dotnet-core/Apollo.ConfigurationManager/README.md)
 3. 如果想将传统的config配置（如web.config）转成json配置，可以使用[config2json](https://github.com/andrewlock/dotnet-config2json)工具
 
 # 二、日志输出
@@ -16,7 +16,7 @@ LogManager.UseConsoleLogging(logLevel);
 ```
 
 # 三、客户端设计
-![client-architecture](https://github.com/ctripcorp/apollo/raw/master/doc/images/client-architecture.png)
+![client-architecture](https://github.com/apolloconfig/apollo/raw/master/doc/images/client-architecture.png)
 
 上图简要描述了Apollo客户端的实现原理：
 
@@ -55,7 +55,7 @@ appId就是应用的appId，如100004458。
 * appId就是应用自己的appId，如100004458
 * cluster就是应用使用的集群，一般在本地模式下没有做过配置的话，就是default
 * namespace就是应用使用配置namespace，一般是application
-![client-local-cache](https://raw.githubusercontent.com/ctripcorp/apollo/master/doc/images/apollo-net-config-cache.png)
+![client-local-cache](https://raw.githubusercontent.com/apolloconfig/apollo/master/doc/images/apollo-net-config-cache.png)
 
 文件内容以json格式存储，比如如果有两个key，一个是request.timeout，另一个是batch，那么文件内容就是如下格式：
 ```json

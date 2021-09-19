@@ -177,13 +177,13 @@ Apollo支持配置按照集群划分，也就是说对于一个appId和一个环
 
 ## 3.2 监听配置变化事件
 
-sdk已经完美支持Microsoft.Extensions.Configuration，请参考[IOptionsMonitor](https://docs.microsoft.com/zh-cn/aspnet/core/fundamentals/configuration/options#options-factory-monitoring-and-cache)或者[Demo](https://github.com/ctripcorp/apollo.net/blob/dotnet-core/Apollo.Configuration.Demo/ConfigurationDemo.cs#L46)
+sdk已经完美支持Microsoft.Extensions.Configuration，请参考[IOptionsMonitor](https://docs.microsoft.com/zh-cn/aspnet/core/fundamentals/configuration/options#options-factory-monitoring-and-cache)或者[Demo](https://github.com/apolloconfig/apollo.net/blob/dotnet-core/Apollo.Configuration.Demo/ConfigurationDemo.cs#L46)
 
 ## 3.3 Demo
 
 apollo.net项目中有多个样例客户端的项目：
-* [Apollo.AspNetCore.Demo](https://github.com/ctripcorp/apollo.net/tree/dotnet-core/Apollo.AspNetCore.Demo)（使用appsettings.json配置）
-* [Apollo.Configuration.Demo](https://github.com/ctripcorp/apollo.net/tree/dotnet-core/Apollo.Configuration.Demo)（使用环境变量配置）
+* [Apollo.AspNetCore.Demo](https://github.com/apolloconfig/apollo.net/tree/dotnet-core/Apollo.AspNetCore.Demo)（使用appsettings.json配置）
+* [Apollo.Configuration.Demo](https://github.com/apolloconfig/apollo.net/tree/dotnet-core/Apollo.Configuration.Demo)（使用环境变量配置）
 
 # 四、FAQ
 
@@ -225,7 +225,7 @@ services.ConfigureJsonValue<Options>(/*name, */config.GetSection("somePrefix:Jso
 
 ## 4.3 如何跳过meta service的服务发现
 
-> 用于解决apollo服务端部署在docker中时，不能在容器外面获取配置的问题。也可以[直接指定IP或IP+Port](https://github.com/ctripcorp/apollo/wiki/%E5%88%86%E5%B8%83%E5%BC%8F%E9%83%A8%E7%BD%B2%E6%8C%87%E5%8D%97#14网络策略)
+> 用于解决apollo服务端部署在docker中时，不能在容器外面获取配置的问题。也可以[直接指定IP或IP+Port](https://github.com/apolloconfig/apollo/wiki/%E5%88%86%E5%B8%83%E5%BC%8F%E9%83%A8%E7%BD%B2%E6%8C%87%E5%8D%97#14网络策略)
 
 ``` diff
 {
