@@ -1,6 +1,7 @@
 ﻿using Com.Ctrip.Framework.Apollo;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Xunit;
 
 namespace Apollo.Tests
@@ -17,7 +18,7 @@ namespace Apollo.Tests
 
             var array = config.GetProperty("array", ",", Array.Empty<string>());
             Assert.NotNull(array);
-            Assert.Equal(new []{"1", "2", "3" }, array);
+            Assert.Equal(new[] { "1", "2", "3" }, array);
         }
 
         private class FakeConfig : IConfig
@@ -30,7 +31,7 @@ namespace Apollo.Tests
 
             public IEnumerable<string> GetPropertyNames() => _data.Keys;
 
-            public bool TryGetProperty(string key, out string value) => _data.TryGetValue(key, out value);
+            public bool TryGetProperty(string key, [NotNullWhen(true)] out string? value) => _data.TryGetValue(key, out value);
         }
     }
 }
