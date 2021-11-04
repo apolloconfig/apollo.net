@@ -157,7 +157,8 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                     }
                     catch (Exception ex)
                     {
-                        Logger().Warn(ex);
+                        Logger().Warn("Load apollo config fail from " + configService, ex);
+
                         exception = ex;
                     }
                 }
