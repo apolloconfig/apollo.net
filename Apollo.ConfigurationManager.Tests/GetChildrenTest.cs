@@ -1,24 +1,26 @@
 ﻿using Com.Ctrip.Framework.Apollo;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Xunit;
 
-namespace Apollo.Tests
+namespace Apollo.ConfigurationManager.Tests
 {
-    public class ConfigExtensionsTest
+    public class GetChildrenTest
     {
         [Fact]
         public void Test()
         {
-            var config = new FakeConfig(new Dictionary<string, string> { ["int"] = "3", ["double"] = "abc", ["array"] = "1,2,3", });
+            var config = new FakeConfig(new Dictionary<string, string>
+            {
+                { "a:B", "1" },
+                { "A:c", "2" },
+                { "A:C:d", "4" },
+            });
 
-            Assert.Equal(3, config.GetProperty("int", new int?()));
-            Assert.Equal(3d, config.GetProperty("double", 3d));
-
-            var array = config.GetProperty("array", ",", Array.Empty<string>());
-            Assert.NotNull(array);
-            Assert.Equal(new[] { "1", "2", "3" }, array);
+            Assert.Equal(new[] { "B", "c" }, config.GetChildren("a").Select(x => x.Name));
+            Assert.Equal(new[] { "a:B", "A:c" }, config.GetChildren("a").Select(x => x.FullName));
+            Assert.Equal(new[] { "d" }, config.GetChildren("a:C").Select(x => x.Name));
         }
 
         private class FakeConfig : IConfig

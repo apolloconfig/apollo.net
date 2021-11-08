@@ -114,7 +114,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                 }
                 catch (Exception ex)
                 {
-                    Logger().Warn(ex);
+                    Logger().Warn("Update config service fail from " + url[index % url.Count], ex);
 
                     exception = ex;
                 }
@@ -139,7 +139,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
                 var uriBuilder = new UriBuilder(uri + "services/config");
 
-                var query = new Dictionary<string, string> {["appId"] = _options.AppId};
+                var query = new Dictionary<string, string> { ["appId"] = _options.AppId };
 
                 if (!string.IsNullOrEmpty(_options.LocalIp)) query["ip"] = _options.LocalIp;
 

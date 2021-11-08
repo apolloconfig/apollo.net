@@ -3,7 +3,10 @@
 
   <PropertyGroup>
     <AssemblyName>Com.Ctrip.Framework.Apollo.ConfigurationManager</AssemblyName>
-    <PackageReleaseNotes>2.4.3:
+    <PackageReleaseNotes>2.4.4:
+    1. 添加Key2XmlConfigurationBuilder和NodeReplaceSectionBuilder，方便直接替换节点内容
+    2. ConnectionStringsSectionBuilder支持读取特定的keyPrefix
+2.4.3:
     1. Apollo配置参数支持优先从环境变量读取，具体请参考项目README（如何优先使用环境变量）
 2.4.2:
     1. 修复AppSettingsSectionBuilder丢失value长度为0的key
@@ -48,6 +51,10 @@ $(PackageReleaseNotes)</Description>
   </PropertyGroup>
 
   <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>Apollo.ConfigurationManager.Tests, PublicKey=002400000480000094000000060200000024000052534131000400000100010031b198cb1742fb12c699a60d820e6582ca8a8dbbd9383812f82bed299e06eab18931798fb14cc6ab80cda818032d15704f0e1c4aa5641b428f8a0decbfa1a30ab8d92efc7ec9cbd801f60c4b88b91c6acb704c20c6a061a7dae86601981164fb27be0c0beb3e6d5dbec1b83962a6d0b845ca09a52723237bd7083359b17830c0</_Parameter1>
+    </AssemblyAttribute>
+
     <ProjectReference Include="..\Apollo\Apollo.csproj" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.*" Condition="'$(TargetFramework)' == 'netstandard2.0'" />
   </ItemGroup>
@@ -59,9 +66,8 @@ $(PackageReleaseNotes)</Description>
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' != 'net471'">
-    <Compile Remove="ApolloConfigurationBuilder.cs" />
-    <Compile Remove="AppSettingsSectionBuilder.cs" />
-    <Compile Remove="ConnectionStringsSectionBuilder.cs" />
+    <Compile Remove="*Builder.cs" />
+    <Compile Remove="XmlExtensions.cs" />
   </ItemGroup>
 
 </Project>

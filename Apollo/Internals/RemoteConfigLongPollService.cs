@@ -136,9 +136,9 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             }
         }
 #if NET40
-        private void Notify(ServiceDto lastServiceDto, ICollection<ApolloConfigNotification> notifications)
+        private void Notify(ServiceDto lastServiceDto, ICollection<ApolloConfigNotification>? notifications)
 #else
-        private void Notify(ServiceDto lastServiceDto, IReadOnlyCollection<ApolloConfigNotification> notifications)
+        private void Notify(ServiceDto lastServiceDto, IReadOnlyCollection<ApolloConfigNotification>? notifications)
 #endif
         {
             if (notifications == null || notifications.Count == 0) return;
