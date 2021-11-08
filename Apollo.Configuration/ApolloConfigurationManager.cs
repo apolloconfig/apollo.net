@@ -12,15 +12,10 @@ namespace Com.Ctrip.Framework.Apollo
     /// <summary>
     /// Entry point for client config use
     /// </summary>
-    [Obsolete("不建议使用，推荐使用Microsoft.Extensions.Configuration.IConfiguration")]
+    [Obsolete("不建议使用，后续版本可能删除，推荐使用Microsoft.Extensions.Configuration.IConfiguration", true)]
     public class ApolloConfigurationManager
     {
-        private static IConfigManager? _manager;
-
-        public static IConfigManager Manager => _manager ?? throw new InvalidOperationException("请在使用之前调用AddApollo");
-
-        internal static void SetApolloOptions(ConfigRepositoryFactory factory) =>
-            Interlocked.CompareExchange(ref _manager, new DefaultConfigManager(new DefaultConfigRegistry(), factory), null);
+        public static IConfigManager Manager => ApolloConfigurationManagerHelper.Manager;
 
         /// <summary>
         /// Get Application's config instance. </summary>
@@ -34,9 +29,8 @@ namespace Com.Ctrip.Framework.Apollo
         public Task<IConfig> GetConfig(string namespaceName)
         {
             if (string.IsNullOrEmpty(namespaceName)) throw new ArgumentNullException(nameof(namespaceName));
-            if (_manager == null) throw new InvalidOperationException("请先配置Apollo");
 
-            return _manager.GetConfig(namespaceName);
+            return Manager.GetConfig(namespaceName);
         }
 
         /// <summary>
@@ -55,6 +49,16 @@ namespace Com.Ctrip.Framework.Apollo
 
             return new MultiConfig(await Task.WhenAll(namespaces.Reverse().Distinct().Select(GetConfig)).ConfigureAwait(false));
         }
+    }
+
+    internal class ApolloConfigurationManagerHelper
+    {
+        private static IConfigManager? _manager;
+
+        public static IConfigManager Manager => _manager ?? throw new InvalidOperationException("请在使用之前调用AddApollo");
+
+        internal static void SetApolloOptions(ConfigRepositoryFactory factory) =>
+            Interlocked.CompareExchange(ref _manager, new DefaultConfigManager(new DefaultConfigRegistry(), factory), null);
     }
 }
 

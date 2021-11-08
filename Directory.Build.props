@@ -1,6 +1,7 @@
 ﻿<Project>
 
   <PropertyGroup>
+    <ApolloVersion>2.5.0</ApolloVersion>
     <AssemblyOriginatorKeyFile>..\Apollo.snk</AssemblyOriginatorKeyFile>
     <AssemblyVersion>2.0.0</AssemblyVersion>
     <DebugSymbols>True</DebugSymbols>

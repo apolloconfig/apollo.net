@@ -2,19 +2,21 @@
 
   <PropertyGroup>
     <AssemblyName>Com.Ctrip.Framework.Apollo.ConfigAdapter.Yaml</AssemblyName>
-    <Description>添加对yml和yaml格式的namespace支持，使用YamlConfigAdapter.Register()添加支持。</Description>
     <PackageIconUrl>https://raw.githubusercontent.com/apolloconfig/apollo/master/apollo-portal/src/main/resources/static/img/config.png</PackageIconUrl>
     <PackageProjectUrl>$(RepositoryUrl)/$(MSBuildProjectName)</PackageProjectUrl>
-    <PackageReleaseNotes>添加对yml和yaml格式的namespace支持，使用YamlConfigAdapter.Register()添加支持。</PackageReleaseNotes>
+    <PackageReleaseNotes>发布日志请点击打开 https://github.com/apolloconfig/apollo.net/releases/tag/v$(ApolloVersion)</PackageReleaseNotes>
+    <Description>添加对yml和yaml格式的namespace支持，使用YamlConfigAdapter.Register()添加支持。
+
+$(PackageReleaseNotes)</Description>
     <PackageTags>$(PackageTags) yml yaml</PackageTags>
     <RootNamespace>Com.Ctrip.Framework.Apollo.ConfigAdapter</RootNamespace>
     <TargetFrameworks>net40;net45;netstandard2.0</TargetFrameworks>
-    <Version>2.2.0</Version>
+    <Version>$(ApolloVersion)</Version>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Apollo\Apollo.csproj" />
-    <PackageReference Include="YamlDotNet" Version="8.*" />
+    <PackageReference Include="YamlDotNet" Version="11.*" />
   </ItemGroup>
 
 </Project>

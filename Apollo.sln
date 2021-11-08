@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28729.10
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31825.309
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Apollo.Configuration.Demo", "Apollo.Configuration.Demo\Apollo.Configuration.Demo.csproj", "{D78C920D-C96B-4973-BBC8-35E5DB54DF2A}"
 EndProject
@@ -13,7 +13,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Apollo.ConfigurationManager
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{52301167-7BBA-48C2-BA36-08270D57D2C4}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		.travis.yml = .travis.yml
+		azure-pipelines.yml = azure-pipelines.yml
 		Directory.Build.props = Directory.Build.props
+		PackAllProject.ps1 = PackAllProject.ps1
 		README.md = README.md
 	EndProjectSection
 EndProject
@@ -45,9 +50,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Apollo.OpenApi.DependencyIn
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Apollo.OpenApi.Tests", "Apollo.OpenApi.Tests\Apollo.OpenApi.Tests.csproj", "{62AB1893-C173-41C7-9884-46A199244B13}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.ExtensionsHosting", "Apollo.ExtensionsHosting\Apollo.ExtensionsHosting.csproj", "{65DED7CA-9B84-45AE-84D4-13400A3842D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Apollo.ExtensionsHosting", "Apollo.ExtensionsHosting\Apollo.ExtensionsHosting.csproj", "{65DED7CA-9B84-45AE-84D4-13400A3842D7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.AspNetCoreHosting", "Apollo.AspNetCoreHosting\Apollo.AspNetCoreHosting.csproj", "{78AB89DD-1D81-4619-8750-2DABDA071FD4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Apollo.AspNetCoreHosting", "Apollo.AspNetCoreHosting\Apollo.AspNetCoreHosting.csproj", "{78AB89DD-1D81-4619-8750-2DABDA071FD4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
