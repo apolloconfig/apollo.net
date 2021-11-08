@@ -1,5 +1,4 @@
-﻿using Com.Ctrip.Framework.Apollo;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
@@ -23,9 +22,6 @@ namespace Apollo.Configuration.Demo
                       services.AddOptions()
                           .Configure<Value>(context.Configuration)
                           .Configure<Value>("other", context.Configuration.GetSection("a"));
-#pragma warning disable 618
-                      services.AddSingleton<ApolloConfigurationManager>();
-#pragma warning restore 618
                   })
                   .Build();
 
