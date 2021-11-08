@@ -8,7 +8,7 @@ namespace Com.Ctrip.Framework.Apollo
     {
         public override ConfigurationSection ProcessConfigurationSection(ConfigurationSection configSection)
         {
-            if (!(configSection is AppSettingsSection section)) return base.ProcessConfigurationSection(configSection);
+            if (configSection is not AppSettingsSection section) return base.ProcessConfigurationSection(configSection);
 
             var appSettings = section.Settings;
 

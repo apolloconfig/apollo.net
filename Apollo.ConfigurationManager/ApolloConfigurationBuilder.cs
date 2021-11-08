@@ -12,7 +12,7 @@ namespace Com.Ctrip.Framework.Apollo
 {
     public abstract class ApolloConfigurationBuilder : ConfigurationBuilder
     {
-        private static readonly object Lock = new object();
+        private static readonly object Lock = new();
         private static readonly FieldInfo ConfigurationManagerReset = typeof(ConfigurationManager).GetField("s_initState", BindingFlags.NonPublic | BindingFlags.Static)!;
 
         private IConfig? _config;
@@ -23,7 +23,7 @@ namespace Com.Ctrip.Framework.Apollo
         {
             Namespaces = config["namespace"]?.Split(new[] { ';', ',' }, StringSplitOptions.RemoveEmptyEntries);
 
-            if (!(this is AppSettingsSectionBuilder)) _ = ConfigurationManager.AppSettings; //让AppSettings必须最先被初始化
+            if (this is not AppSettingsSectionBuilder) _ = ConfigurationManager.AppSettings; //让AppSettings必须最先被初始化
 
             base.Initialize(name, config);
         }
