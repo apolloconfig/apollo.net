@@ -1,4 +1,5 @@
-﻿using Com.Ctrip.Framework.Apollo;
+﻿using System;
+using Com.Ctrip.Framework.Apollo;
 using Com.Ctrip.Framework.Apollo.Internals;
 using Com.Ctrip.Framework.Apollo.Util.Http;
 using Moq;
@@ -16,7 +17,8 @@ namespace Apollo.Tests
             var moq = new Mock<IApolloOptions>();
             moq.SetupGet(o => o.AppId).Returns("apollo-client");
             moq.SetupGet(o => o.MetaServer).Returns("http://106.54.227.205:8080/");
-            moq.SetupGet(o => o.ConfigServer).Returns(new string[0]);
+            moq.SetupGet(o => o.ConfigServer).Returns(Array.Empty<string>());
+            moq.SetupGet(o => o.Timeout).Returns(5000);
 
             var options = moq.Object;
 

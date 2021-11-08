@@ -1,10 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net461;net471</TargetFrameworks>
+    <TargetFrameworks>net461;net471;netcoreapp3.1</TargetFrameworks>
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>
+
+  <ItemGroup Condition="'$(TargetFrameworkIdentifier)' != '.NETFramework'">
+    <Compile Remove="ConfigurationBuilderTest.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.*" />
@@ -14,9 +18,9 @@
     <ProjectReference Include="..\Apollo.ConfigurationManager\Apollo.ConfigurationManager.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="System.Configuration, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-    <Reference Include="System.ServiceModel, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.ServiceModel" />
   </ItemGroup>
 
 </Project>

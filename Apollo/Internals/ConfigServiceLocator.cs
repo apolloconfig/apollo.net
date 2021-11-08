@@ -120,7 +120,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                 }
             }
 
-            throw new ApolloConfigException($"Get config services failed from {url}", exception!);
+            throw new ApolloConfigException($"Get config services failed from \"{string.Join(", ",url)}\"", exception!);
         }
 #if NET40
         private IList<Uri> AssembleMetaServiceUrl() =>

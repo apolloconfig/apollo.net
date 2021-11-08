@@ -19,6 +19,10 @@ namespace Apollo.AspNet.Demo
                 var key = context.Request.Query["key"];
                 if (string.IsNullOrWhiteSpace(key)) return Task.CompletedTask;
 
+                var con = ConfigurationManager.ConnectionStrings[key];
+                if (con != null)
+                    return context.Response.WriteAsync($"{con.Name} {nameof(con.ConnectionString)}: {con.ConnectionString}, {nameof(con.ProviderName)}: {con.ProviderName}");
+
                 var useLegend = DateTime.Now.Second % 2 == 1;
                 var value = useLegend ? ConfigurationManager.AppSettings[key] : Global.Configuration[key];
                 if (value != null) context.Response.StatusCode = 200;

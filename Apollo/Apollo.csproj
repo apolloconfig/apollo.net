@@ -2,41 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Com.Ctrip.Framework.Apollo</AssemblyName>
-    <PackageReleaseNotes>2.4.4:
-    1. 更新ConfigServices将原来硬编码的2000ms改成ApolloOptions.Timeout
-2.4.3:
-    1. 修复MultiConfig丢失value长度为0的key
-2.4.2:
-    1. #135 MetaServer支持使用英文逗号和英文分号分割的多个URI
-2.4.1:
-    1. 修复 #120 `.net 客户端，AddNameSpace导致TCP链接过多，阿波罗服务器资源耗尽！`
-2.4.0:
-    1. 添加apollo 1.6访问密钥
-2.3.0:
-    1. 添加ICacheFileProvider支持自定义配置缓存方式（比如本地加密存储）
-2.2.0:
-    1. 使用C# 8、添加nullable
-    2. 添加net40支持
-    3. 修复 #96 `ConfigService 挂了，重启配置不能同步问题`
-2.1.0:
-    1. 修复ConfigServiceLocator不能刷新的bug
-2.0.5:
-    1. LogManager.CreateLogger异常时返回结果
-2.0.4:
-    1. 修复MultiConfig的ConfigChanged事件参数错误的问题
-    2. 当namespace数据异常时给出有意义的提示
-2.0.3:
-    1. 修复使用net471的ConfigurationBuilder会造成死锁的问题
-    2. 修复当无本地缓存文件且远程加载配置失败时出现空引用异常
-2.0.2:
-    1. 修复当配置发布后，非Properties格式的namespace可能不能获取到配置的问题
-    2. IConfig事件触发失败的BUG
-2.0.1:
-    1. 修复并发时的一个NullReferenceException
-2.0.0:
-    1. 添加json、xml等格式的namespace的支持，通过扩展名识别格式
-    2. 重新设计IConfig，通过扩展方法实现更多功能
-    3. 重构日志，直接通过委托而不需要实现接口</PackageReleaseNotes>
+    <PackageReleaseNotes>发布日志请点击打开 https://github.com/apolloconfig/apollo.net/releases/tag/v$(ApolloVersion)</PackageReleaseNotes>
     <Description>携程Apollo客户端
 
 　　与Microsoft.Extensions.Configuration集成请使用Com.Ctrip.Framework.Apollo.Configuration包
@@ -48,7 +14,7 @@ $(PackageReleaseNotes)</Description>
     <PackageProjectUrl>$(RepositoryUrl)/$(MSBuildProjectName)</PackageProjectUrl>
     <RootNamespace>Com.Ctrip.Framework.Apollo</RootNamespace>
     <TargetFrameworks>net40;net45;netstandard2.0;netstandard2.1</TargetFrameworks>
-    <Version>2.4.4</Version>
+    <Version>$(ApolloVersion)</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -66,6 +32,9 @@ $(PackageReleaseNotes)</Description>
     </AssemblyAttribute>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
       <_Parameter1>Apollo.ConfigAdapter.Yaml.Tests, PublicKey=002400000480000094000000060200000024000052534131000400000100010031b198cb1742fb12c699a60d820e6582ca8a8dbbd9383812f82bed299e06eab18931798fb14cc6ab80cda818032d15704f0e1c4aa5641b428f8a0decbfa1a30ab8d92efc7ec9cbd801f60c4b88b91c6acb704c20c6a061a7dae86601981164fb27be0c0beb3e6d5dbec1b83962a6d0b845ca09a52723237bd7083359b17830c0</_Parameter1>
+    </AssemblyAttribute>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>Apollo.ConfigurationManager.Tests, PublicKey=002400000480000094000000060200000024000052534131000400000100010031b198cb1742fb12c699a60d820e6582ca8a8dbbd9383812f82bed299e06eab18931798fb14cc6ab80cda818032d15704f0e1c4aa5641b428f8a0decbfa1a30ab8d92efc7ec9cbd801f60c4b88b91c6acb704c20c6a061a7dae86601981164fb27be0c0beb3e6d5dbec1b83962a6d0b845ca09a52723237bd7083359b17830c0</_Parameter1>
     </AssemblyAttribute>
   </ItemGroup>
 

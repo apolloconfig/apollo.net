@@ -14,6 +14,7 @@ namespace Com.Ctrip.Framework.Apollo
     {
         private static readonly object Lock = new();
         private static readonly FieldInfo ConfigurationManagerReset = typeof(ConfigurationManager).GetField("s_initState", BindingFlags.NonPublic | BindingFlags.Static)!;
+        public static bool AppSettingsInitialized { get; private set; }
 
         private IConfig? _config;
         public IReadOnlyList<string>? Namespaces { get; private set; }
@@ -23,7 +24,12 @@ namespace Com.Ctrip.Framework.Apollo
         {
             Namespaces = config["namespace"]?.Split(new[] { ';', ',' }, StringSplitOptions.RemoveEmptyEntries);
 
-            if (this is not AppSettingsSectionBuilder) _ = ConfigurationManager.AppSettings; //让AppSettings必须最先被初始化
+            if (this is not AppSettingsSectionBuilder)
+            {
+                _ = ConfigurationManager.AppSettings; //让AppSettings必须最先被初始化
+
+                AppSettingsInitialized = true;
+            }
 
             base.Initialize(name, config);
         }

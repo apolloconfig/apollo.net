@@ -20,11 +20,11 @@ namespace Microsoft.Extensions.Configuration
         public static IApolloConfigurationBuilder AddApollo(this IConfigurationBuilder builder, IApolloOptions options)
         {
             var repositoryFactory = new ConfigRepositoryFactory(options ?? throw new ArgumentNullException(nameof(options)));
-#pragma warning disable 618
-            ApolloConfigurationManager.SetApolloOptions(repositoryFactory);
-#pragma warning restore 618
+
+            ApolloConfigurationManagerHelper.SetApolloOptions(repositoryFactory);
+
             var acb = new ApolloConfigurationBuilder(builder, repositoryFactory);
-            if (options is ApolloOptions ao && ao.Namespaces != null)
+            if (options is ApolloOptions { Namespaces: { } } ao)
                 foreach (var ns in ao.Namespaces) acb.AddNamespace(ns);
 
             return acb;
@@ -65,9 +65,8 @@ namespace Com.Ctrip.Framework.Apollo
             else
             {
                 builder.Add(new ApolloConfigurationProvider(sectionKey, configRepository));
-#pragma warning disable 618
-                ApolloConfigurationManager.Manager.Registry.Register(@namespace, new DefaultConfigFactory(builder.ConfigRepositoryFactory));
-#pragma warning restore 618
+
+                ApolloConfigurationManagerHelper.Manager.Registry.Register(@namespace, new DefaultConfigFactory(builder.ConfigRepositoryFactory));
             }
 
             return builder;

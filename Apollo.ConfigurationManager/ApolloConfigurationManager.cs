@@ -15,7 +15,7 @@ namespace Com.Ctrip.Framework.Apollo
 #if NET471
     [Obsolete("不建议使用，推荐使用System.Configuration.ConfigurationBuilder + System.Configuration.ConfigurationManager")]
 #elif NETSTANDARD
-    [Obsolete("不建议使用，推荐安装包Com.Ctrip.Framework.Apollo.Configuration")]
+    [Obsolete("不建议使用，后续版本可能删除，推荐安装包Com.Ctrip.Framework.Apollo.Configuration", true)]
 #endif
     public static class ApolloConfigurationManager
     {

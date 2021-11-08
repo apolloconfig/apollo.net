@@ -6,8 +6,8 @@ namespace Com.Ctrip.Framework.Apollo.Logging
 {
     public static class LogManager
     {
-        private static readonly Action<LogLevel, string, Exception?> Noop = (level, msg, ex) => { };
-        public static Func<string, Action<LogLevel, string, Exception?>> LogFactory { get; set; } = name => Noop;
+        private static readonly Action<LogLevel, string, Exception?> Noop = (_, _, _) => { };
+        public static Func<string, Action<LogLevel, string, Exception?>> LogFactory { get; set; } = _ => Noop;
 
         public static void UseConsoleLogging(LogLevel minimumLevel) =>
             LogFactory = name => (level, message, exception) =>
@@ -15,8 +15,8 @@ namespace Com.Ctrip.Framework.Apollo.Logging
                 if (level < minimumLevel) return;
 
                 Console.WriteLine(exception == null
-                    ? $"{DateTime.Now:HH:mm:ss} [{level}] {message}"
-                    : $"{DateTime.Now:HH:mm:ss} [{level}] {message} - {exception.GetDetailMessage()}");
+                    ? $"{DateTime.Now:HH:mm:ss} [{level}] {name} {message}"
+                    : $"{DateTime.Now:HH:mm:ss} [{level}] {name} {message} - {exception.GetDetailMessage()}");
             };
 
         internal static Action<LogLevel, string, Exception?> CreateLogger(Type type)
