@@ -14,7 +14,7 @@
     <NoWarn>1591</NoWarn>
     <PackageTags>apollo configcenter configuration ctrip</PackageTags>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/apolloconfig/apollo.net/tree/dotnet-core</RepositoryUrl>
+    <RepositoryUrl>https://github.com/apolloconfig/apollo.net/tree/main</RepositoryUrl>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
 

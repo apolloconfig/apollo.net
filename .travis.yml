@@ -1,4 +1,4 @@
-language: csharp
+﻿language: csharp
 solution: Apollo.sln
 notification:
   email:
@@ -7,4 +7,4 @@ notification:
     on_failure: always
 branches:
   only:
-    - master
+    - main

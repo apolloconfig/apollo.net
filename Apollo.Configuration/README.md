@@ -177,13 +177,13 @@ Apollo支持配置按照集群划分，也就是说对于一个appId和一个环
 
 ## 3.2 监听配置变化事件
 
-sdk已经完美支持Microsoft.Extensions.Configuration，请参考[IOptionsMonitor](https://docs.microsoft.com/zh-cn/aspnet/core/fundamentals/configuration/options#options-factory-monitoring-and-cache)或者[Demo](https://github.com/apolloconfig/apollo.net/blob/dotnet-core/Apollo.Configuration.Demo/ConfigurationDemo.cs#L46)
+sdk已经完美支持Microsoft.Extensions.Configuration，请参考[IOptionsMonitor](https://docs.microsoft.com/zh-cn/aspnet/core/fundamentals/configuration/options#options-factory-monitoring-and-cache)或者[Demo](https://github.com/apolloconfig/apollo.net/blob/main/Apollo.Configuration.Demo/ConfigurationDemo.cs#L46)
 
 ## 3.3 Demo
 
 apollo.net项目中有多个样例客户端的项目：
-* [Apollo.AspNetCore.Demo](https://github.com/apolloconfig/apollo.net/tree/dotnet-core/Apollo.AspNetCore.Demo)（使用appsettings.json配置）
-* [Apollo.Configuration.Demo](https://github.com/apolloconfig/apollo.net/tree/dotnet-core/Apollo.Configuration.Demo)（使用环境变量配置）
+* [Apollo.AspNetCore.Demo](https://github.com/apolloconfig/apollo.net/tree/main/Apollo.AspNetCore.Demo)（使用appsettings.json配置）
+* [Apollo.Configuration.Demo](https://github.com/apolloconfig/apollo.net/tree/main/Apollo.Configuration.Demo)（使用环境变量配置）
 
 # 四、FAQ
 

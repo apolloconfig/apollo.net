@@ -125,7 +125,7 @@ Apollo支持配置按照集群划分，也就是说对于一个appId和一个环
 1. Apollo.XXX => Apollo:XXX
 2. Apollo.{ENV}.Meta => Apollo:Meta:{ENV}
 
-> 优先级低于原来的方式，具体可以参考[Demo](https://github.com/apolloconfig/apollo.net/tree/dotnet-core/Apollo.ConfigurationManager.Demo)或者[Tests](https://github.com/apolloconfig/apollo.net/tree/dotnet-core/Apollo.ConfigurationManager.Tests)
+> 优先级低于原来的方式，具体可以参考[Demo](https://github.com/apolloconfig/apollo.net/tree/main/Apollo.ConfigurationManager.Demo)或者[Tests](https://github.com/apolloconfig/apollo.net/tree/main/Apollo.ConfigurationManager.Tests)
 
 # 二、引入方式
 
@@ -189,8 +189,8 @@ string value = config.GetProperty(someKey, someDefaultValue);
 ## 3.4 Demo
 
 apollo.net项目中有多个样例客户端的项目：
-* [Apollo.AspNet.Demo](https://github.com/apolloconfig/apollo.net/tree/dotnet-core/Apollo.AspNet.Demo)（通过Web.config配置）
-* [Apollo.ConfigurationManager.Demo](https://github.com/apolloconfig/apollo.net/tree/dotnet-core/Apollo.ConfigurationManager.Demo)（通过环境变量配置）
+* [Apollo.AspNet.Demo](https://github.com/apolloconfig/apollo.net/tree/main/Apollo.AspNet.Demo)（通过Web.config配置）
+* [Apollo.ConfigurationManager.Demo](https://github.com/apolloconfig/apollo.net/tree/main/Apollo.ConfigurationManager.Demo)（通过环境变量配置）
 
 # 四、NETFramework 4.7.1+ ConfigurationBuilder支持
 
