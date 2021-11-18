@@ -1,39 +1,35 @@
 ﻿using Com.Ctrip.Framework.Apollo;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using Xunit;
 
-namespace Apollo.ConfigurationManager.Tests
+namespace Apollo.ConfigurationManager.Tests;
+
+public class GetChildrenTest
 {
-    public class GetChildrenTest
+    [Fact]
+    public void Test()
     {
-        [Fact]
-        public void Test()
+        var config = new FakeConfig(new Dictionary<string, string>
         {
-            var config = new FakeConfig(new Dictionary<string, string>
-            {
-                { "a:B", "1" },
-                { "A:c", "2" },
-                { "A:C:d", "4" },
-            });
+            { "a:B", "1" },
+            { "A:c", "2" },
+            { "A:C:d", "4" },
+        });
 
-            Assert.Equal(new[] { "B", "c" }, config.GetChildren("a").Select(x => x.Name));
-            Assert.Equal(new[] { "a:B", "A:c" }, config.GetChildren("a").Select(x => x.FullName));
-            Assert.Equal(new[] { "d" }, config.GetChildren("a:C").Select(x => x.Name));
-        }
+        Assert.Equal(new[] { "B", "c" }, config.GetChildren("a").Select(x => x.Name));
+        Assert.Equal(new[] { "a:B", "A:c" }, config.GetChildren("a").Select(x => x.FullName));
+        Assert.Equal(new[] { "d" }, config.GetChildren("a:C").Select(x => x.Name));
+    }
 
-        private class FakeConfig : IConfig
-        {
-            private readonly IReadOnlyDictionary<string, string> _data;
+    private class FakeConfig : IConfig
+    {
+        private readonly IReadOnlyDictionary<string, string> _data;
 
-            public event ConfigChangeEvent ConfigChanged = default!;
+        public event ConfigChangeEvent ConfigChanged = default!;
 
-            public FakeConfig(IReadOnlyDictionary<string, string> data) => _data = data;
+        public FakeConfig(IReadOnlyDictionary<string, string> data) => _data = data;
 
-            public IEnumerable<string> GetPropertyNames() => _data.Keys;
+        public IEnumerable<string> GetPropertyNames() => _data.Keys;
 
-            public bool TryGetProperty(string key, [NotNullWhen(true)] out string? value) => _data.TryGetValue(key, out value);
-        }
+        public bool TryGetProperty(string key, [NotNullWhen(true)] out string? value) => _data.TryGetValue(key, out value);
     }
 }

@@ -1,44 +1,42 @@
 ﻿using Com.Ctrip.Framework.Apollo.Util;
-using System.Collections.Specialized;
 using System.Configuration;
 
-namespace Com.Ctrip.Framework.Apollo
+namespace Com.Ctrip.Framework.Apollo;
+
+public class AppSettingsSectionBuilder : ApolloConfigurationBuilder
 {
-    public class AppSettingsSectionBuilder : ApolloConfigurationBuilder
+    public override ConfigurationSection ProcessConfigurationSection(ConfigurationSection configSection)
     {
-        public override ConfigurationSection ProcessConfigurationSection(ConfigurationSection configSection)
+        if (configSection is not AppSettingsSection section) return base.ProcessConfigurationSection(configSection);
+
+        var appSettings = section.Settings;
+
+        TrySetConfigUtil(appSettings);
+
+        lock (this)
         {
-            if (configSection is not AppSettingsSection section) return base.ProcessConfigurationSection(configSection);
-
-            var appSettings = section.Settings;
-
-            TrySetConfigUtil(appSettings);
-
-            lock (this)
+            var config = GetConfig();
+            foreach (var key in config.GetPropertyNames())
             {
-                var config = GetConfig();
-                foreach (var key in config.GetPropertyNames())
-                {
-                    if (config.TryGetProperty(key, out var value))
-                        appSettings.Remove(key);
+                if (config.TryGetProperty(key, out var value))
+                    appSettings.Remove(key);
 
-                    appSettings.Add(key, value);
-                }
+                appSettings.Add(key, value);
             }
-
-            return base.ProcessConfigurationSection(configSection);
         }
 
-        private static void TrySetConfigUtil(KeyValueConfigurationCollection appSettings)
-        {
-            if (ConfigUtil.AppSettings != null) return;
+        return base.ProcessConfigurationSection(configSection);
+    }
 
-            var settings = new NameValueCollection();
+    private static void TrySetConfigUtil(KeyValueConfigurationCollection appSettings)
+    {
+        if (ConfigUtil.AppSettings != null) return;
 
-            foreach (var key in appSettings.AllKeys)
-                settings.Add(key, appSettings[key].Value);
+        var settings = new NameValueCollection();
 
-            ConfigUtil.AppSettings = settings;
-        }
+        foreach (var key in appSettings.AllKeys)
+            settings.Add(key, appSettings[key].Value);
+
+        ConfigUtil.AppSettings = settings;
     }
 }

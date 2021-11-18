@@ -1,24 +1,23 @@
-﻿namespace Com.Ctrip.Framework.Apollo.Enums
-{
-    public enum ConfigFileFormat
-    {
-        Properties, Xml, Json, Yml, Yaml, Txt
-    }
+﻿namespace Com.Ctrip.Framework.Apollo.Enums;
 
-    internal static class ConfigFileFormatMethods
+public enum ConfigFileFormat
+{
+    Properties, Xml, Json, Yml, Yaml, Txt
+}
+
+internal static class ConfigFileFormatMethods
+{
+    public static string GetString(this ConfigFileFormat format)
     {
-        public static string GetString(this ConfigFileFormat format)
+        return format switch
         {
-            return format switch
-            {
-                ConfigFileFormat.Properties => "properties",
-                ConfigFileFormat.Xml => "xml",
-                ConfigFileFormat.Json => "json",
-                ConfigFileFormat.Yml => "yml",
-                ConfigFileFormat.Yaml => "yaml",
-                ConfigFileFormat.Txt => "txt",
-                _ => "unknown",
-            };
-        }
+            ConfigFileFormat.Properties => "properties",
+            ConfigFileFormat.Xml => "xml",
+            ConfigFileFormat.Json => "json",
+            ConfigFileFormat.Yml => "yml",
+            ConfigFileFormat.Yaml => "yaml",
+            ConfigFileFormat.Txt => "txt",
+            _ => "unknown",
+        };
     }
 }

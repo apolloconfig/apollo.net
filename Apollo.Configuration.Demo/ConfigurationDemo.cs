@@ -1,63 +1,58 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using System;
 
-namespace Apollo.Configuration.Demo
+namespace Apollo.Configuration.Demo;
+
+internal class ConfigurationDemo
 {
-    internal class ConfigurationDemo
+    private const string DefaultValue = "undefined";
+    private readonly IConfiguration _config;
+    private readonly IConfiguration _anotherConfig;
+
+    public ConfigurationDemo()
     {
-        private const string DefaultValue = "undefined";
-        private readonly IConfiguration _config;
-        private readonly IConfiguration _anotherConfig;
-
-        public ConfigurationDemo()
-        {
-            var host = Host.CreateDefaultBuilder()
-                  .AddApollo()
-                  .ConfigureServices((context, services) =>
-                  {
-                      services.AddOptions()
-                          .Configure<Value>(context.Configuration)
-                          .Configure<Value>("other", context.Configuration.GetSection("a"));
-                  })
-                  .Build();
-
-            _config = host.Services.GetRequiredService<IConfiguration>();
-            _anotherConfig = _config.GetSection("a");
-
-            var optionsMonitor = host.Services.GetService<IOptionsMonitor<Value>>();
-
-            optionsMonitor.OnChange(OnChanged);
-
-            //new ConfigurationManagerDemo( host.Services.GetService<ApolloConfigurationManager>());
-        }
-
-        public string GetConfig(string key)
-        {
-            var result = _config.GetValue(key, DefaultValue);
-            if (result.Equals(DefaultValue))
+        var host = Host.CreateDefaultBuilder()
+            .AddApollo()
+            .ConfigureServices((context, services) =>
             {
-                result = _anotherConfig.GetValue(key, DefaultValue);
-            }
-            var color = Console.ForegroundColor;
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Loading key: {0} with value: {1}", key, result);
-            Console.ForegroundColor = color;
+                services.AddOptions()
+                    .Configure<Value>(context.Configuration)
+                    .Configure<Value>("other", context.Configuration.GetSection("a"));
+            })
+            .Build();
 
-            return result;
-        }
+        _config = host.Services.GetRequiredService<IConfiguration>();
+        _anotherConfig = _config.GetSection("a");
 
-        private static void OnChanged(Value value, string name)
+        var optionsMonitor = host.Services.GetService<IOptionsMonitor<Value>>();
+
+        optionsMonitor.OnChange(OnChanged);
+
+        //new ConfigurationManagerDemo( host.Services.GetService<ApolloConfigurationManager>());
+    }
+
+    public string GetConfig(string key)
+    {
+        var result = _config.GetValue(key, DefaultValue);
+        if (result.Equals(DefaultValue))
         {
-            Console.WriteLine(name + " has changed: " + JsonConvert.SerializeObject(value));
+            result = _anotherConfig.GetValue(key, DefaultValue);
         }
+        var color = Console.ForegroundColor;
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine("Loading key: {0} with value: {1}", key, result);
+        Console.ForegroundColor = color;
 
-        private class Value
-        {
-            public string Timeout { get; set; } = "";
-        }
+        return result;
+    }
+
+    private static void OnChanged(Value value, string name)
+    {
+        Console.WriteLine(name + " has changed: " + JsonConvert.SerializeObject(value));
+    }
+
+    private class Value
+    {
+        public string Timeout { get; set; } = "";
     }
 }

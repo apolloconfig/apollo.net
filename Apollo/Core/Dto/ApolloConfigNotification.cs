@@ -1,34 +1,33 @@
-﻿namespace Com.Ctrip.Framework.Apollo.Core.Dto
+﻿namespace Com.Ctrip.Framework.Apollo.Core.Dto;
+
+public class ApolloConfigNotification
 {
-    public class ApolloConfigNotification
+    private volatile ApolloNotificationMessages? _messages;
+
+    public string NamespaceName { get; set; } = default!;
+
+    public long NotificationId { get; set; }
+
+    public ApolloNotificationMessages? Messages
     {
-        private volatile ApolloNotificationMessages? _messages;
+        get => _messages;
+        set => _messages = value;
+    }
 
-        public string NamespaceName { get; set; } = default!;
-
-        public long NotificationId { get; set; }
-
-        public ApolloNotificationMessages? Messages
+    public void AddMessage(string key, long notificationId)
+    {
+        if (_messages == null)
         {
-            get => _messages;
-            set => _messages = value;
-        }
-
-        public void AddMessage(string key, long notificationId)
-        {
-            if (_messages == null)
+            lock (this)
             {
-                lock (this)
+                if (_messages == null)
                 {
-                    if (_messages == null)
-                    {
-                        _messages = new ApolloNotificationMessages();
-                    }
+                    _messages = new ApolloNotificationMessages();
                 }
             }
-            _messages.Put(key, notificationId);
         }
-
-        public override string ToString() => $"ApolloConfigNotification{{namespaceName='{NamespaceName}{'\''}, notificationId={NotificationId}{'}'}";
+        _messages.Put(key, notificationId);
     }
+
+    public override string ToString() => $"ApolloConfigNotification{{namespaceName='{NamespaceName}{'\''}, notificationId={NotificationId}{'}'}";
 }

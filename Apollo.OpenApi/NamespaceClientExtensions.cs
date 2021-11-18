@@ -1,8 +1,4 @@
 ﻿using Com.Ctrip.Framework.Apollo.OpenApi.Model;
-using System;
-using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
 #if NET40
 using WebUtility = System.Web.HttpUtility;
 #endif

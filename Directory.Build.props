@@ -8,15 +8,25 @@
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">True</GeneratePackageOnBuild>
     <IncludeSymbols>True</IncludeSymbols>
-    <LangVersion>9.0</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>10.0</LangVersion>
     <Nullable>enable</Nullable>
-    <WarningsAsErrors>nullable</WarningsAsErrors>
-    <NoWarn>1591</NoWarn>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <NoWarn>$(NoWarn);CS0414;CS0436;CS1591</NoWarn>
     <PackageTags>apollo configcenter configuration ctrip</PackageTags>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/apolloconfig/apollo.net/tree/main</RepositoryUrl>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Using Include="System.Collections.Concurrent" />
+    <Using Include="System.Collections.Specialized" />
+    <Using Include="System.Diagnostics" />
+    <Using Include="System.Diagnostics.CodeAnalysis" />
+    <Using Include="System.Net" />
+    <Using Include="System.Text" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.*" PrivateAssets="All" />

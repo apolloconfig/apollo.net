@@ -1,7 +1,6 @@
-﻿namespace Com.Ctrip.Framework.Apollo.OpenApi
+﻿namespace Com.Ctrip.Framework.Apollo.OpenApi;
+
+public interface IAppClusterClient : IOpenApiClient
 {
-    public interface IAppClusterClient : IOpenApiClient
-    {
-        string AppId { get; }
-    }
+    string AppId { get; }
 }

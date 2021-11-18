@@ -3,8 +3,6 @@ using Com.Ctrip.Framework.Apollo.Core;
 using Com.Ctrip.Framework.Apollo.Enums;
 using Com.Ctrip.Framework.Apollo.Internals;
 using Com.Ctrip.Framework.Apollo.Spi;
-using System;
-using System.Linq;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.Configuration

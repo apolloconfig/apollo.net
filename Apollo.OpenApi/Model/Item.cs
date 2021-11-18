@@ -1,11 +1,10 @@
-﻿namespace Com.Ctrip.Framework.Apollo.OpenApi.Model
+﻿namespace Com.Ctrip.Framework.Apollo.OpenApi.Model;
+
+public class Item : BaseModel
 {
-    public class Item : BaseModel
-    {
-        public string? Key { get; set; }
+    public string? Key { get; set; }
 
-        public string? Value { get; set; }
+    public string? Value { get; set; }
 
-        public string? Comment { get; set; }
-    }
+    public string? Comment { get; set; }
 }

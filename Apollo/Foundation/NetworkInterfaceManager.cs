@@ -1,33 +1,30 @@
-﻿using System.Linq;
-using System.Net;
-using System.Net.NetworkInformation;
+﻿using System.Net.NetworkInformation;
 using System.Net.Sockets;
 
-namespace Com.Ctrip.Framework.Apollo.Foundation
+namespace Com.Ctrip.Framework.Apollo.Foundation;
+
+public class NetworkInterfaceManager
 {
-    public class NetworkInterfaceManager
+    static NetworkInterfaceManager()
     {
-        static NetworkInterfaceManager()
+        try
         {
-            try
-            {
-                var hostIp = NetworkInterface.GetAllNetworkInterfaces()
-                    .Where(network => network.OperationalStatus == OperationalStatus.Up)
-                    .Select(network => network.GetIPProperties())
-                    .OrderByDescending(properties => properties.GatewayAddresses.Count)
-                    .SelectMany(properties => properties.UnicastAddresses)
-                    .FirstOrDefault(address => !IPAddress.IsLoopback(address.Address) &&
-                                               address.Address.AddressFamily == AddressFamily.InterNetwork);
+            var hostIp = NetworkInterface.GetAllNetworkInterfaces()
+                .Where(network => network.OperationalStatus == OperationalStatus.Up)
+                .Select(network => network.GetIPProperties())
+                .OrderByDescending(properties => properties.GatewayAddresses.Count)
+                .SelectMany(properties => properties.UnicastAddresses)
+                .FirstOrDefault(address => !IPAddress.IsLoopback(address.Address) &&
+                                           address.Address.AddressFamily == AddressFamily.InterNetwork);
 
-                if (hostIp != null)
-                    HostIp = hostIp.Address.ToString();
-            }
-            catch
-            {
-                // ignored
-            }
+            if (hostIp != null)
+                HostIp = hostIp.Address.ToString();
         }
-
-        public static string HostIp { get; } = "127.0.0.1";
+        catch
+        {
+            // ignored
+        }
     }
+
+    public static string HostIp { get; } = "127.0.0.1";
 }

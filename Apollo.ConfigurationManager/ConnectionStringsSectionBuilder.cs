@@ -1,52 +1,50 @@
-﻿using System.Collections.Specialized;
-using System.Configuration;
+﻿using System.Configuration;
 
-namespace Com.Ctrip.Framework.Apollo
+namespace Com.Ctrip.Framework.Apollo;
+
+public class ConnectionStringsSectionBuilder : ApolloConfigurationBuilder
 {
-    public class ConnectionStringsSectionBuilder : ApolloConfigurationBuilder
+    private string? _keyPrefix;
+
+    private string? _defaultProviderName;
+
+    public override void Initialize(string name, NameValueCollection config)
     {
-        private string? _keyPrefix;
+        base.Initialize(name, config);
 
-        private string? _defaultProviderName;
+        _keyPrefix = config["keyPrefix"];
 
-        public override void Initialize(string name, NameValueCollection config)
+        _defaultProviderName = config["defaultProviderName"] ?? "System.Data.SqlClient";
+    }
+
+    public override ConfigurationSection ProcessConfigurationSection(ConfigurationSection configSection)
+    {
+        if (configSection is not ConnectionStringsSection section) return base.ProcessConfigurationSection(configSection);
+
+        var connectionStrings = section.ConnectionStrings;
+
+        lock (this)
         {
-            base.Initialize(name, config);
+            var config = GetConfig();
 
-            _keyPrefix = config["keyPrefix"];
+            if (string.IsNullOrEmpty(_keyPrefix)) _keyPrefix = configSection.SectionInformation.Name;
 
-            _defaultProviderName = config["defaultProviderName"] ?? "System.Data.SqlClient";
-        }
-
-        public override ConfigurationSection ProcessConfigurationSection(ConfigurationSection configSection)
-        {
-            if (configSection is not ConnectionStringsSection section) return base.ProcessConfigurationSection(configSection);
-
-            var connectionStrings = section.ConnectionStrings;
-
-            lock (this)
+            foreach (var name in config.GetChildren(_keyPrefix!))
             {
-                var config = GetConfig();
+                var connectionName = name.Name;
 
-                if (string.IsNullOrEmpty(_keyPrefix)) _keyPrefix = configSection.SectionInformation.Name;
+                if (!config.TryGetProperty($"{_keyPrefix}:{connectionName}:ConnectionString", out var connectionString) &&
+                    !config.TryGetProperty($"{_keyPrefix}:{connectionName}", out connectionString) ||
+                    string.IsNullOrWhiteSpace(connectionString)) continue;
 
-                foreach (var name in config.GetChildren(_keyPrefix!))
-                {
-                    var connectionName = name.Name;
+                connectionStrings.Remove(connectionName);
 
-                    if (!config.TryGetProperty($"{_keyPrefix}:{connectionName}:ConnectionString", out var connectionString) &&
-                        !config.TryGetProperty($"{_keyPrefix}:{connectionName}", out connectionString) ||
-                        string.IsNullOrWhiteSpace(connectionString)) continue;
+                config.TryGetProperty($"{_keyPrefix}:{connectionName}:ProviderName", out var providerName);
 
-                    connectionStrings.Remove(connectionName);
-
-                    config.TryGetProperty($"{_keyPrefix}:{connectionName}:ProviderName", out var providerName);
-
-                    connectionStrings.Add(new ConnectionStringSettings(connectionName, connectionString, providerName ?? _defaultProviderName));
-                }
+                connectionStrings.Add(new ConnectionStringSettings(connectionName, connectionString, providerName ?? _defaultProviderName));
             }
-
-            return base.ProcessConfigurationSection(configSection);
         }
+
+        return base.ProcessConfigurationSection(configSection);
     }
 }
