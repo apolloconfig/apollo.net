@@ -7,14 +7,14 @@ using static Com.Ctrip.Framework.Apollo.ConfigExtensions;
 
 namespace Com.Ctrip.Framework.Apollo;
 
-public class CommonConfigurationBuilder : ApolloConfigurationBuilder
+public class CommonSectionBuilder : ApolloConfigurationBuilder
 {
     private static readonly Action<ConfigurationElementCollection, ConfigurationElement> Add;
     private static readonly Func<ConfigurationElementCollection, ConfigurationElement> CreateNewElement;
     private static readonly Action<ConfigurationElement, ConfigurationProperty, string> SetValue;
     private string? _keyPrefix;
 
-    static CommonConfigurationBuilder()
+    static CommonSectionBuilder()
     {
         var set = typeof(ConfigurationElement).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
             .First(p =>
@@ -148,7 +148,7 @@ public class CommonConfigurationBuilder : ApolloConfigurationBuilder
 
         var method = new DynamicMethod("Add", typeof(void),
             new[] { typeof(ConfigurationElementCollection), typeof(ConfigurationElement) },
-            typeof(CommonConfigurationBuilder).Module, true);
+            typeof(CommonSectionBuilder).Module, true);
 
         var il = method.GetILGenerator();
 

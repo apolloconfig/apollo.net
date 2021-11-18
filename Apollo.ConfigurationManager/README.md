@@ -1,9 +1,9 @@
-﻿# 一、准备工作
+﻿﻿# 一、准备工作
 
 > 如果想将传统的config配置（如web.config）转成json配置，可以使用[config2json](https://github.com/andrewlock/dotnet-config2json)工具
 
 ## 1.1 环境要求
-    
+
 * NETFramework 4.5+
 * NETFramework 4.7.1+（支持[ConfigurationBuilder](https://docs.microsoft.com/zh-cn/dotnet/api/system.configuration.configurationbuilder)）
 
@@ -222,13 +222,13 @@ apollo.net项目中有多个样例客户端的项目：
 * 通过ConnectionStrings:ConnectionName:ConnectionString或者ConnectionStrings:ConnectionName来设置连接字符串（同时指定时ConnectionStrings:ConnectionName:ConnectionString优先级高）
 * 通过ConnectionStrings:ConnectionName:ProviderName来指定使用其他数据库，比如MySql.Data.MySqlClient来指定是MySql
 
-## 4.3 CommonConfigurationBuilder
+## 4.3 CommonSectionBuilder
 通过反射结点类型，动态递归添加到节点类型中，此方法灵活，适应绝大部分节点。
 ``` xml
 <configuration>
     <configBuilders>
         <builders>
-            <add name="CommonConfigurationBuilder" type="Com.Ctrip.Framework.Apollo.CommonConfigurationBuilder, Com.Ctrip.Framework.Apollo.ConfigurationManager" namespace="TEST1.test" keyPrefix="可选值" />
+            <add name="CommonSectionBuilder" type="Com.Ctrip.Framework.Apollo.CommonSectionBuilder, Com.Ctrip.Framework.Apollo.ConfigurationManager" namespace="TEST1.test" keyPrefix="可选值" />
         </builders>
     </configBuilders>
 </configuration>
@@ -236,21 +236,7 @@ apollo.net项目中有多个样例客户端的项目：
 * namespace为可选值，该值对应apollo中的namespace。支持多个值，以`,`或`;`分割，优先级从低到高
 * keyPrefix为可选值，默认是以节点名
 
-## 4.4 Key2XmlConfigurationBuilder
-通过简单的层次结构改换成xml，限制比较大，建议使用CommonConfigurationBuilder。
-``` xml
-<configuration>
-    <configBuilders>
-        <builders>
-            <add name="Key2XmlConfigurationBuilder" type="Com.Ctrip.Framework.Apollo.Key2XmlConfigurationBuilder, Com.Ctrip.Framework.Apollo.ConfigurationManager" namespace="TEST1.test" keyPrefix="可选值" />
-        </builders>
-    </configBuilders>
-</configuration>
-```
-* namespace为可选值，该值对应apollo中的namespace。支持多个值，以`,`或`;`分割，优先级从低到高
-* keyPrefix为可选值，默认是以节点名
-
-## 4.5 NodeReplaceSectionBuilder
+## 4.4 NodeReplaceSectionBuilder
 直接使用apollo中配置的xml替换掉原来的节点xml
 ``` xml
 <configuration>
