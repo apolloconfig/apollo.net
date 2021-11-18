@@ -1,15 +1,14 @@
-﻿namespace Com.Ctrip.Framework.Apollo.Enums
+﻿namespace Com.Ctrip.Framework.Apollo.Enums;
+
+public enum Env
 {
-    public enum Env
-    {
-        Local,
-        Dev,
-        Fws,
-        Fat,
-        Uat,
-        Lpt,
-        Pro,
-        Tools,
-        Unknown
-    }
+    Local,
+    Dev,
+    Fws,
+    Fat,
+    Uat,
+    Lpt,
+    Pro,
+    Tools,
+    Unknown
 }

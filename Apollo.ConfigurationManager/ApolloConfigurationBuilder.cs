@@ -1,85 +1,79 @@
 ﻿using Com.Ctrip.Framework.Apollo.Model;
-using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Configuration;
 using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Xml;
 
-namespace Com.Ctrip.Framework.Apollo
+namespace Com.Ctrip.Framework.Apollo;
+
+public abstract class ApolloConfigurationBuilder : ConfigurationBuilder
 {
-    public abstract class ApolloConfigurationBuilder : ConfigurationBuilder
+    private static readonly object Lock = new();
+    private static readonly FieldInfo ConfigurationManagerReset = typeof(ConfigurationManager).GetField("s_initState", BindingFlags.NonPublic | BindingFlags.Static)!;
+    public static bool AppSettingsInitialized { get; private set; }
+
+    private IConfig? _config;
+    public IReadOnlyList<string>? Namespaces { get; private set; }
+    public string? SectionName { get; private set; }
+
+    public override void Initialize(string name, NameValueCollection config)
     {
-        private static readonly object Lock = new();
-        private static readonly FieldInfo ConfigurationManagerReset = typeof(ConfigurationManager).GetField("s_initState", BindingFlags.NonPublic | BindingFlags.Static)!;
-        public static bool AppSettingsInitialized { get; private set; }
+        Namespaces = config["namespace"]?.Split(new[] { ';', ',' }, StringSplitOptions.RemoveEmptyEntries);
 
-        private IConfig? _config;
-        public IReadOnlyList<string>? Namespaces { get; private set; }
-        public string? SectionName { get; private set; }
-
-        public override void Initialize(string name, NameValueCollection config)
+        if (this is not AppSettingsSectionBuilder)
         {
-            Namespaces = config["namespace"]?.Split(new[] { ';', ',' }, StringSplitOptions.RemoveEmptyEntries);
+            _ = ConfigurationManager.AppSettings; //让AppSettings必须最先被初始化
 
-            if (this is not AppSettingsSectionBuilder)
-            {
-                _ = ConfigurationManager.AppSettings; //让AppSettings必须最先被初始化
-
-                AppSettingsInitialized = true;
-            }
-
-            base.Initialize(name, config);
+            AppSettingsInitialized = true;
         }
 
-        public override XmlNode ProcessRawXml(XmlNode rawXml)
-        {
-            SectionName = rawXml.Name;
+        base.Initialize(name, config);
+    }
 
-            return base.ProcessRawXml(rawXml);
-        }
+    public override XmlNode ProcessRawXml(XmlNode rawXml)
+    {
+        SectionName = rawXml.Name;
 
-        protected IConfig GetConfig()
+        return base.ProcessRawXml(rawXml);
+    }
+
+    protected IConfig GetConfig()
+    {
+        if (_config != null) return _config;
+
+        lock (Lock)
         {
+            Interlocked.MemoryBarrier();
+
             if (_config != null) return _config;
 
-            lock (Lock)
-            {
-                Interlocked.MemoryBarrier();
-
-                if (_config != null) return _config;
-
-                Task<IConfig> config;
-                if (Namespaces == null || Namespaces.Count == 0)
+            Task<IConfig> config;
+            if (Namespaces == null || Namespaces.Count == 0)
 #pragma warning disable 618
-                    config = ApolloConfigurationManager.GetAppConfig();
-                else if (Namespaces.Count == 1)
-                    config = ApolloConfigurationManager.GetConfig(Namespaces[0]);
-                else
-                    config = ApolloConfigurationManager.GetConfig(Namespaces);
+                config = ApolloConfigurationManager.GetAppConfig();
+            else if (Namespaces.Count == 1)
+                config = ApolloConfigurationManager.GetConfig(Namespaces[0]);
+            else
+                config = ApolloConfigurationManager.GetConfig(Namespaces);
 #pragma warning restore 618
-                _config = config.ConfigureAwait(false).GetAwaiter().GetResult();
+            _config = config.ConfigureAwait(false).GetAwaiter().GetResult();
 
-                _config.ConfigChanged += Config_ConfigChanged;
-            }
-
-            return _config;
+            _config.ConfigChanged += Config_ConfigChanged;
         }
 
-        private void Config_ConfigChanged(IConfig config, ConfigChangeEventArgs args)
-        {
-            try
-            {
-                ConfigurationManagerReset.SetValue(null, 0);
+        return _config;
+    }
 
-                config.ConfigChanged -= Config_ConfigChanged;
-            }
-            catch
-            {
-                ConfigurationManager.RefreshSection(SectionName!);
-            }
+    private void Config_ConfigChanged(IConfig config, ConfigChangeEventArgs args)
+    {
+        try
+        {
+            ConfigurationManagerReset.SetValue(null, 0);
+
+            config.ConfigChanged -= Config_ConfigChanged;
+        }
+        catch
+        {
+            ConfigurationManager.RefreshSection(SectionName!);
         }
     }
 }

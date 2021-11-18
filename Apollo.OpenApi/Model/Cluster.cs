@@ -1,9 +1,8 @@
-﻿namespace Com.Ctrip.Framework.Apollo.OpenApi.Model
-{
-    public class Cluster : BaseModel
-    {
-        public string? Name { get; set; }
+﻿namespace Com.Ctrip.Framework.Apollo.OpenApi.Model;
 
-        public string? AppId { get; set; }
-    }
+public class Cluster : BaseModel
+{
+    public string? Name { get; set; }
+
+    public string? AppId { get; set; }
 }

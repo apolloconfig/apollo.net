@@ -1,7 +1,6 @@
-﻿namespace Com.Ctrip.Framework.Apollo.Internals
+﻿namespace Com.Ctrip.Framework.Apollo.Internals;
+
+public interface IConfigRepositoryFactory
 {
-    public interface IConfigRepositoryFactory
-    {
-        IConfigRepository GetConfigRepository(string @namespace);
-    }
+    IConfigRepository GetConfigRepository(string @namespace);
 }

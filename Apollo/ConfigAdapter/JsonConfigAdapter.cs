@@ -1,9 +1,8 @@
 ﻿using Com.Ctrip.Framework.Apollo.Core.Utils;
 
-namespace Com.Ctrip.Framework.Apollo.ConfigAdapter
+namespace Com.Ctrip.Framework.Apollo.ConfigAdapter;
+
+internal class JsonConfigAdapter : ContentConfigAdapter
 {
-    internal class JsonConfigAdapter : ContentConfigAdapter
-    {
-        public override Properties GetProperties(string content) => new Properties(JsonConfigurationParser.Parse(content));
-    }
+    public override Properties GetProperties(string content) => new(JsonConfigurationParser.Parse(content));
 }

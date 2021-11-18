@@ -1,24 +1,22 @@
 ﻿using Com.Ctrip.Framework.Apollo.Logging;
-using System;
 using Xunit;
 
-namespace Apollo.Tests
+namespace Apollo.Tests;
+
+public class LogManagerTest
 {
-    public class LogManagerTest
+    [Fact]
+    public void DefaultLogger()
     {
-        [Fact]
-        public void DefaultLogger()
-        {
-            Assert.NotNull(LogManager.LogFactory);
-            Assert.NotNull(LogManager.CreateLogger(typeof(LogManagerTest)));
-        }
+        Assert.NotNull(LogManager.LogFactory);
+        Assert.NotNull(LogManager.CreateLogger(typeof(LogManagerTest)));
+    }
 
-        [Fact]
-        public void Exception_Fallback()
-        {
-            LogManager.LogFactory = s => throw new NotSupportedException();
+    [Fact]
+    public void Exception_Fallback()
+    {
+        LogManager.LogFactory = s => throw new NotSupportedException();
 
-            Assert.NotNull(LogManager.CreateLogger(typeof(LogManagerTest)));
-        }
+        Assert.NotNull(LogManager.CreateLogger(typeof(LogManagerTest)));
     }
 }

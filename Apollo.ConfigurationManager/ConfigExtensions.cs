@@ -1,41 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿namespace Com.Ctrip.Framework.Apollo;
 
-namespace Com.Ctrip.Framework.Apollo
+internal static class ConfigExtensions
 {
-    internal static class ConfigExtensions
+    public static IEnumerable<ConfigKey> GetChildren(this IConfig config, string keyPrefix)
     {
-        public static IEnumerable<ConfigKey> GetChildren(this IConfig config, string keyPrefix)
+        keyPrefix += ":";
+
+        var hash = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var propertyName in config.GetPropertyNames())
         {
-            keyPrefix += ":";
+            if (!propertyName.StartsWith(keyPrefix, StringComparison.OrdinalIgnoreCase)) continue;
 
-            var hash = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var index = propertyName.IndexOf(':', keyPrefix.Length);
 
-            foreach (var propertyName in config.GetPropertyNames())
-            {
-                if (!propertyName.StartsWith(keyPrefix, StringComparison.OrdinalIgnoreCase)) continue;
-
-                var index = propertyName.IndexOf(':', keyPrefix.Length);
-
-                hash.Add(index > 0 ? propertyName.Substring(0, index) : propertyName);
-            }
-
-            return hash.Select(key => new ConfigKey(key.Substring(key.LastIndexOf(':') + 1), key));
+            hash.Add(index > 0 ? propertyName.Substring(0, index) : propertyName);
         }
 
-        public struct ConfigKey
+        return hash.Select(key => new ConfigKey(key.Substring(key.LastIndexOf(':') + 1), key));
+    }
+
+    public struct ConfigKey
+    {
+        public ConfigKey(string name, string fullName)
         {
-            public ConfigKey(string name, string fullName)
-            {
-                Name = name;
+            Name = name;
 
-                FullName = fullName;
-            }
-
-            public string Name { get; }
-
-            public string FullName { get; }
+            FullName = fullName;
         }
+
+        public string Name { get; }
+
+        public string FullName { get; }
     }
 }

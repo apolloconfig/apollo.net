@@ -1,13 +1,12 @@
-﻿namespace Com.Ctrip.Framework.Apollo.OpenApi
+﻿namespace Com.Ctrip.Framework.Apollo.OpenApi;
+
+public interface INamespaceClient : IOpenApiClient
 {
-    public interface INamespaceClient : IOpenApiClient
-    {
-        string AppId { get; }
+    string AppId { get; }
 
-        string Env { get; }
+    string Env { get; }
 
-        string Cluster { get; }
+    string Cluster { get; }
 
-        string Namespace { get; }
-    }
+    string Namespace { get; }
 }
