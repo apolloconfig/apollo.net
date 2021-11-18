@@ -26,5 +26,40 @@ public class ConfigurationBuilderTest
         Assert.Equal(new Uri("http://localhost:1234"), endpoint.Address);
         Assert.Equal("test", endpoint.Name);
     }
+
+    [Fact]
+    public void CommonConfigurationBuilderTest()
+    {
+        var test = (TestConfigurationSection)System.Configuration.ConfigurationManager.GetSection("test");
+
+        Assert.Equal(3, test.DefaultValue);
+
+        Assert.Equal(TimeSpan.FromSeconds(30), test.Timeout);
+
+        Assert.Equal(100, test.MaxValue);
+
+        Assert.NotNull(test.Map);
+
+        var element = test.Map["abc"];
+
+        Assert.NotNull(element);
+
+        Assert.Equal("abc", element.Key);
+        Assert.Equal("123", element.Value);
+
+        Assert.Null(test.Map["def"]);
+
+        element = test.Map["defg"];
+
+        Assert.NotNull(element);
+
+        Assert.Equal("defg", element.Key);
+        Assert.Equal("456", element.Value);
+
+        Assert.NotNull(test.Element);
+
+        Assert.Equal("jkl", test.Element.Name);
+        Assert.Equal("789", test.Element.Value);
+    }
 #endif
 }
