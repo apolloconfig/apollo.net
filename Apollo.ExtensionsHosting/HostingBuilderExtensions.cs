@@ -9,6 +9,7 @@ namespace Microsoft.AspNetCore.Hosting;
 public static class WebHostingBuilderExtensions
 #else
 namespace Microsoft.Extensions.Hosting;
+
 public static class HostingBuilderExtensions
 #endif
 {
