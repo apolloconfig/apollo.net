@@ -1,11 +1,11 @@
-﻿﻿# 一、准备工作
+﻿﻿﻿# 一、准备工作
 
 > 如果想将传统的config配置（如web.config）转成json配置，可以使用[config2json](https://github.com/andrewlock/dotnet-config2json)工具
 
 ## 1.1 环境要求
 
-* NETFramework 4.5+
-* NETFramework 4.7.1+（支持[ConfigurationBuilder](https://docs.microsoft.com/zh-cn/dotnet/api/system.configuration.configurationbuilder)）
+* NETFramework 4.0+（4.7.1+支持[ConfigurationBuilder](https://docs.microsoft.com/zh-cn/dotnet/api/system.configuration.configurationbuilder)）
+* [NETStandard 2.0](https://github.com/dotnet/standard/blob/master/docs/versions/netstandard2.0.md#platform-support)
 
 ## 1.2 必选设置
 Apollo客户端依赖于`AppId`，`Environment`等环境信息来工作，所以请确保阅读下面的说明并且做正确的配置：
