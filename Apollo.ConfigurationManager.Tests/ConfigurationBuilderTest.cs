@@ -8,7 +8,7 @@ public class ConfigurationBuilderTest
 #if NET471_OR_GREATER
     [Fact]
     public void AppSettingsSectionBuilderTest() =>
-        Assert.Equal("560", System.Configuration.ConfigurationManager.AppSettings["Timeout"]);
+        Assert.Equal("00:00:30", System.Configuration.ConfigurationManager.AppSettings["Timeout"]);
 
     [Fact]
     public void ConnectionStringsSectionBuilderTest() =>

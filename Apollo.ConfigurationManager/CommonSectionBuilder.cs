@@ -49,13 +49,13 @@ public class CommonSectionBuilder : ApolloConfigurationBuilder
     {
         base.Initialize(name, config);
 
-        _keyPrefix = config["keyPrefix"];
+        _keyPrefix = config["keyPrefix"]?.TrimEnd(':');
     }
 
     public override ConfigurationSection ProcessConfigurationSection(ConfigurationSection configSection)
     {
-        Bind(configSection, GetConfig(), string.IsNullOrEmpty(_keyPrefix)
-            ? new ConfigKey(configSection.SectionInformation.SectionName, configSection.SectionInformation.SectionName)
+        Bind(configSection, GetConfig(), string.IsNullOrWhiteSpace(_keyPrefix ??= configSection.SectionInformation.SectionName)
+            ? new ConfigKey("", "")
             : new ConfigKey(_keyPrefix!.Substring(_keyPrefix!.LastIndexOf(':') + 1), _keyPrefix));
 
         return configSection;
@@ -63,12 +63,15 @@ public class CommonSectionBuilder : ApolloConfigurationBuilder
 
     private static void Bind(ConfigurationElement configElement, IConfig config, ConfigKey configKey)
     {
+        if (string.IsNullOrWhiteSpace(configKey.FullName) &&
+            configElement is not ConfigurationSection) return;
+
         foreach (var property in configElement.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
         {
             var cpa = property.GetCustomAttribute<ConfigurationPropertyAttribute>();
             if (cpa == null) continue;
 
-            var key = $"{configKey.FullName}:{cpa.Name}";
+            var key = string.IsNullOrWhiteSpace(configKey.FullName) ? cpa.Name : $"{configKey.FullName}:{cpa.Name}";
 
             if (typeof(ConfigurationElement).IsAssignableFrom(property.PropertyType))
             {
@@ -94,7 +97,7 @@ public class CommonSectionBuilder : ApolloConfigurationBuilder
 
                 ExceptionDispatchInfo? ex = null;
 
-                if (cpa.IsKey)
+                if (cpa.IsKey && !string.IsNullOrWhiteSpace(configKey.Name))
                     try
                     {
                         SetValue(configElement, cp, configKey.Name);
@@ -104,6 +107,7 @@ public class CommonSectionBuilder : ApolloConfigurationBuilder
                         ex = ExceptionDispatchInfo.Capture(e);
                     }
                 else if (string.Equals("value", cpa.Name, StringComparison.OrdinalIgnoreCase) &&
+                         !string.IsNullOrWhiteSpace(configKey.FullName) &&
                          config.TryGetProperty(configKey.FullName, out var value))
                     try
                     {
@@ -133,7 +137,7 @@ public class CommonSectionBuilder : ApolloConfigurationBuilder
 
         MethodInfo GetMethod(string method, params Type[] parameterTypes)
         {
-            var ms = methods!.Where(m => m.Name == method).ToArray();
+            var ms = methods.Where(m => m.Name == method).ToArray();
             if (parameterTypes.Length < 1) return ms.FirstOrDefault(m => m.GetParameters().Length == 0) ?? ms.First();
 
             return ms.First(m =>

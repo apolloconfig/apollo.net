@@ -35,7 +35,6 @@ $(PackageReleaseNotes)</Description>
 
   <ItemGroup Condition="'$(TargetFramework)' != 'net471'">
     <Compile Remove="*Builder.cs" />
-    <Compile Remove="XmlExtensions.cs" />
   </ItemGroup>
 
 </Project>

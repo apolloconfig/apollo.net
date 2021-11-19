@@ -199,12 +199,13 @@ apollo.net项目中有多个样例客户端的项目：
 <configuration>
     <configBuilders>
         <builders>
-            <add name="ApolloConfigBuilder1" type="Com.Ctrip.Framework.Apollo.AppSettingsSectionBuilder, Com.Ctrip.Framework.Apollo.ConfigurationManager" namespace="TEST1.test;application" />
+            <add name="ApolloConfigBuilder1" type="Com.Ctrip.Framework.Apollo.AppSettingsSectionBuilder, Com.Ctrip.Framework.Apollo.ConfigurationManager" namespace="TEST1.test;application" keyPrefix="可选值" />
         </builders>
     </configBuilders>
 </configuration>
 ```
 * namespace为可选值，该值对应apollo中的namespace。支持多个值，以`,`或`;`分割，优先级从低到高
+* keyPrefix为可选值，当值不是IsNullOrWhiteSpace时生效
 
 ## 4.2 ConnectionStringsSectionBuilder
 ``` xml
@@ -218,12 +219,14 @@ apollo.net项目中有多个样例客户端的项目：
 ```
 * namespace为可选值，该值对应apollo中的namespace。支持多个值，以`,`或`;`分割，优先级从低到高
 * defaultProviderName为可选值，默认值为System.Data.SqlClient,，对应ConnectionString的ProviderName。
-* keyPrefix为可选值，默认值是connectionStrings
+* keyPrefix为可选值，没有配置时值为节点名（一般是connectionStrings），值是WhiteSpace时则不生效
 * 通过ConnectionStrings:ConnectionName:ConnectionString或者ConnectionStrings:ConnectionName来设置连接字符串（同时指定时ConnectionStrings:ConnectionName:ConnectionString优先级高）
 * 通过ConnectionStrings:ConnectionName:ProviderName来指定使用其他数据库，比如MySql.Data.MySqlClient来指定是MySql
 
 ## 4.3 CommonSectionBuilder
-通过反射结点类型，动态递归添加到节点类型中，此方法灵活，适应绝大部分节点。
+
+通过反射结点类型，动态递归添加到节点类型中，此方法灵活，适应绝大部分节点。通过读取属性的[ConfigurationProperty]值和配置中的值关联
+
 ``` xml
 <configuration>
     <configBuilders>
@@ -234,7 +237,7 @@ apollo.net项目中有多个样例客户端的项目：
 </configuration>
 ```
 * namespace为可选值，该值对应apollo中的namespace。支持多个值，以`,`或`;`分割，优先级从低到高
-* keyPrefix为可选值，默认是以节点名
+* keyPrefix为可选值，没有配置时值为节点名，值是WhiteSpace时则不生效
 
 ## 4.4 NodeReplaceSectionBuilder
 直接使用apollo中配置的xml替换掉原来的节点xml
@@ -248,7 +251,7 @@ apollo.net项目中有多个样例客户端的项目：
 </configuration>
 ```
 * namespace为可选值，该值对应apollo中的namespace。支持多个值，以`,`或`;`分割，优先级从低到高
-* key为可选值，默认是以节点名
+* key为可选值，当为IsNullOrWhiteSpace时值为节点名
 
 # 五、FAQ
 

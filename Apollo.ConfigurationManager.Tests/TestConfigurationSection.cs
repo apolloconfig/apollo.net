@@ -16,6 +16,6 @@ public class TestConfigurationSection : ConfigurationSection
     [ConfigurationProperty("element")]
     public NameValueConfigurationElement Element => (NameValueConfigurationElement)this["element"];
 
-    [ConfigurationProperty("", IsDefaultCollection = true)]
-    public KeyValueConfigurationCollection Map => (KeyValueConfigurationCollection)this[""];
+    [ConfigurationProperty("map")]
+    public KeyValueConfigurationCollection Map => (KeyValueConfigurationCollection)this["map"];
 }

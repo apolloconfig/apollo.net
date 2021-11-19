@@ -12,7 +12,7 @@ public class ConnectionStringsSectionBuilder : ApolloConfigurationBuilder
     {
         base.Initialize(name, config);
 
-        _keyPrefix = config["keyPrefix"];
+        _keyPrefix = config["keyPrefix"]?.TrimEnd(':');
 
         _defaultProviderName = config["defaultProviderName"] ?? "System.Data.SqlClient";
     }
@@ -25,23 +25,11 @@ public class ConnectionStringsSectionBuilder : ApolloConfigurationBuilder
 
         lock (this)
         {
-            var config = GetConfig();
-
-            if (string.IsNullOrEmpty(_keyPrefix)) _keyPrefix = configSection.SectionInformation.Name;
-
-            foreach (var name in config.GetChildren(_keyPrefix!))
+            foreach (var connectionString in GetConfig().GetConnectionStrings(_keyPrefix ?? configSection.SectionInformation.Name, _defaultProviderName))
             {
-                var connectionName = name.Name;
+                connectionStrings.Remove(connectionString.Name);
 
-                if (!config.TryGetProperty($"{_keyPrefix}:{connectionName}:ConnectionString", out var connectionString) &&
-                    !config.TryGetProperty($"{_keyPrefix}:{connectionName}", out connectionString) ||
-                    string.IsNullOrWhiteSpace(connectionString)) continue;
-
-                connectionStrings.Remove(connectionName);
-
-                config.TryGetProperty($"{_keyPrefix}:{connectionName}:ProviderName", out var providerName);
-
-                connectionStrings.Add(new ConnectionStringSettings(connectionName, connectionString, providerName ?? _defaultProviderName));
+                connectionStrings.Add(connectionString);
             }
         }
 
