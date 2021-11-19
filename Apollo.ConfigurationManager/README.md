@@ -1,9 +1,9 @@
-﻿# 一、准备工作
+﻿﻿# 一、准备工作
 
 > 如果想将传统的config配置（如web.config）转成json配置，可以使用[config2json](https://github.com/andrewlock/dotnet-config2json)工具
 
 ## 1.1 环境要求
-    
+
 * NETFramework 4.5+
 * NETFramework 4.7.1+（支持[ConfigurationBuilder](https://docs.microsoft.com/zh-cn/dotnet/api/system.configuration.configurationbuilder)）
 
@@ -194,35 +194,64 @@ apollo.net项目中有多个样例客户端的项目：
 
 # 四、NETFramework 4.7.1+ ConfigurationBuilder支持
 
-## 4.1 ApolloConfigurationBuilder说明
+## 4.1 ApolloConfigurationBuilder
 ``` xml
 <configuration>
     <configBuilders>
         <builders>
-            <add name="ApolloConfigBuilder1" type="Com.Ctrip.Framework.Apollo.AppSettingsSectionBuilder, Com.Ctrip.Framework.Apollo.ConfigurationManager" namespace="TEST1.test;application" />
+            <add name="ApolloConfigBuilder1" type="Com.Ctrip.Framework.Apollo.AppSettingsSectionBuilder, Com.Ctrip.Framework.Apollo.ConfigurationManager" namespace="TEST1.test;application" keyPrefix="可选值" />
         </builders>
     </configBuilders>
 </configuration>
-
 ```
 * namespace为可选值，该值对应apollo中的namespace。支持多个值，以`,`或`;`分割，优先级从低到高
+* keyPrefix为可选值，当值不是IsNullOrWhiteSpace时生效
 
-## 4.2 ConnectionStringsSectionBuilder使用说明
+## 4.2 ConnectionStringsSectionBuilder
 ``` xml
 <configuration>
     <configBuilders>
         <builders>
-            <add name="ConnectionStringsSectionBuilder1" type="Com.Ctrip.Framework.Apollo.ConnectionStringsSectionBuilder, Com.Ctrip.Framework.Apollo.ConfigurationManager" namespace="TEST1.test" defaultProviderName="MySql.Data.MySqlClient" />
+            <add name="ConnectionStringsSectionBuilder1" type="Com.Ctrip.Framework.Apollo.ConnectionStringsSectionBuilder, Com.Ctrip.Framework.Apollo.ConfigurationManager" namespace="TEST1.test" keyPrefix="可选值" defaultProviderName="MySql.Data.MySqlClient" />
         </builders>
     </configBuilders>
 </configuration>
-
 ```
 * namespace为可选值，该值对应apollo中的namespace。支持多个值，以`,`或`;`分割，优先级从低到高
 * defaultProviderName为可选值，默认值为System.Data.SqlClient,，对应ConnectionString的ProviderName。
-* key必须以ConnectionStrings:开始
+* keyPrefix为可选值，没有配置时值为节点名（一般是connectionStrings），值是WhiteSpace时则不生效
 * 通过ConnectionStrings:ConnectionName:ConnectionString或者ConnectionStrings:ConnectionName来设置连接字符串（同时指定时ConnectionStrings:ConnectionName:ConnectionString优先级高）
 * 通过ConnectionStrings:ConnectionName:ProviderName来指定使用其他数据库，比如MySql.Data.MySqlClient来指定是MySql
+
+## 4.3 CommonSectionBuilder
+
+通过反射结点类型，动态递归添加到节点类型中，此方法灵活，适应绝大部分节点。通过读取属性的[ConfigurationProperty]值和配置中的值关联
+
+``` xml
+<configuration>
+    <configBuilders>
+        <builders>
+            <add name="CommonSectionBuilder" type="Com.Ctrip.Framework.Apollo.CommonSectionBuilder, Com.Ctrip.Framework.Apollo.ConfigurationManager" namespace="TEST1.test" keyPrefix="可选值" />
+        </builders>
+    </configBuilders>
+</configuration>
+```
+* namespace为可选值，该值对应apollo中的namespace。支持多个值，以`,`或`;`分割，优先级从低到高
+* keyPrefix为可选值，没有配置时值为节点名，值是WhiteSpace时则不生效
+
+## 4.4 NodeReplaceSectionBuilder
+直接使用apollo中配置的xml替换掉原来的节点xml
+``` xml
+<configuration>
+    <configBuilders>
+        <builders>
+            <add name="NodeReplaceSectionBuilder" type="Com.Ctrip.Framework.Apollo.NodeReplaceSectionBuilder, Com.Ctrip.Framework.Apollo.ConfigurationManager" namespace="TEST1.test" key="可选值" />
+        </builders>
+    </configBuilders>
+</configuration>
+```
+* namespace为可选值，该值对应apollo中的namespace。支持多个值，以`,`或`;`分割，优先级从低到高
+* key为可选值，当为IsNullOrWhiteSpace时值为节点名
 
 # 五、FAQ
 

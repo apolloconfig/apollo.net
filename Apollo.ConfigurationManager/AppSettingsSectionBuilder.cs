@@ -5,6 +5,18 @@ namespace Com.Ctrip.Framework.Apollo;
 
 public class AppSettingsSectionBuilder : ApolloConfigurationBuilder
 {
+    private string? _keyPrefix;
+
+    public override void Initialize(string name, NameValueCollection config)
+    {
+        base.Initialize(name, config);
+
+        _keyPrefix = config["keyPrefix"];
+
+        if (!string.IsNullOrWhiteSpace(_keyPrefix) && !_keyPrefix.EndsWith(":"))
+            _keyPrefix += ":";
+    }
+
     public override ConfigurationSection ProcessConfigurationSection(ConfigurationSection configSection)
     {
         if (configSection is not AppSettingsSection section) return base.ProcessConfigurationSection(configSection);
@@ -15,7 +27,8 @@ public class AppSettingsSectionBuilder : ApolloConfigurationBuilder
 
         lock (this)
         {
-            var config = GetConfig();
+            var config = GetConfig().WithPrefix(_keyPrefix);
+
             foreach (var key in config.GetPropertyNames())
             {
                 if (config.TryGetProperty(key, out var value))

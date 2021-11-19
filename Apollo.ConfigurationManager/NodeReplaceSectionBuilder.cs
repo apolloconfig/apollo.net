@@ -16,10 +16,10 @@ public class NodeReplaceSectionBuilder : ApolloConfigurationBuilder
 
     public override XmlNode ProcessRawXml(XmlNode rawXml)
     {
-        if (string.IsNullOrEmpty(_key)) _key = rawXml.Name;
+        if (string.IsNullOrWhiteSpace(_key)) _key = rawXml.Name;
 
         if (!GetConfig().TryGetProperty(_key!, out var xml) ||
-            string.IsNullOrEmpty(xml))
+            string.IsNullOrWhiteSpace(xml))
             return base.ProcessRawXml(rawXml);
 
         var doc = new XmlDocument();

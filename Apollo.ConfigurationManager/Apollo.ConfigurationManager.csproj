@@ -11,12 +11,11 @@
 　　直接使用ApolloConfigurationManager请使用Com.Ctrip.Framework.Apollo.Configuration或者Com.Ctrip.Framework.Apollo.ConfigurationManager
 
 $(PackageReleaseNotes)</Description>
-    <PackageIconUrl>https://raw.githubusercontent.com/apolloconfig/apollo/master/apollo-portal/src/main/resources/static/img/config.png</PackageIconUrl>
     <PackageProjectUrl>$(RepositoryUrl)/$(MSBuildProjectName)</PackageProjectUrl>
     <PackageTags>$(PackageTags) ConfigurationBuilder ConfigurationManager</PackageTags>
     <RootNamespace>Com.Ctrip.Framework.Apollo</RootNamespace>
     <TargetFrameworks>net471;net45;net40;netstandard2.0;netstandard2.1</TargetFrameworks>
-    <Version>$(ApolloVersion)</Version>
+    <Version>$(ApolloVersion).1</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -36,7 +35,6 @@ $(PackageReleaseNotes)</Description>
 
   <ItemGroup Condition="'$(TargetFramework)' != 'net471'">
     <Compile Remove="*Builder.cs" />
-    <Compile Remove="XmlExtensions.cs" />
   </ItemGroup>
 
 </Project>
