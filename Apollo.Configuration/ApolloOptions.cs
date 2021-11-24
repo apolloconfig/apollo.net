@@ -48,7 +48,10 @@ public class ApolloOptions : IApolloOptions
     /// <returns> the cluster name, or "default" if not specified </returns>
     public virtual string Cluster { get => _cluster ?? ConfigConsts.ClusterNameDefault; set => _cluster = value; }
 
-    public IEnumerable<string>? Namespaces { get; set; }
+    /// <summary>
+    /// Specify the multiple namespaces
+    /// </summary>
+    public IEnumerable<KeyValuePair<string, ConfigFileFormat>>? Namespaces { get; set; }
 
     /// <summary>Default Dev</summary>
     public virtual Env Env { get; set; } = Env.Dev;

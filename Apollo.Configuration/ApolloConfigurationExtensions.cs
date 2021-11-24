@@ -23,7 +23,7 @@ namespace Microsoft.Extensions.Configuration
 
             var acb = new ApolloConfigurationBuilder(builder, repositoryFactory);
             if (options is ApolloOptions { Namespaces: { } } ao)
-                foreach (var ns in ao.Namespaces) acb.AddNamespace(ns);
+                foreach (var ns in ao.Namespaces) acb.AddNamespace(ns.Key, ns.Value);
 
             return acb;
         }
