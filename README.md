@@ -4,7 +4,7 @@
 
 1. 与[Microsoft.Extensions.Configuration](https://docs.microsoft.com/zh-cn/aspnet/core/fundamentals/configuration/)集成请参考[Apollo.Configuration](https://github.com/apolloconfig/apollo.net/blob/main/Apollo.Configuration/README.md)，完全支持IConfiguration的变动通知
 2. 与[System.Configuration.ConfigurationManager](https://docs.microsoft.com/zh-cn/dotnet/api/system.configuration.configurationbuilder)集成(.net 4.7.1及以后版本)或直接使用ApolloConfigurationManager请参考[Apollo.ConfigurationManager](https://github.com/apolloconfig/apollo.net/blob/main/Apollo.ConfigurationManager/README.md)
-3. 如果想将传统的config配置（如web.config）转成json配置，可以使用[config2json](https://github.com/andrewlock/dotnet-config2json)工具
+3. 如果想将传统的config配置（如web.config）转成json配置，可以使用[config2json](https://github.com/pengweiqhca/config2json)工具
 
 # 二、日志输出
 
