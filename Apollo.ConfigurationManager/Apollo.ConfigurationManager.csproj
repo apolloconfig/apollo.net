@@ -1,5 +1,4 @@
-﻿
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <AssemblyName>Com.Ctrip.Framework.Apollo.ConfigurationManager</AssemblyName>
@@ -15,7 +14,7 @@ $(PackageReleaseNotes)</Description>
     <PackageTags>$(PackageTags) ConfigurationBuilder ConfigurationManager</PackageTags>
     <RootNamespace>Com.Ctrip.Framework.Apollo</RootNamespace>
     <TargetFrameworks>net471;net45;net40;netstandard2.0;netstandard2.1</TargetFrameworks>
-    <Version>$(ApolloVersion).1</Version>
+    <Version>$(ApolloVersion).2</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,6 +24,10 @@ $(PackageReleaseNotes)</Description>
 
     <ProjectReference Include="..\Apollo\Apollo.csproj" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.*" Condition="'$(TargetFrameworkIdentifier)' == '.NETStandard'" />
+
+    <None Include="$(PackageId).props" Pack="True" PackagePath="build/net40;build/net45" />
+    <None Include="bin/$(Configuration)/net471/$(AssemblyName).dll" Pack="True" PackagePath="build/net40;build/net45" />
+    <None Include="bin/$(Configuration)/net471/$(AssemblyName).pdb" Pack="True" PackagePath="build/net40;build/net45" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
