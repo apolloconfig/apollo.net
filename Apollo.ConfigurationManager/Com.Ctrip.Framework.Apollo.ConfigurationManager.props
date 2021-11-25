@@ -1,0 +1,11 @@
+﻿<Project>
+
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)*" Condition="'$(UseApolloConfigurationBuilder)' == 'true'">
+      <Link>%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Visible>False</Visible>
+    </None>
+  </ItemGroup>
+
+</Project>
