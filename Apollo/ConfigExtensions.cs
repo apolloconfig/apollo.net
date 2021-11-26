@@ -36,12 +36,12 @@ public static partial class ConfigExtensions
 #if NET40
     public static string?[]? GetProperty(this IConfig config, string key, string delimiter, string?[]? defaultValue)
 #else
-        public static IReadOnlyList<string?>? GetProperty(this IConfig config, string key, string delimiter, IReadOnlyList<string?>? defaultValue)
+    public static IReadOnlyList<string?>? GetProperty(this IConfig config, string key, string delimiter, IReadOnlyList<string?>? defaultValue)
 #endif
     {
         if (config == null) throw new ArgumentNullException(nameof(config));
 
-        if (!config.TryGetProperty(key, out var str) || str == null) return defaultValue;
+        if (!config.TryGetProperty(key, out var str)) return defaultValue;
 
         try
         {

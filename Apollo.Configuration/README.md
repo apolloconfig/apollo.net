@@ -241,6 +241,11 @@ services.ConfigureJsonValue<Options>(/*name, */config.GetSection("somePrefix:Jso
 ``` diff
 {
     "apollo": {
-        "Secret": "服务端配置的值"
++       "Secret": "服务端配置的值"
     }
 }
+```
+
+## 4.5 如何允许类似Sping的[PlaceHolder功能](https://github.com/pengweiqhca/Microsoft.Extensions.Configuration.Placeholder)
+
+`dotnet add package PW.Extensions.Configuration.Placeholder`

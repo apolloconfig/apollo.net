@@ -5,6 +5,7 @@
       "environmentVariables": {
         "Apollo:AppId": "apollo-client",
         "Apollo:Cluster": "test",
+        "Apollo:EnablePlaceholder": "true",
         "Apollo:Secret": "ffd9d01130ee4329875ac3441c0bedda",
         "Apollo:MetaServer": "http://106.54.227.205:8080/"
       }

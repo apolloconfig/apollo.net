@@ -12,7 +12,7 @@ public class ConfigChangeEventArgs : EventArgs
 #if NET40
     public ConfigChangeEventArgs(IConfig config, IDictionary<string, ConfigChange> changes)
 #else
-        public ConfigChangeEventArgs(IConfig config, IReadOnlyDictionary<string, ConfigChange> changes)
+    public ConfigChangeEventArgs(IConfig config, IReadOnlyDictionary<string, ConfigChange> changes)
 #endif
     {
         Config = config;
@@ -47,6 +47,6 @@ public class ConfigChangeEventArgs : EventArgs
 #if NET40
     public IDictionary<string, ConfigChange> Changes { get; }
 #else
-        public IReadOnlyDictionary<string, ConfigChange> Changes { get; }
+    public IReadOnlyDictionary<string, ConfigChange> Changes { get; }
 #endif
 }

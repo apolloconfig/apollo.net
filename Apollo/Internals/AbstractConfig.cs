@@ -17,7 +17,7 @@ public abstract class AbstractConfig : IConfig
 
     public abstract IEnumerable<string> GetPropertyNames();
 #if NET40
-        protected void FireConfigChange(IDictionary<string, ConfigChange> actualChanges)
+    protected void FireConfigChange(IDictionary<string, ConfigChange> actualChanges)
 #else
     protected void FireConfigChange(IReadOnlyDictionary<string, ConfigChange> actualChanges)
 #endif

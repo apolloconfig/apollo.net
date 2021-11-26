@@ -28,7 +28,7 @@ internal static class OpenApiClientExtensions
 #if NET40
         return await response.Content.ReadAsAsync<TResponse>().ConfigureAwait(false);
 #else
-            return await response.Content.ReadAsAsync<TResponse>(cancellationToken).ConfigureAwait(false);
+        return await response.Content.ReadAsAsync<TResponse>(cancellationToken).ConfigureAwait(false);
 #endif
     }
 
@@ -61,7 +61,7 @@ internal static class OpenApiClientExtensions
 #if NET40
         return await response.Content.ReadAsAsync<TResponse>().ConfigureAwait(false);
 #else
-            return await response.Content.ReadAsAsync<TResponse>(cancellationToken).ConfigureAwait(false);
+        return await response.Content.ReadAsAsync<TResponse>(cancellationToken).ConfigureAwait(false);
 #endif
     }
 
@@ -95,7 +95,7 @@ internal static class OpenApiClientExtensions
 #if NET40
         return await response.Content.ReadAsAsync<TResponse>().ConfigureAwait(false);
 #else
-            return await response.Content.ReadAsAsync<TResponse>(cancellationToken).ConfigureAwait(false);
+        return await response.Content.ReadAsAsync<TResponse>(cancellationToken).ConfigureAwait(false);
 #endif
     }
 

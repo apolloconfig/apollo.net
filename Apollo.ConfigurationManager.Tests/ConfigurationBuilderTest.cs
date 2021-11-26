@@ -59,7 +59,7 @@ public class ConfigurationBuilderTest
         Assert.NotNull(test.Element);
 
         Assert.Equal("jkl", test.Element.Name);
-        Assert.Equal("789", test.Element.Value);
+        Assert.Equal("300:00:304", test.Element.Value);
     }
 #endif
 }
