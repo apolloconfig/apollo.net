@@ -131,7 +131,7 @@ public class ConfigUtil : IApolloOptions
         }
     }
 #else
-        public IReadOnlyCollection<string>? ConfigServer => GetAppConfig("ConfigServer")?.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries);
+    public IReadOnlyCollection<string>? ConfigServer => GetAppConfig("ConfigServer")?.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries);
 #endif
     private void InitTimeout()
     {
@@ -162,6 +162,8 @@ public class ConfigUtil : IApolloOptions
     public string LocalCacheDir => GetAppConfig(nameof(LocalCacheDir)) ?? Path.Combine(ConfigConsts.DefaultLocalCacheDir, AppId);
 
     public Func<HttpMessageHandler>? HttpMessageHandlerFactory => _httpMessageHandlerFactory;
+
+    public bool EnablePlaceholder => bool.TryParse(GetAppConfig(nameof(EnablePlaceholder)), out var enablePlaceholder) && enablePlaceholder;
 
     public ICacheFileProvider CacheFileProvider => _cacheFileProvider ??= new LocalPlaintextCacheFileProvider();
 

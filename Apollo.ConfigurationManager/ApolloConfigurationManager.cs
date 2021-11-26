@@ -15,6 +15,7 @@ namespace Com.Ctrip.Framework.Apollo;
 #endif
 public static class ApolloConfigurationManager
 {
+    private static readonly bool ConfigEnablePlaceholder;
     private static readonly Exception? Exception;
     public static IConfigManager? Manager { get; }
 
@@ -22,7 +23,11 @@ public static class ApolloConfigurationManager
     {
         try
         {
-            Manager = new DefaultConfigManager(new DefaultConfigRegistry(), new ConfigRepositoryFactory(new ConfigUtil()));
+            var config = new ConfigUtil();
+
+            ConfigEnablePlaceholder = config.EnablePlaceholder;
+
+            Manager = new DefaultConfigManager(new DefaultConfigRegistry(), new ConfigRepositoryFactory(config));
         }
         catch (Exception ex)
         {
@@ -62,9 +67,16 @@ public static class ApolloConfigurationManager
     {
         if (namespaces == null) throw new ArgumentNullException(nameof(namespaces));
 #if NET40
-        return new MultiConfig(await TaskEx.WhenAll(namespaces.Reverse().Distinct().Select(GetConfig)).ConfigureAwait(false));
+        var configs = await TaskEx.WhenAll(namespaces.Reverse().Distinct().Select(GetConfig)).ConfigureAwait(false);
 #else
-            return new MultiConfig(await Task.WhenAll(namespaces.Reverse().Distinct().Select(GetConfig)).ConfigureAwait(false));
+        var configs = await Task.WhenAll(namespaces.Reverse().Distinct().Select(GetConfig)).ConfigureAwait(false);
 #endif
+        if (configs.Length < 1) throw new ArgumentException("namespaces not allow empty");
+
+        var config = configs.Length == 1 ? configs[0] : new MultiConfig(configs);
+
+        if (ConfigEnablePlaceholder) config = new PlaceholderConfig(config);
+
+        return config;
     }
 }

@@ -291,7 +291,13 @@ ConfigUtil.UseHttpMessageHandlerFactory(() => new HttpClientHandler
 
 配置Apollo.EnvironmentVariablePriority或者Apollo:EnvironmentVariablePriority值为1或者true（优先从环境变量中读取）后，则Apollo配置则优先从环境变量中读取（和现在读取顺序相反）
 
-## 5.5 如果不更改framework版本的情况下使用ConfigurationBuilder
+## 5.5 如何不更改framework版本的情况下使用ConfigurationBuilder
 
 1. 运行时必须是.NET Framework 4.7.1+
 2. 在项目文件的PropertyGroup节点里添加<UseApolloConfigurationBuilder>true</UseApolloConfigurationBuilder>
+
+> 在4.0版本中使用此功能时不建议使用ApolloConfigurationManager（可能存在运行时错误）。
+
+## 5.6 如何允许类似Sping的[PlaceHolder功能](https://github.com/pengweiqhca/Microsoft.Extensions.Configuration.Placeholder)
+
+`<add key="Apollo:EnablePlaceholder" value="true" />`
