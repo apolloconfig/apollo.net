@@ -22,8 +22,8 @@ public class HttpUtil : IDisposable
         try
         {
 #if NET40
-                using var cts = new CancellationTokenSource();
-                cts.CancelAfter(timeout);
+            using var cts = new CancellationTokenSource();
+            cts.CancelAfter(timeout);
 #else
             using var cts = new CancellationTokenSource(timeout);
 #endif
@@ -38,7 +38,7 @@ public class HttpUtil : IDisposable
             {
                 case HttpStatusCode.OK:
 #if NET40
-                        return new HttpResponse<T>(response.StatusCode, await response.Content.ReadAsAsync<T>().ConfigureAwait(false));
+                    return new HttpResponse<T>(response.StatusCode, await response.Content.ReadAsAsync<T>().ConfigureAwait(false));
 #else
                     return new HttpResponse<T>(response.StatusCode, await response.Content.ReadAsAsync<T>(cts.Token).ConfigureAwait(false));
 #endif
@@ -61,7 +61,7 @@ public class HttpUtil : IDisposable
     private static async Task<T> Timeout<T>(Task<T> task, int millisecondsDelay, CancellationTokenSource cts)
     {
 #if NET40
-            if (await TaskEx.WhenAny(task, TaskEx.Delay(millisecondsDelay, cts.Token)).ConfigureAwait(false) == task)
+        if (await TaskEx.WhenAny(task, TaskEx.Delay(millisecondsDelay, cts.Token)).ConfigureAwait(false) == task)
 #else
         if (await Task.WhenAny(task, Task.Delay(millisecondsDelay, cts.Token)).ConfigureAwait(false) == task)
 #endif

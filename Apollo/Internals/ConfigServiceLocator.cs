@@ -115,12 +115,12 @@ public class ConfigServiceLocator : IDisposable
             }
         }
 
-        throw new ApolloConfigException($"Get config services failed from \"{string.Join(", ",url)}\"", exception!);
+        throw new ApolloConfigException($"Get config services failed from \"{string.Join(", ", url)}\"", exception!);
     }
 #if NET40
     private IList<Uri> AssembleMetaServiceUrl() =>
 #else
-        private IReadOnlyList<Uri> AssembleMetaServiceUrl() =>
+    private IReadOnlyList<Uri> AssembleMetaServiceUrl() =>
 #endif
         (_options.MetaServer?
             .Split(MetaServerSeparator, StringSplitOptions.RemoveEmptyEntries)

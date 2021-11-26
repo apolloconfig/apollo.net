@@ -7,7 +7,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals;
 public class MultiConfig : AbstractConfig
 {
 #if NET40
-        private readonly ICollection<IConfig> _configs;
+    private readonly ICollection<IConfig> _configs;
 #else
     private readonly IReadOnlyCollection<IConfig> _configs;
 #endif
@@ -33,10 +33,10 @@ public class MultiConfig : AbstractConfig
         var dic = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
         foreach (var config in _configs)
-        foreach (var name in config.GetPropertyNames())
-        {
-            if (!dic.ContainsKey(name) && config.TryGetProperty(name, out var value)) dic[name] = value;
-        }
+            foreach (var name in config.GetPropertyNames())
+            {
+                if (!dic.ContainsKey(name) && config.TryGetProperty(name, out var value)) dic[name] = value;
+            }
 
         return new Properties(dic);
     }
@@ -61,7 +61,7 @@ public class MultiConfig : AbstractConfig
         }
     }
 #if NET40
-        private IDictionary<string, ConfigChange> UpdateAndCalcConfigChanges(Properties newConfigProperties)
+    private IDictionary<string, ConfigChange> UpdateAndCalcConfigChanges(Properties newConfigProperties)
 #else
     private IReadOnlyDictionary<string, ConfigChange> UpdateAndCalcConfigChanges(Properties newConfigProperties)
 #endif

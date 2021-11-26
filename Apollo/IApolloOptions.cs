@@ -30,7 +30,7 @@ public interface IApolloOptions
 
     string? Secret { get; }
 #if NET40
-        ReadOnlyCollection<string>? ConfigServer { get; }
+    ReadOnlyCollection<string>? ConfigServer { get; }
 #else
     IReadOnlyCollection<string>? ConfigServer { get; }
 #endif
