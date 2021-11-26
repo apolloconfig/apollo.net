@@ -2,25 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Com.Ctrip.Framework.Apollo.Configuration</AssemblyName>
-    <PackageReleaseNotes>2.4.2:
-    1. 完全禁用ApolloConfigurationManager
-2.4.1:
-    1. 支持从配置中读取apollo namespace（key apollo:Namespaces，值为数组，后面优先）
-2.4.0:
-    1. 添加apollo 1.6访问密钥
-2.3.0:
-    1. 添加ICacheFileProvider支持自定义配置缓存方式（比如本地加密存储）
-2.2.0:
-    1. 使用C# 8、添加nullable
-2.1.0:
-    1. 无
-2.0.2:
-    1. 使用新方法获取Properties里的值
-2.0.1:
-    1. 过滤重复的Namespace（后面添加的为准）
-2.0.0:
-    1. 支持添加namespace时指定格式
-    2. 支持通过Env读取metaserver</PackageReleaseNotes>
+    <PackageReleaseNotes>发布日志请点击打开 https://github.com/apolloconfig/apollo.net/releases</PackageReleaseNotes>
     <Description>携程Apollo客户端
 
 　　与Microsoft.Extensions.Configuration集成请使用Com.Ctrip.Framework.Apollo.Configuration包

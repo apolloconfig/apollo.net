@@ -4,7 +4,7 @@
     <AssemblyName>Com.Ctrip.Framework.Apollo.ConfigAdapter.Yaml</AssemblyName>
     <PackageIconUrl>https://raw.githubusercontent.com/apolloconfig/apollo/master/apollo-portal/src/main/resources/static/img/config.png</PackageIconUrl>
     <PackageProjectUrl>$(RepositoryUrl)/$(MSBuildProjectName)</PackageProjectUrl>
-    <PackageReleaseNotes>发布日志请点击打开 https://github.com/apolloconfig/apollo.net/releases/tag/v$(ApolloVersion)</PackageReleaseNotes>
+    <PackageReleaseNotes>发布日志请点击打开 https://github.com/apolloconfig/apollo.net/releases</PackageReleaseNotes>
     <Description>添加对yml和yaml格式的namespace支持，使用YamlConfigAdapter.Register()添加支持。
 
 $(PackageReleaseNotes)</Description>
