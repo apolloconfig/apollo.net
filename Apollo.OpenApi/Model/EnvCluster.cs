@@ -4,7 +4,7 @@ public class EnvCluster
 {
     public string? Env { get; set; }
 #if NET40
-        public IList<string>? Clusters { get; set; }
+    public IList<string>? Clusters { get; set; }
 #else
     public IReadOnlyList<string>? Clusters { get; set; }
 #endif

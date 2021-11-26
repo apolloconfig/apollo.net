@@ -14,7 +14,7 @@ public class Namespace : BaseModel
 
     public bool IsPublic { get; set; }
 #if NET40
-        public IList<Item>? Items { get; set; }
+    public IList<Item>? Items { get; set; }
 #else
     public IReadOnlyList<Item>? Items { get; set; }
 #endif
