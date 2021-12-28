@@ -28,7 +28,7 @@ public class LocalFileConfigRepository : AbstractConfigRepository, IRepositoryCh
         _options = configUtil;
 
         var ext = Path.GetExtension(@namespace);
-        if (ext != null && ext.Length > 1 && Enum.TryParse(ext.Substring(1), true, out ConfigFileFormat format)) Format = format;
+        if (ext is { Length: > 1 } && Enum.TryParse(ext.Substring(1), true, out ConfigFileFormat format)) Format = format;
 
         PrepareConfigCacheDir();
     }
