@@ -12,7 +12,7 @@ public class ConfigurationBuilderTest
 
     [Fact]
     public void ConnectionStringsSectionBuilderTest() =>
-        Assert.Equal("asdfasdf", System.Configuration.ConfigurationManager.ConnectionStrings["abc"]?.ConnectionString);
+        Assert.Equal("Test connection string", System.Configuration.ConfigurationManager.ConnectionStrings["abc"]?.ConnectionString);
 
     [Fact]
     public void NodeReplaceSectionBuilderTest()

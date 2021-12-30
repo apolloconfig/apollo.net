@@ -1,7 +1,7 @@
 ﻿<Project>
 
   <PropertyGroup>
-    <ApolloVersion>2.5</ApolloVersion>
+    <ApolloVersion>2.6</ApolloVersion>
     <AssemblyOriginatorKeyFile>..\Apollo.snk</AssemblyOriginatorKeyFile>
     <AssemblyVersion>2.0.0</AssemblyVersion>
     <DebugSymbols>True</DebugSymbols>
@@ -31,7 +31,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.*" PrivateAssets="All" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.*" PrivateAssets="All" />
-    <PackageReference Include="Nullable" Version="1.*" PrivateAssets="All" />
+    <PackageReference Include="Nullable" Version="1.*" PrivateAssets="All" Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework' OR '$(TargetFramework)' == 'netstandard2.0'" />
   </ItemGroup>
 
 </Project>

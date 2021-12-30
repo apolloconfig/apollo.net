@@ -12,7 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Apollo\Apollo.csproj" PrivateAssets="All" />
+    <Compile Include="../Apollo/Core/ConfigConsts.cs" />
 
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.*" Condition="'$(TargetFramework)' != 'net40'" />
   </ItemGroup>
