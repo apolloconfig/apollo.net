@@ -260,7 +260,7 @@ apollo.net项目中有多个样例客户端的项目：
 在读取任何配置之前执行如下代码
 
 ``` C#
-ConfigUtil.UseHttpMessageHandlerFactory(() => new HttpClientHandler
+ConfigUtil.UseHttpMessageHandler(new HttpClientHandler
 {
     UseProxy = true,
     Proxy = new WebProxy(new Uri("http://代理地址"))

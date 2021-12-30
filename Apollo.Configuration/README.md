@@ -209,7 +209,7 @@ services.ConfigureJsonValue<Options>(/*name, */config.GetSection("somePrefix:Jso
 +       .ConfigureAppConfiguration(builder =>
 +       {
 +           var apollo = builder.Build().GetSection("apollo").Get<ApolloOptions>();
-+           apollo.HttpMessageHandlerFactory = () => new HttpClientHandler
++           apollo.HttpMessageHandler = new HttpClientHandler
 +           {
 +               UseProxy = true,
 +               Proxy = new WebProxy(new Uri("http://代理地址"))
