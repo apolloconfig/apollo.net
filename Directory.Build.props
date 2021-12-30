@@ -13,7 +13,8 @@
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <NoWarn>$(NoWarn);CS0414;CS0436;CS1591</NoWarn>
-    <PackageTags>apollo configcenter configuration ctrip</PackageTags>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageTags>apollo configcenter configuration ctrip</PackageTags><PackageIcon>icon.png</PackageIcon>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/apolloconfig/apollo.net/tree/main</RepositoryUrl>
     <SignAssembly>true</SignAssembly>
@@ -29,6 +30,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="..\icon.png" Pack="true" PackagePath="\" />
+
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.*" PrivateAssets="All" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.*" PrivateAssets="All" />
     <PackageReference Include="Nullable" Version="1.*" PrivateAssets="All" Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework' OR '$(TargetFramework)' == 'netstandard2.0'" />
