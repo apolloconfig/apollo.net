@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 
 namespace Com.Ctrip.Framework.Apollo;
 
-public interface IApolloOptions
+public interface IApolloOptions : IDisposable
 {
     string AppId { get; }
     /// <summary>
@@ -42,7 +42,7 @@ public interface IApolloOptions
 
     string? LocalCacheDir { get; }
 
-    Func<HttpMessageHandler>? HttpMessageHandlerFactory { get; }
+    HttpMessageHandler HttpMessageHandler { get; }
 
     ICacheFileProvider CacheFileProvider { get; }
 }

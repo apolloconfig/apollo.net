@@ -10,7 +10,7 @@ namespace Com.Ctrip.Framework.Apollo.Util;
 public class ConfigUtil : IApolloOptions
 {
     public static NameValueCollection? AppSettings { get; set; }
-    private static Func<HttpMessageHandler>? _httpMessageHandlerFactory;
+    private static HttpMessageHandler _handler = new HttpClientHandler();
     private static ICacheFileProvider? _cacheFileProvider;
     private static readonly Func<Action<LogLevel, string, Exception?>> Logger = () => LogManager.CreateLogger(typeof(ConfigUtil));
 
@@ -161,13 +161,20 @@ public class ConfigUtil : IApolloOptions
 
     public string LocalCacheDir => GetAppConfig(nameof(LocalCacheDir)) ?? Path.Combine(ConfigConsts.DefaultLocalCacheDir, AppId);
 
-    public Func<HttpMessageHandler>? HttpMessageHandlerFactory => _httpMessageHandlerFactory;
-
     public bool EnablePlaceholder => bool.TryParse(GetAppConfig(nameof(EnablePlaceholder)), out var enablePlaceholder) && enablePlaceholder;
 
     public ICacheFileProvider CacheFileProvider => _cacheFileProvider ??= new LocalPlaintextCacheFileProvider();
 
-    public static void UseHttpMessageHandlerFactory(Func<HttpMessageHandler> factory) => Interlocked.CompareExchange(ref _httpMessageHandlerFactory, factory, null);
+    public HttpMessageHandler HttpMessageHandler => _handler;
+
+    public static void UseHttpMessageHandler(HttpMessageHandler handler) =>
+        Interlocked.Exchange(ref _handler, handler).Dispose();
+
+    [Obsolete("请使用UseHttpMessageHandler", true)]
+    public static void UseHttpMessageHandlerFactory(Func<HttpMessageHandler> factory) =>
+        UseHttpMessageHandler(factory());
 
     public static void UseCacheFileProvider(ICacheFileProvider cacheFileProvider) => Interlocked.CompareExchange(ref _cacheFileProvider, cacheFileProvider, null);
+
+    public void Dispose() { }
 }

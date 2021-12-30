@@ -8,7 +8,7 @@ internal class JsonConfigurationParser
 {
     private JsonConfigurationParser() { }
 
-    private readonly IDictionary<string, string> _data = new SortedDictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+    private readonly IDictionary<string, string> _data = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
     private readonly Stack<string> _context = new();
     private string _currentPath = string.Empty;
 

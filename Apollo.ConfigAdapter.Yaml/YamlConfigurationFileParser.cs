@@ -5,7 +5,7 @@ namespace Com.Ctrip.Framework.Apollo.ConfigAdapter;
 
 internal class YamlConfigurationFileParser
 {
-    private readonly IDictionary<string, string> _data = new SortedDictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+    private readonly IDictionary<string, string> _data = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
     private readonly Stack<string> _context = new();
     private string _currentPath = "";
 
@@ -16,12 +16,13 @@ internal class YamlConfigurationFileParser
         var yamlStream = new YamlStream();
         yamlStream.Load(reader);
 
-        if (yamlStream.Documents.Count > 0 && yamlStream.Documents[0].RootNode is YamlMappingNode mappingNode)
-            foreach (var node in mappingNode.Children)
-                if (node.Key is YamlScalarNode ysn && ysn.Value != null)
-                    VisitYamlNode(ysn.Value, node.Value);
-                else
-                    throw UnsupportedKeyType(node.Key, _currentPath);
+        if (yamlStream.Documents.Count < 1 || yamlStream.Documents[0].RootNode is not YamlMappingNode mappingNode) return _data;
+
+        foreach (var node in mappingNode.Children)
+            if (node.Key is YamlScalarNode { Value: { } } ysn)
+                VisitYamlNode(ysn.Value, node.Value);
+            else
+                throw UnsupportedKeyType(node.Key, _currentPath);
 
         return _data;
     }
@@ -129,10 +130,6 @@ internal class YamlConfigurationFileParser
     }
 
     private static bool IsNullValue(YamlScalarNode yamlValue) =>
-        yamlValue.Style == ScalarStyle.Plain
-        && (yamlValue.Value == "~"
-            || yamlValue.Value == null
-            || yamlValue.Value == "null"
-            || yamlValue.Value == "Null"
-            || yamlValue.Value == "NULL");
+        yamlValue.Style == ScalarStyle.Plain &&
+        yamlValue.Value is "~" or null or "null" or "Null" or "NULL";
 }

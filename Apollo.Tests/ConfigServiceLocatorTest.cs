@@ -16,6 +16,7 @@ public class ConfigServiceLocatorTest
         moq.SetupGet(o => o.MetaServer).Returns("http://106.54.227.205:8080/");
         moq.SetupGet(o => o.ConfigServer).Returns(Array.Empty<string>());
         moq.SetupGet(o => o.Timeout).Returns(5000);
+        moq.SetupGet(o => o.HttpMessageHandler).Returns(new HttpClientHandler());
 
         var options = moq.Object;
 

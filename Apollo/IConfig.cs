@@ -26,5 +26,5 @@ public interface IConfig
     /// <summary>
     /// Config change event subscriber
     /// </summary>
-    event ConfigChangeEvent ConfigChanged;
+    event ConfigChangeEvent? ConfigChanged;
 }

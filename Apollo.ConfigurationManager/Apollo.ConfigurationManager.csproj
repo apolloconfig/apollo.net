@@ -10,11 +10,10 @@
 　　直接使用ApolloConfigurationManager请使用Com.Ctrip.Framework.Apollo.Configuration或者Com.Ctrip.Framework.Apollo.ConfigurationManager
 
 $(PackageReleaseNotes)</Description>
-    <PackageProjectUrl>$(RepositoryUrl)/$(MSBuildProjectName)</PackageProjectUrl>
     <PackageTags>$(PackageTags) ConfigurationBuilder ConfigurationManager</PackageTags>
     <RootNamespace>Com.Ctrip.Framework.Apollo</RootNamespace>
     <TargetFrameworks>net471;net45;net40;netstandard2.0;netstandard2.1</TargetFrameworks>
-    <Version>$(ApolloVersion).3</Version>
+    <Version>$(ApolloVersion).0</Version>
   </PropertyGroup>
 
   <ItemGroup>

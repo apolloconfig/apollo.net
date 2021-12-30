@@ -8,7 +8,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals;
 public abstract class AbstractConfig : IConfig
 {
     private static readonly Func<Action<LogLevel, string, Exception?>> Logger = () => LogManager.CreateLogger(typeof(AbstractConfig));
-    public event ConfigChangeEvent ConfigChanged = default!;
+    public event ConfigChangeEvent? ConfigChanged;
     private static readonly TaskFactory ExecutorService;
 
     static AbstractConfig() => ExecutorService = new TaskFactory(new LimitedConcurrencyLevelTaskScheduler(5));
@@ -22,37 +22,30 @@ public abstract class AbstractConfig : IConfig
     protected void FireConfigChange(IReadOnlyDictionary<string, ConfigChange> actualChanges)
 #endif
     {
-        if (ConfigChanged != null)
+        if (ConfigChanged is not { } configChanged) return;
+
+        foreach (var @delegate in configChanged.GetInvocationList())
         {
-            foreach (var @delegate in ConfigChanged.GetInvocationList())
+            var handlerCopy = (ConfigChangeEvent)@delegate;
+            ExecutorService.StartNew(() =>
             {
-                var handlerCopy = (ConfigChangeEvent)@delegate;
-                ExecutorService.StartNew(() =>
+                try
                 {
-                    try
-                    {
-                        handlerCopy(this, new ConfigChangeEventArgs(this, actualChanges));
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger().Error($"Failed to invoke config change handler {(handlerCopy.Target == null ? handlerCopy.Method.Name : $"{handlerCopy.Target.GetType()}.{handlerCopy.Method.Name}")}", ex);
-                    }
-                });
-            }
+                    handlerCopy(this, new ConfigChangeEventArgs(this, actualChanges));
+                }
+                catch (Exception ex)
+                {
+                    Logger().Error($"Failed to invoke config change handler {(handlerCopy.Target == null ? handlerCopy.Method.Name : $"{handlerCopy.Target.GetType()}.{handlerCopy.Method.Name}")}", ex);
+                }
+            });
         }
     }
 
-    protected ICollection<ConfigChange> CalcPropertyChanges(Properties previous, Properties current)
+    protected ICollection<ConfigChange> CalcPropertyChanges(Properties? previous, Properties? current)
     {
-        if (previous == null)
-        {
-            previous = new Properties();
-        }
+        previous ??= new Properties();
 
-        if (current == null)
-        {
-            current = new Properties();
-        }
+        current ??= new Properties();
 
         var previousKeys = previous.GetPropertyNames();
         var currentKeys = current.GetPropertyNames();
