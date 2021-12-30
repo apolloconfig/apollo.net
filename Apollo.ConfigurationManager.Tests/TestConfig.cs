@@ -39,5 +39,5 @@ public class TestConfig : IConfig
 
     public IEnumerable<string> GetPropertyNames() => _dict.Keys;
 
-    public event ConfigChangeEvent ConfigChanged = default!;
+    public event ConfigChangeEvent? ConfigChanged = default;
 }

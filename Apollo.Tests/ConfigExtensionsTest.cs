@@ -22,7 +22,7 @@ public class ConfigExtensionsTest
     {
         private readonly IReadOnlyDictionary<string, string> _data;
 
-        public event ConfigChangeEvent ConfigChanged = default!;
+        public event ConfigChangeEvent? ConfigChanged = default;
 
         public FakeConfig(IReadOnlyDictionary<string, string> data) => _data = data;
 
