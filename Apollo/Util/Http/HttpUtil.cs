@@ -4,15 +4,9 @@ namespace Com.Ctrip.Framework.Apollo.Util.Http;
 
 public class HttpUtil : IDisposable
 {
-    private readonly HttpMessageHandler _httpMessageHandler;
     private readonly IApolloOptions _options;
 
-    public HttpUtil(IApolloOptions options)
-    {
-        _options = options;
-
-        _httpMessageHandler = _options.HttpMessageHandlerFactory == null ? new HttpClientHandler() : _options.HttpMessageHandlerFactory();
-    }
+    public HttpUtil(IApolloOptions options) => _options = options;
 
     public Task<HttpResponse<T>> DoGetAsync<T>(Uri url) => DoGetAsync<T>(url, _options.Timeout);
 
@@ -27,7 +21,10 @@ public class HttpUtil : IDisposable
 #else
             using var cts = new CancellationTokenSource(timeout);
 #endif
-            var httpClient = new HttpClient(_httpMessageHandler, false) { Timeout = TimeSpan.FromMilliseconds(timeout > 0 ? timeout : _options.Timeout) };
+            var httpClient = new HttpClient(_options.HttpMessageHandler, false)
+            {
+                Timeout = TimeSpan.FromMilliseconds(timeout > 0 ? timeout : _options.Timeout)
+            };
 
             if (!string.IsNullOrWhiteSpace(_options.Secret))
                 foreach (var header in Signature.BuildHttpHeaders(url, _options.AppId, _options.Secret!))
@@ -56,7 +53,7 @@ public class HttpUtil : IDisposable
         throw e;
     }
 
-    public void Dispose() => _httpMessageHandler.Dispose();
+    public void Dispose() => _options.Dispose();
 
     private static async Task<T> Timeout<T>(Task<T> task, int millisecondsDelay, CancellationTokenSource cts)
     {

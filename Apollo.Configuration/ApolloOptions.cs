@@ -84,7 +84,22 @@ public class ApolloOptions : IApolloOptions
 
     public IDictionary<string, string> Meta { get; set; } = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
-    public Func<HttpMessageHandler>? HttpMessageHandlerFactory { get; set; }
+    private HttpMessageHandler _handler = new HttpClientHandler();
+
+    public HttpMessageHandler HttpMessageHandler
+    {
+        get => _handler;
+        set => Interlocked.Exchange(ref _handler, value).Dispose();
+    }
+
+    [Obsolete("请使用HttpMessageHandler", true)]
+    public Func<HttpMessageHandler> HttpMessageHandlerFactory
+    {
+        get => () => _handler;
+        set => HttpMessageHandler = value();
+    }
 
     public ICacheFileProvider CacheFileProvider { get; set; } = new LocalPlaintextCacheFileProvider();
+
+    public void Dispose() => _handler.Dispose();
 }
