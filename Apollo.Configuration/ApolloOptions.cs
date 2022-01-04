@@ -89,7 +89,12 @@ public class ApolloOptions : IApolloOptions
     public HttpMessageHandler HttpMessageHandler
     {
         get => _handler;
-        set => Interlocked.Exchange(ref _handler, value).Dispose();
+        set
+        {
+            if (_handler == value) return;
+
+            Interlocked.Exchange(ref _handler, value).Dispose();
+        }
     }
 
     [Obsolete("请使用HttpMessageHandler", true)]
