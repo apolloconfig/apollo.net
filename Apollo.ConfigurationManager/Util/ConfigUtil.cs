@@ -167,8 +167,12 @@ public class ConfigUtil : IApolloOptions
 
     public HttpMessageHandler HttpMessageHandler => _handler;
 
-    public static void UseHttpMessageHandler(HttpMessageHandler handler) =>
+    public static void UseHttpMessageHandler(HttpMessageHandler handler)
+    {
+        if (_handler == handler) return;
+
         Interlocked.Exchange(ref _handler, handler).Dispose();
+    }
 
     [Obsolete("请使用UseHttpMessageHandler", true)]
     public static void UseHttpMessageHandlerFactory(Func<HttpMessageHandler> factory) =>
