@@ -13,7 +13,7 @@
 $(PackageReleaseNotes)</Description>
     <RootNamespace>Microsoft.AspNetCore.Hosting</RootNamespace>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Version>$(ApolloVersion).0</Version>
+    <Version>$(ApolloVersion).1</Version>
   </PropertyGroup>
 
   <ItemGroup>
