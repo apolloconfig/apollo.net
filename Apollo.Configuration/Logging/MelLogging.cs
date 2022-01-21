@@ -11,10 +11,10 @@ public static class MelLogging
     {
         LogLevel.Trace => Microsoft.Extensions.Logging.LogLevel.Trace,
         LogLevel.Debug => Microsoft.Extensions.Logging.LogLevel.Debug,
-        LogLevel.Info => Microsoft.Extensions.Logging.LogLevel.Information,
-        LogLevel.Warn => Microsoft.Extensions.Logging.LogLevel.Warning,
+        LogLevel.Information => Microsoft.Extensions.Logging.LogLevel.Information,
+        LogLevel.Warning => Microsoft.Extensions.Logging.LogLevel.Warning,
         LogLevel.Error => Microsoft.Extensions.Logging.LogLevel.Error,
-        LogLevel.Fatal => Microsoft.Extensions.Logging.LogLevel.Critical,
+        LogLevel.Critical => Microsoft.Extensions.Logging.LogLevel.Critical,
         _ => Microsoft.Extensions.Logging.LogLevel.None
     };
 }

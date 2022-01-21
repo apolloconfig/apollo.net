@@ -41,13 +41,13 @@ public static class LogManager
         logger(LogLevel.Error, message, exception);
 
     internal static void Warn(this Action<LogLevel, string, Exception?> logger, Exception exception) =>
-        logger(LogLevel.Warn, exception.Message, exception);
+        logger(LogLevel.Warning, exception.Message, exception);
 
     internal static void Warn(this Action<LogLevel, string, Exception?> logger, string message) =>
-        logger(LogLevel.Warn, message, null);
+        logger(LogLevel.Warning, message, null);
 
     internal static void Warn(this Action<LogLevel, string, Exception?> logger, string message, Exception exception) =>
-        logger(LogLevel.Warn, message, exception);
+        logger(LogLevel.Warning, message, exception);
 
     internal static void Debug(this Action<LogLevel, string, Exception?> logger, string message) =>
         logger(LogLevel.Debug, message, null);

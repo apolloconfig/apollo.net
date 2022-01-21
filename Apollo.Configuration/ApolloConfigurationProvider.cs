@@ -49,4 +49,8 @@ public class ApolloConfigurationProvider : ConfigurationProvider, IRepositoryCha
     IConfigurationProvider IConfigurationSource.Build(IConfigurationBuilder builder) => this;
 
     public void Dispose() => ConfigRepository.RemoveChangeListener(this);
+
+    public override string ToString() => string.IsNullOrEmpty(SectionKey)
+        ? $"apollo {ConfigRepository}"
+        : $"apollo {ConfigRepository}[{SectionKey}]";
 }
