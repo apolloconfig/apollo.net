@@ -36,6 +36,7 @@ public class ConfigUtil : IApolloOptions
 
         var key1 = "Apollo." + key;
         var key2 = "Apollo:" + key;
+        var key3 = "Apollo__" + key;
 
         var appSettings = AppSettings ?? ConfigurationManager.AppSettings;
 
@@ -45,6 +46,8 @@ public class ConfigUtil : IApolloOptions
             value = Environment.GetEnvironmentVariable(key1);
 
             if (string.IsNullOrEmpty(value)) value = Environment.GetEnvironmentVariable(key2);
+
+            if (string.IsNullOrEmpty(value)) value = Environment.GetEnvironmentVariable(key3);
 
             if (string.IsNullOrEmpty(value)) value = appSettings[key1];
 
@@ -59,6 +62,8 @@ public class ConfigUtil : IApolloOptions
             if (string.IsNullOrEmpty(value)) value = Environment.GetEnvironmentVariable(key1);
 
             if (string.IsNullOrEmpty(value)) value = Environment.GetEnvironmentVariable(key2);
+
+            if (string.IsNullOrEmpty(value)) value = Environment.GetEnvironmentVariable(key3);
         }
 
         return string.IsNullOrEmpty(value) ? null : value;
