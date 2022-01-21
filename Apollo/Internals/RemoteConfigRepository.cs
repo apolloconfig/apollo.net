@@ -256,6 +256,8 @@ namespace Com.Ctrip.Framework.Apollo.Internals
 
             _disposed = true;
         }
+
+        public override string ToString() => $"remote {_options.AppId} {Namespace}";
     }
 }
 #if NET40

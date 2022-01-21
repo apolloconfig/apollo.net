@@ -155,7 +155,7 @@ public class LocalFileConfigRepository : AbstractConfigRepository, IRepositoryCh
         }
     }
 
-    private void PersistLocalCacheFile(string baseDir, string namespaceName)
+    private void PersistLocalCacheFile(string? baseDir, string namespaceName)
     {
         var properties = _fileProperties;
         if (baseDir == null || properties == null) return;
@@ -207,4 +207,6 @@ public class LocalFileConfigRepository : AbstractConfigRepository, IRepositoryCh
 
         return Path.Combine(baseDir, fileName);
     }
+
+    public override string ToString() => $"local {_options.AppId} {Namespace}";
 }

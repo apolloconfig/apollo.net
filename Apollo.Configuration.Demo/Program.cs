@@ -17,16 +17,15 @@ internal class Program
         while (true)
         {
             Console.Write("> ");
+
             var input = Console.ReadLine();
-            if (string.IsNullOrEmpty(input))
-            {
-                continue;
-            }
+
+            if (string.IsNullOrEmpty(input)) continue;
+
             input = input.Trim();
-            if (input.Equals("quit", StringComparison.CurrentCultureIgnoreCase))
-            {
-                Environment.Exit(0);
-            }
+
+            if (input.Equals("quit", StringComparison.CurrentCultureIgnoreCase)) return;
+
             demo.GetConfig(input);
         }
     }
