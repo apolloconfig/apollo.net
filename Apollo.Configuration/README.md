@@ -187,20 +187,9 @@ apollo.net项目中有多个样例客户端的项目：
 
 # 四、FAQ
 
-## 4.1 如何将配置的JSON或者XML值直接绑定到Options？
+## 4.1 如何允许类似Sping的[PlaceHolder功能](https://github.com/pengweiqhca/Microsoft.Extensions.Configuration.Placeholder)
 
-### 4.1.1 使用1.3指定的方式
-
-### 4.1.2 使用ValueBinder
-
-``` PS
-Install-Package Tuhu.Extensions.Configuration.ValueBinder.Json
-```
-
-``` C#
-services.ConfigureJsonValue<Options>(/*name, */config.GetSection("somePrefix:JsonKey")); //一定要是完整的Key，取不到Value就不能绑定了
-```
-更多信息请点出[此处](https://github.com/pengweiqhca/Microsoft.Extensions.Configuration.ValueBinder)
+`dotnet add package PW.Extensions.Configuration.Placeholder`
 
 ## 4.2 Apollo内部HttpClient如何配置代理
 
@@ -245,7 +234,3 @@ services.ConfigureJsonValue<Options>(/*name, */config.GetSection("somePrefix:Jso
     }
 }
 ```
-
-## 4.5 如何允许类似Sping的[PlaceHolder功能](https://github.com/pengweiqhca/Microsoft.Extensions.Configuration.Placeholder)
-
-`dotnet add package PW.Extensions.Configuration.Placeholder`
