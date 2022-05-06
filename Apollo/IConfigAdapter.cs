@@ -17,15 +17,15 @@ public abstract class ContentConfigAdapter : IConfigAdapter
 
     public Properties GetProperties(Properties properties)
     {
+        if (properties.GetPropertyNames().Count < 1) return properties;
+
         var content = properties.GetProperty(ConfigConsts.ConfigFileContentKey);
-        if (string.IsNullOrWhiteSpace(content))
-        {
-            Logger().Warn("找不到" + ConfigConsts.ConfigFileContentKey);
 
-            return properties;
-        }
+        if (!string.IsNullOrWhiteSpace(content)) return GetProperties(content!);
 
-        return GetProperties(content!);
+        Logger().Warn("找不到" + ConfigConsts.ConfigFileContentKey);
+
+        return properties;
     }
 
     public abstract Properties GetProperties(string content);
