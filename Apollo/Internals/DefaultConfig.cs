@@ -44,7 +44,7 @@ public class DefaultConfig : AbstractConfig, IRepositoryChangeListener, IDisposa
         value = _configProperties?.GetProperty(key);
 
         if (value == null)
-            Logger().Warn($"Could not load config for namespace {_namespace} from Apollo, please check whether the configs are released in Apollo! Return default value now!");
+            Logger().Debug($"Could not load config {key} for namespace {_namespace} from Apollo, please check whether the configs are released in Apollo! Return default value now!");
 
         return value != null;
     }
