@@ -22,7 +22,7 @@ public class ApolloConfigNotification
             {
                 if (_messages == null)
                 {
-                    _messages = new ApolloNotificationMessages();
+                    _messages = new();
                 }
             }
         }

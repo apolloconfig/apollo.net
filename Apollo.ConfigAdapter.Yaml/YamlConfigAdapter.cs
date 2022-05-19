@@ -8,7 +8,7 @@ public class YamlConfigAdapter : ContentConfigAdapter
     public override Properties GetProperties(string content)
     {
         using var reader = new StringReader(content);
-        return new Properties(new YamlConfigurationFileParser().Parse(reader));
+        return new(new YamlConfigurationFileParser().Parse(reader));
     }
 
     public static void Register()

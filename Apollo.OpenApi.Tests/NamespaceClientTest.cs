@@ -38,7 +38,7 @@ public class NamespaceClientTest : BaseTest
 
         try
         {
-            var item = await client.CreateItem(new Item
+            var item = await client.CreateItem(new()
             {
                 Key = key,
                 Value = value1,
@@ -73,7 +73,7 @@ public class NamespaceClientTest : BaseTest
         key = Guid.NewGuid().ToString("N");
         try
         {
-            var item = await client.CreateOrUpdateItem(new Item
+            var item = await client.CreateOrUpdateItem(new()
             {
                 Key = key,
                 Value = value1,

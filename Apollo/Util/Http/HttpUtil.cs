@@ -35,12 +35,12 @@ public class HttpUtil : IDisposable
             {
                 case HttpStatusCode.OK:
 #if NET40
-                    return new HttpResponse<T>(response.StatusCode, await response.Content.ReadAsAsync<T>().ConfigureAwait(false));
+                    return new(response.StatusCode, await response.Content.ReadAsAsync<T>().ConfigureAwait(false));
 #else
-                    return new HttpResponse<T>(response.StatusCode, await response.Content.ReadAsAsync<T>(cts.Token).ConfigureAwait(false));
+                    return new(response.StatusCode, await response.Content.ReadAsAsync<T>(cts.Token).ConfigureAwait(false));
 #endif
                 case HttpStatusCode.NotModified:
-                    return new HttpResponse<T>(response.StatusCode);
+                    return new(response.StatusCode);
             }
 
             e = new ApolloConfigStatusCodeException(response.StatusCode, $"Get operation failed for {url}");

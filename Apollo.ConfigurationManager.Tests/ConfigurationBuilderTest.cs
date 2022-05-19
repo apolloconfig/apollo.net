@@ -23,7 +23,7 @@ public class ConfigurationBuilderTest
 
         var endpoint = client.Endpoints[0];
 
-        Assert.Equal(new Uri("http://localhost:1234"), endpoint.Address);
+        Assert.Equal(new("http://localhost:1234"), endpoint.Address);
         Assert.Equal("test", endpoint.Name);
     }
 
