@@ -13,12 +13,12 @@ public class ConfigUtilTest
         var appSettings = new NameValueCollection();
         ConfigUtil.AppSettings = appSettings;
 
-        appSettings.Add("Apollo:AppId", "apollo-client");
+        appSettings.Add("Apollo:AppId", "apollo.net");
         appSettings.Add("Apollo:Env", "Pro");
 
         var options = new ConfigUtil();
 
-        Assert.Equal("apollo-client", options.AppId);
+        Assert.Equal("apollo.net", options.AppId);
         Assert.Equal(Env.Pro, options.Env);
         Assert.Equal(ConfigConsts.ClusterNameDefault, options.Cluster);
     }
@@ -43,18 +43,18 @@ public class ConfigUtilTest
         var appSettings = new NameValueCollection();
         ConfigUtil.AppSettings = appSettings;
 
-        appSettings.Add("Apollo:AppId", "apollo-client");
+        appSettings.Add("Apollo:AppId", "apollo.net");
 
         var options = new ConfigUtil();
 
         Assert.Equal(ConfigConsts.DefaultMetaServerUrl, options.MetaServer);
 
-        appSettings = new NameValueCollection();
+        appSettings = new();
         ConfigUtil.AppSettings = appSettings;
 
         appSettings.Add("Apollo:MetaServer", "https://abc:1234");
 
-        options = new ConfigUtil();
+        options = new();
 
         Assert.Equal("https://abc:1234", options.MetaServer);
     }
@@ -73,14 +73,14 @@ public class ConfigUtilTest
 
         Assert.Equal("https://pro:1234", options.MetaServer);
 
-        appSettings = new NameValueCollection();
+        appSettings = new();
         ConfigUtil.AppSettings = appSettings;
 
         appSettings.Add("Apollo:Env", "Pro");
         appSettings.Add("Apollo:Meta:FAT", "https://fat:1234");
         appSettings.Add("Apollo:Meta:PRO", "https://pro:1234");
 
-        options = new ConfigUtil();
+        options = new();
 
         Assert.Equal("https://pro:1234", options.MetaServer);
     }

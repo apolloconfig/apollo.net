@@ -34,7 +34,7 @@ public class AppClusterTest : BaseTest
 
         Assert.NotNull(result);
 
-        Assert.Equal("apollo-client", result!.AppId);
+        Assert.Equal("apollo.net", result!.AppId);
     }
 
     [Fact]

@@ -48,7 +48,7 @@ public class OpenApiFactoryTest
                     PortalUrl = new Uri("http://106.54.227.205:8070"),
                     Token = "19419f7d3e5a1b0b0cfe3e238b36e09718fb8e94"
                 })
-                .CreateNamespaceClient("apollo-client", "PRO", "test", "test")
+                .CreateNamespaceClient("apollo.net", "PRO", "test", "test")
                 .GetNamespaceInfo()
                 .ConfigureAwait(false);
         }
@@ -64,7 +64,7 @@ public class OpenApiFactoryTest
                     PortalUrl = new Uri("http://106.54.227.205:8070"),
                     Token = "19419f7d3e5a1b0b0cfe3e238b36e09718fb8e94"
                 })
-                .CreateNamespaceClient("apollo-client", "DEV", "test", "test")
+                .CreateNamespaceClient("apollo.net", "DEV", "test", "test")
                 .GetNamespaceInfo()
                 .ConfigureAwait(false);
         }

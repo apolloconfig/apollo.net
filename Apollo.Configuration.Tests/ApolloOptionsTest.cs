@@ -14,14 +14,14 @@ public class ApolloOptionsTest
         var options = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string>
             {
-                {"Apollo:AppId", "apollo-client" },
+                {"Apollo:AppId", "apollo.net" },
                 {"Apollo:Env", "Pro" },
             })
             .Build()
             .GetSection("Apollo")
             .Get<ApolloOptions>();
 
-        Assert.Equal("apollo-client", options.AppId);
+        Assert.Equal("apollo.net", options.AppId);
         Assert.Equal(Env.Pro, options.Env);
         Assert.Equal(ConfigConsts.ClusterNameDefault, options.Cluster);
     }
@@ -48,7 +48,7 @@ public class ApolloOptionsTest
         var options = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string>
             {
-                {"Apollo:AppId", "apollo-client" },
+                {"Apollo:AppId", "apollo.net" },
             })
             .Build()
             .GetSection("Apollo")
