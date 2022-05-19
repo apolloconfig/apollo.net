@@ -203,6 +203,6 @@ public static class PropertyPlaceholderHelper
 
         builder.CopyTo(start, array, 0, array.Length);
 
-        return new string(array);
+        return new(array);
     }
 }

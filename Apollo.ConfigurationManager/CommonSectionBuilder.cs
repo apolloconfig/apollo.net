@@ -55,7 +55,7 @@ public class CommonSectionBuilder : ApolloConfigurationBuilder
     public override ConfigurationSection ProcessConfigurationSection(ConfigurationSection configSection)
     {
         Bind(configSection, GetConfig(), string.IsNullOrWhiteSpace(_keyPrefix ??= configSection.SectionInformation.SectionName)
-            ? new ConfigKey("", "")
+            ? new("", "")
             : new ConfigKey(_keyPrefix!.Substring(_keyPrefix!.LastIndexOf(':') + 1), _keyPrefix));
 
         return configSection;
@@ -89,7 +89,7 @@ public class CommonSectionBuilder : ApolloConfigurationBuilder
                         Add(cec, ele);
                     }
                 }
-                else if (element is ConfigurationElement ce) Bind(ce, config, new ConfigKey(cpa.Name, key));
+                else if (element is ConfigurationElement ce) Bind(ce, config, new(cpa.Name, key));
             }
             else
             {

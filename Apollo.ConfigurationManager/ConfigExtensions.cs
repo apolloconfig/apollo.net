@@ -51,7 +51,7 @@ internal static class ConfigExtensions
 
             config.TryGetProperty($"{keyPrefixAndColon}{connectionName}:ProviderName", out var providerName);
 
-            yield return new ConnectionStringSettings(connectionName, connectionString, providerName ?? defaultProviderName);
+            yield return new(connectionName, connectionString, providerName ?? defaultProviderName);
         }
     }
 

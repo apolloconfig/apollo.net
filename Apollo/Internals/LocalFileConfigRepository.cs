@@ -9,32 +9,51 @@ namespace Com.Ctrip.Framework.Apollo.Internals;
 
 public class LocalFileConfigRepository : AbstractConfigRepository, IRepositoryChangeListener
 {
-    private static readonly Func<Action<LogLevel, string, Exception?>> Logger = () => LogManager.CreateLogger(typeof(LocalFileConfigRepository));
+    private static readonly Func<Action<LogLevel, string, Exception?>> Logger = () =>
+        LogManager.CreateLogger(typeof(LocalFileConfigRepository));
+#if NET40
+    private static readonly Task CompletedTask = TaskEx.FromResult(0);
+#elif NET45
+    private static readonly Task CompletedTask = Task.FromResult(0);
+#else
+    private static readonly Task CompletedTask = Task.CompletedTask;
+#endif
     private const string ConfigDir = "config-cache";
 
     private string? _baseDir;
     private volatile Properties? _fileProperties;
+    private TaskCompletionSource<object?>? _tcs;
 
     private readonly IApolloOptions _options;
     private readonly IConfigRepository? _upstream;
 
     public ConfigFileFormat Format { get; } = ConfigFileFormat.Properties;
 
-    public LocalFileConfigRepository(string @namespace,
-        IApolloOptions configUtil,
-        IConfigRepository? upstream = null) : base(@namespace)
+    public LocalFileConfigRepository(string @namespace, IApolloOptions configUtil, IConfigRepository? upstream = null)
+        : base(@namespace)
     {
         _upstream = upstream;
         _options = configUtil;
 
         var ext = Path.GetExtension(@namespace);
-        if (ext is { Length: > 1 } && Enum.TryParse(ext.Substring(1), true, out ConfigFileFormat format)) Format = format;
+        if (ext is { Length: > 1 } && Enum.TryParse(ext.Substring(1), true, out ConfigFileFormat format))
+            Format = format;
 
         PrepareConfigCacheDir();
     }
 
     public override async Task Initialize()
     {
+        if (_baseDir != null)
+            try
+            {
+                _fileProperties = LoadFromLocalCacheFile(_baseDir, Namespace);
+            }
+            catch (Exception ex)
+            {
+                Logger().Warn(ex);
+            }
+
         if (_upstream != null)
         {
             await _upstream.Initialize().ConfigureAwait(false);
@@ -42,24 +61,13 @@ public class LocalFileConfigRepository : AbstractConfigRepository, IRepositoryCh
             _upstream.AddChangeListener(this);
 
             //sync with upstream immediately
-            if (TrySyncFromUpstream()) return;
-        }
-
-        if (_baseDir == null) return;
-
-        try
-        {
-            _fileProperties = LoadFromLocalCacheFile(_baseDir, Namespace);
-        }
-        catch (Exception ex)
-        {
-            Logger().Warn(ex);
+            await TrySyncFromUpstream();
         }
     }
 
     public override Properties GetConfig()
     {
-        var properties = _fileProperties == null ? new Properties() : new Properties(_fileProperties);
+        var properties = _fileProperties == null ? new() : new Properties(_fileProperties);
 
         if (Format == ConfigFileFormat.Properties || !ConfigAdapterRegister.TryGetAdapter(Format, out var adapter))
             return properties;
@@ -75,45 +83,52 @@ public class LocalFileConfigRepository : AbstractConfigRepository, IRepositoryCh
     }
 
     private bool _disposed;
+
     protected override void Dispose(bool disposing)
     {
         if (_disposed)
             return;
 
-        if (disposing)
-        {
-            _upstream?.Dispose();
-        }
+        if (disposing) _upstream?.Dispose();
 
         //释放非托管资源
 
         _disposed = true;
     }
 
-    private bool TrySyncFromUpstream()
+    private Task TrySyncFromUpstream()
     {
-        if (_upstream == null) return false;
+        if (_upstream == null) return CompletedTask;
 
         try
         {
             var properties = _upstream.GetConfig();
 
             UpdateFileProperties(properties);
-
-            return true;
         }
         catch (Exception ex)
         {
-            Logger().Warn(
-                $"Sync config from upstream repository {_upstream.GetType()} failed, reason: {ex.GetDetailMessage()}");
+            Logger()
+                .Warn(
+                    $"Sync config from upstream repository {_upstream.GetType()} failed, reason: {ex.GetDetailMessage()}");
+
+            // If the config fails to be obtained at startup and there is no local cache, wait until successful or timeout.
+            if (_fileProperties == null)
+#if NET40
+                return TaskEx.WhenAny((_tcs = new()).Task, TaskEx.Delay(_options.StartupTimeout));
+#else
+                return Task.WhenAny((_tcs = new()).Task, Task.Delay(_options.StartupTimeout));
+#endif
         }
 
-        return false;
+        return CompletedTask;
     }
 
     public void OnRepositoryChange(string namespaceName, Properties newProperties)
     {
-        UpdateFileProperties(new Properties(newProperties));
+        Interlocked.Exchange(ref _tcs, null)?.TrySetResult(null);
+
+        UpdateFileProperties(new(newProperties));
 
         FireRepositoryChange(namespaceName, GetConfig());
     }
@@ -132,12 +147,10 @@ public class LocalFileConfigRepository : AbstractConfigRepository, IRepositoryCh
         }
     }
 
-    private Properties LoadFromLocalCacheFile(string baseDir, string namespaceName)
+    private Properties? LoadFromLocalCacheFile(string baseDir, string namespaceName)
     {
         if (string.IsNullOrWhiteSpace(baseDir))
-        {
             throw new ApolloConfigException("Basedir cannot be empty");
-        }
 
         var file = AssembleLocalCacheFile(baseDir, namespaceName);
 
@@ -197,13 +210,17 @@ public class LocalFileConfigRepository : AbstractConfigRepository, IRepositoryCh
         }
         catch (Exception ex)
         {
-            Logger().Warn($"Unable to create local config cache directory {baseDir}, reason: {ex.GetDetailMessage()}. Will not able to cache config file.", ex);
+            Logger()
+                .Warn(
+                    $"Unable to create local config cache directory {baseDir}, reason: {ex.GetDetailMessage()}. Will not able to cache config file.",
+                    ex);
         }
     }
 
     private string AssembleLocalCacheFile(string baseDir, string namespaceName)
     {
-        var fileName = $"{string.Join(ConfigConsts.ClusterNamespaceSeparator, _options.AppId, _options.Cluster, namespaceName)}.json";
+        var fileName =
+            $"{string.Join(ConfigConsts.ClusterNamespaceSeparator, _options.AppId, _options.Cluster, namespaceName)}.json";
 
         return Path.Combine(baseDir, fileName);
     }
