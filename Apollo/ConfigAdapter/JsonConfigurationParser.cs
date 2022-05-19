@@ -19,7 +19,7 @@ internal class JsonConfigurationParser
     private IDictionary<string, string> ParseString(string input)
     {
         _data.Clear();
-        _reader = new JsonTextReader(new StringReader(input))
+        _reader = new(new StringReader(input))
         {
             DateParseHandling = DateParseHandling.None
         };

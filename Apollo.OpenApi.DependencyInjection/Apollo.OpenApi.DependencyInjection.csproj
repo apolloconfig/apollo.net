@@ -2,9 +2,8 @@
 
   <PropertyGroup>
     <AssemblyName>Com.Ctrip.Framework.Apollo.OpenApi.DependencyInjection</AssemblyName>
-    <PackageReleaseNotes></PackageReleaseNotes>
     <Description>携程Apollo的OpenApi客户端，入口接口IOpenApiFactory</Description>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>net461;netstandard2.0</TargetFrameworks>
     <Version>2.1.0</Version>
     <RootNamespace>Com.Ctrip.Framework.Apollo.OpenApi</RootNamespace>
   </PropertyGroup>

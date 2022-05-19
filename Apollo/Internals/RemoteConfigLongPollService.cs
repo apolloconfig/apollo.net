@@ -32,9 +32,9 @@ public class RemoteConfigLongPollService : IDisposable
         _options = configUtil;
         _longPollFailSchedulePolicyInSecond = new ExponentialSchedulePolicy(1, 120); //in second
         _longPollSuccessSchedulePolicyInMs = new ExponentialSchedulePolicy(100, 1000); //in millisecond
-        _longPollNamespaces = new ConcurrentDictionary<string, ISet<RemoteConfigRepository>>();
-        _notifications = new ConcurrentDictionary<string, long?>();
-        _remoteNotificationMessages = new ConcurrentDictionary<string, ApolloNotificationMessages>();
+        _longPollNamespaces = new();
+        _notifications = new();
+        _remoteNotificationMessages = new();
     }
 
     public void Submit(string namespaceName, RemoteConfigRepository remoteConfigRepository)
@@ -50,7 +50,7 @@ public class RemoteConfigLongPollService : IDisposable
 
     private void StartLongPolling()
     {
-        if (Interlocked.CompareExchange(ref _cts, new CancellationTokenSource(), null) != null) return;
+        if (Interlocked.CompareExchange(ref _cts, new(), null) != null) return;
 
         try
         {
@@ -191,7 +191,7 @@ public class RemoteConfigLongPollService : IDisposable
         {
             if (string.IsNullOrEmpty(notification.NamespaceName) || notification.Messages == null || notification.Messages.IsEmpty()) continue;
 
-            var localRemoteMessages = _remoteNotificationMessages.GetOrAdd(notification.NamespaceName, _ => new ApolloNotificationMessages());
+            var localRemoteMessages = _remoteNotificationMessages.GetOrAdd(notification.NamespaceName, _ => new());
 
             localRemoteMessages.MergeFrom(notification.Messages);
         }

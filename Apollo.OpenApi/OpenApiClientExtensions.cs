@@ -9,7 +9,7 @@ internal static class OpenApiClientExtensions
 {
     private static readonly MediaTypeFormatter Json = new JsonMediaTypeFormatter
     {
-        SerializerSettings = new JsonSerializerSettings
+        SerializerSettings = new()
         {
             ContractResolver = new CamelCasePropertyNamesContractResolver()
         }

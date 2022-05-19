@@ -14,7 +14,7 @@ public class ConfigTest
     public async Task SingleNamespaceTest()
     {
         var repositoryFactory = new FakeConfigRepository(ConfigConsts.NamespaceApplication,
-            new Properties(new Dictionary<string, string> { ["A"] = "3" }));
+            new(new Dictionary<string, string> { ["A"] = "3" }));
 
         var config = await CreateConfig(repositoryFactory).ConfigureAwait(false);
 
@@ -23,7 +23,7 @@ public class ConfigTest
         ConfigChangeEventArgs? args = null;
         config.ConfigChanged += (sender, e) => args = e;
 
-        repositoryFactory.Change(new Properties(new Dictionary<string, string>()));
+        repositoryFactory.Change(new(new Dictionary<string, string>()));
 
         await Task.Delay(100).ConfigureAwait(false);
 
@@ -36,9 +36,9 @@ public class ConfigTest
         var repositoryFactories = new[]
         {
             new FakeConfigRepository(ConfigConsts.NamespaceApplication,
-                new Properties(new Dictionary<string, string> {["A"] = "3", ["B"] = "3"})),
+                new(new Dictionary<string, string> {["A"] = "3", ["B"] = "3"})),
             new FakeConfigRepository(ConfigConsts.NamespaceApplication,
-                new Properties(new Dictionary<string, string> {["B"] = "4"})),
+                new(new Dictionary<string, string> {["B"] = "4"})),
         };
 
         var config = new MultiConfig(await Task.WhenAll(repositoryFactories.Select(CreateConfig).Reverse()).ConfigureAwait(false));
@@ -49,7 +49,7 @@ public class ConfigTest
         ConfigChangeEventArgs? args = null;
         config.ConfigChanged += (sender, e) => args = e;
 
-        repositoryFactories[1].Change(new Properties(new Dictionary<string, string>()));
+        repositoryFactories[1].Change(new(new Dictionary<string, string>()));
 
         await Task.Delay(100).ConfigureAwait(false);
 
@@ -57,7 +57,7 @@ public class ConfigTest
 
         args = null;
 
-        repositoryFactories[1].Change(new Properties(new Dictionary<string, string> {["B"] = "3"}));
+        repositoryFactories[1].Change(new(new Dictionary<string, string> {["B"] = "3"}));
 
         await Task.Delay(100).ConfigureAwait(false);
 

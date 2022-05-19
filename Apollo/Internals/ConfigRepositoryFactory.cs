@@ -15,8 +15,8 @@ public class ConfigRepositoryFactory : IConfigRepositoryFactory, IDisposable
     {
         _options = options;
         _httpUtil = httpUtil ?? new HttpUtil(options);
-        _serviceLocator = new ConfigServiceLocator(_httpUtil, _options);
-        _remoteConfigLongPollService = new RemoteConfigLongPollService(_serviceLocator, _httpUtil, _options);
+        _serviceLocator = new(_httpUtil, _options);
+        _remoteConfigLongPollService = new(_serviceLocator, _httpUtil, _options);
     }
 
     public IConfigRepository GetConfigRepository(string @namespace) =>

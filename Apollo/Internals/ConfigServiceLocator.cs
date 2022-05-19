@@ -27,7 +27,7 @@ public class ConfigServiceLocator : IDisposable
         var serviceDtos = GetCustomizedConfigService(configUtil);
 
         if (serviceDtos == null || serviceDtos.Count < 1)
-            _timer = new Timer(SchedulePeriodicRefresh, null, 0, _options.RefreshInterval);
+            _timer = new(SchedulePeriodicRefresh, null, 0, _options.RefreshInterval);
         else
             _configServices = serviceDtos;
     }

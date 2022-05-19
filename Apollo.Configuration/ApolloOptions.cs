@@ -106,5 +106,8 @@ public class ApolloOptions : IApolloOptions
 
     public ICacheFileProvider CacheFileProvider { get; set; } = new LocalPlaintextCacheFileProvider();
 
+    /// <inheritdoc />
+    public int StartupTimeout { get; set; } = 30000;
+
     public void Dispose() => _handler.Dispose();
 }

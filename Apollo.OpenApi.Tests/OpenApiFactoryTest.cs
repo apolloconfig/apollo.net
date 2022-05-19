@@ -9,13 +9,13 @@ public class OpenApiFactoryTest
     [Fact]
     public async Task ExceptionTest()
     {
-        Assert.Throws<ArgumentNullException>(() => new OpenApiFactory(new OpenApiOptions()));
+        Assert.Throws<ArgumentNullException>(() => new OpenApiFactory(new()));
 
         try
         {
-            await new OpenApiFactory(new OpenApiOptions
+            await new OpenApiFactory(new()
                 {
-                    PortalUrl = new Uri("http://106.54.227.205:8070"),
+                    PortalUrl = new("http://106.54.227.205:8070"),
                     Token = Guid.NewGuid().ToString("N")
                 })
                 .CreateAppClusterClient("abc").GetAppInfo()
@@ -28,9 +28,9 @@ public class OpenApiFactoryTest
 
         try
         {
-            await new OpenApiFactory(new OpenApiOptions
+            await new OpenApiFactory(new()
                 {
-                    PortalUrl = new Uri("http://106.54.227.205:8070"),
+                    PortalUrl = new("http://106.54.227.205:8070"),
                     Token = "19419f7d3e5a1b0b0cfe3e238b36e09718fb8e94"
                 })
                 .CreateAppClusterClient("abc").GetAppInfo()
@@ -43,12 +43,12 @@ public class OpenApiFactoryTest
 
         try
         {
-            await new OpenApiFactory(new OpenApiOptions
+            await new OpenApiFactory(new()
                 {
-                    PortalUrl = new Uri("http://106.54.227.205:8070"),
+                    PortalUrl = new("http://106.54.227.205:8070"),
                     Token = "19419f7d3e5a1b0b0cfe3e238b36e09718fb8e94"
                 })
-                .CreateNamespaceClient("apollo-client", "PRO", "test", "test")
+                .CreateNamespaceClient("apollo.net", "PRO", "test", "test")
                 .GetNamespaceInfo()
                 .ConfigureAwait(false);
         }
@@ -59,12 +59,12 @@ public class OpenApiFactoryTest
 
         try
         {
-            await new OpenApiFactory(new OpenApiOptions
+            await new OpenApiFactory(new()
                 {
-                    PortalUrl = new Uri("http://106.54.227.205:8070"),
+                    PortalUrl = new("http://106.54.227.205:8070"),
                     Token = "19419f7d3e5a1b0b0cfe3e238b36e09718fb8e94"
                 })
-                .CreateNamespaceClient("apollo-client", "DEV", "test", "test")
+                .CreateNamespaceClient("apollo.net", "DEV", "test", "test")
                 .GetNamespaceInfo()
                 .ConfigureAwait(false);
         }
@@ -86,9 +86,9 @@ public class OpenApiFactoryTest
     {
         yield return new object[]
         {
-            new OpenApiFactory(new OpenApiOptions
+            new OpenApiFactory(new()
             {
-                PortalUrl = new Uri("http://localhost:8070"),
+                PortalUrl = new("http://localhost:8070"),
                 Token = "e16e5cd903fd0c97a116c873b448544b9d086de9"
             })
         };
@@ -97,7 +97,7 @@ public class OpenApiFactoryTest
 
         services.Configure<OpenApiOptions>(options =>
             {
-                options.PortalUrl = new Uri("http://localhost:8070");
+                options.PortalUrl = new("http://localhost:8070");
                 options.Token = "e16e5cd903fd0c97a116c873b448544b9d086de9";
             })
             .AddApolloOpenApi();

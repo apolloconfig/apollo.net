@@ -26,10 +26,10 @@ public class OpenApiFactory : IOpenApiFactory
     }
 
     private Func<HttpClient> CreateHttpClient(Func<HttpMessageHandler> httpMessageHandlerFactory, bool disposeHandler) =>
-        () => new HttpClient(httpMessageHandlerFactory(), disposeHandler)
+        () => new(httpMessageHandlerFactory(), disposeHandler)
         {
             BaseAddress = _baseUri,
-            DefaultRequestHeaders = { Authorization = new AuthenticationHeaderValue(_options.Token) },
+            DefaultRequestHeaders = { Authorization = new(_options.Token) },
             Timeout = TimeSpan.FromMilliseconds(_options.Timeout)
         };
 

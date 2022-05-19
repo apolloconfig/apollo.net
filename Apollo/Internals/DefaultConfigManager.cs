@@ -12,7 +12,7 @@ public class DefaultConfigManager : IConfigManager
 
     public DefaultConfigManager(IConfigRegistry registry, IConfigRepositoryFactory repositoryFactory)
     {
-        _configFactory = new DefaultConfigFactory(repositoryFactory);
+        _configFactory = new(repositoryFactory);
         Registry = registry;
     }
 

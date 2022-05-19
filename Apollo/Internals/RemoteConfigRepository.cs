@@ -37,7 +37,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
             _serviceLocator = serviceLocator;
             _remoteConfigLongPollService = remoteConfigLongPollService;
 
-            _timer = new Timer(SchedulePeriodicRefresh);
+            _timer = new(SchedulePeriodicRefresh);
         }
 
         public override async Task Initialize()
@@ -143,7 +143,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
                             notFound = true;
 
                             var message = $"Could not find config for namespace - appId: {appId}, cluster: {cluster}, namespace: {Namespace}, please check whether the configs are released in Apollo!";
-                            statusCodeException = new ApolloConfigStatusCodeException(ex.StatusCode, message);
+                            statusCodeException = new(ex.StatusCode, message);
                         }
 
                         Logger().Warn(statusCodeException);
@@ -221,7 +221,7 @@ namespace Com.Ctrip.Framework.Apollo.Internals
         };
 
         private static Properties TransformApolloConfigToProperties(ApolloConfig? apolloConfig) =>
-            apolloConfig?.Configurations == null ? new Properties() : new Properties(apolloConfig.Configurations);
+            apolloConfig?.Configurations == null ? new() : new Properties(apolloConfig.Configurations);
 
         public void OnLongPollNotified(ServiceDto longPollNotifiedServiceDto, ApolloNotificationMessages remoteMessages)
         {
@@ -288,7 +288,7 @@ namespace System.Runtime.ExceptionServices
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
 
-            return new ExceptionDispatchInfo(source);
+            return new(source);
         }
 
         public void Throw()

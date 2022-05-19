@@ -3,7 +3,7 @@
     "Apollo.ConfigurationManager.Demo": {
       "commandName": "Project",
       "environmentVariables": {
-        "Apollo:AppId": "apollo-client",
+        "Apollo:AppId": "apollo.net",
         "Apollo:Cluster": "test",
         "Apollo:EnablePlaceholder": "true",
         "Apollo:Secret": "ffd9d01130ee4329875ac3441c0bedda",

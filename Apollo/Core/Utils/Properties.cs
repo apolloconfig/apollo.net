@@ -6,11 +6,11 @@ public class Properties
 {
     private readonly Dictionary<string, string> _dict;
 
-    public Properties() => _dict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+    public Properties() => _dict = new(StringComparer.OrdinalIgnoreCase);
 
     public Properties(IDictionary<string, string>? dictionary) =>
         _dict = dictionary == null
-            ? new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+            ? new(StringComparer.OrdinalIgnoreCase)
             : new Dictionary<string, string>(dictionary, StringComparer.OrdinalIgnoreCase);
 
     public Properties(Properties source) => _dict = source._dict;
@@ -20,7 +20,7 @@ public class Properties
         if (textReader == null) throw new ArgumentNullException(nameof(textReader));
 
         using var reader = new JsonTextReader(textReader);
-        _dict = new Dictionary<string, string>(new JsonSerializer().Deserialize<IDictionary<string, string>>(reader), StringComparer.OrdinalIgnoreCase);
+        _dict = new(new JsonSerializer().Deserialize<IDictionary<string, string>>(reader), StringComparer.OrdinalIgnoreCase);
     }
 
     public bool TryGetProperty(string key, [NotNullWhen(true)] out string? value) => _dict.TryGetValue(key, out value);

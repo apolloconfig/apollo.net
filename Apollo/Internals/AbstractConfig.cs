@@ -11,7 +11,7 @@ public abstract class AbstractConfig : IConfig
     public event ConfigChangeEvent? ConfigChanged;
     private static readonly TaskFactory ExecutorService;
 
-    static AbstractConfig() => ExecutorService = new TaskFactory(new LimitedConcurrencyLevelTaskScheduler(5));
+    static AbstractConfig() => ExecutorService = new(new LimitedConcurrencyLevelTaskScheduler(5));
 
     public abstract bool TryGetProperty(string key, [NotNullWhen(true)] out string? value);
 
@@ -31,7 +31,7 @@ public abstract class AbstractConfig : IConfig
             {
                 try
                 {
-                    handlerCopy(this, new ConfigChangeEventArgs(this, actualChanges));
+                    handlerCopy(this, new(this, actualChanges));
                 }
                 catch (Exception ex)
                 {
@@ -43,9 +43,9 @@ public abstract class AbstractConfig : IConfig
 
     protected ICollection<ConfigChange> CalcPropertyChanges(Properties? previous, Properties? current)
     {
-        previous ??= new Properties();
+        previous ??= new();
 
-        current ??= new Properties();
+        current ??= new();
 
         var previousKeys = previous.GetPropertyNames();
         var currentKeys = current.GetPropertyNames();
@@ -58,12 +58,12 @@ public abstract class AbstractConfig : IConfig
 
         foreach (var newKey in newKeys)
         {
-            changes.Add(new ConfigChange(this, newKey, null, current.GetProperty(newKey), PropertyChangeType.Added));
+            changes.Add(new(this, newKey, null, current.GetProperty(newKey), PropertyChangeType.Added));
         }
 
         foreach (var removedKey in removedKeys)
         {
-            changes.Add(new ConfigChange(this, removedKey, previous.GetProperty(removedKey), null, PropertyChangeType.Deleted));
+            changes.Add(new(this, removedKey, previous.GetProperty(removedKey), null, PropertyChangeType.Deleted));
         }
 
         foreach (var commonKey in commonKeys)
@@ -74,7 +74,7 @@ public abstract class AbstractConfig : IConfig
             {
                 continue;
             }
-            changes.Add(new ConfigChange(this, commonKey, previousValue, currentValue, PropertyChangeType.Modified));
+            changes.Add(new(this, commonKey, previousValue, currentValue, PropertyChangeType.Modified));
         }
 
         return changes;

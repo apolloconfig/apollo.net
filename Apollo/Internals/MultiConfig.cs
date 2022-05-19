@@ -38,7 +38,7 @@ public class MultiConfig : AbstractConfig
                 if (!dic.ContainsKey(name) && config.TryGetProperty(name, out var value)) dic[name] = value;
             }
 
-        return new Properties(dic);
+        return new(dic);
     }
 
     public override bool TryGetProperty(string key, [NotNullWhen(true)] out string? value) =>

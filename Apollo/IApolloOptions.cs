@@ -45,4 +45,7 @@ public interface IApolloOptions : IDisposable
     HttpMessageHandler HttpMessageHandler { get; }
 
     ICacheFileProvider CacheFileProvider { get; }
+
+    /// <summary>ms, default value is 30000. If the config fails to be obtained at startup and there is no local cache, wait until successful or timeout.</summary>
+    int StartupTimeout { get; }
 }
