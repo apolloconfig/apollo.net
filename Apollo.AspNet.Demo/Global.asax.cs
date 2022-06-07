@@ -1,7 +1,6 @@
 ﻿using Com.Ctrip.Framework.Apollo;
 using Com.Ctrip.Framework.Apollo.ConfigAdapter;
 using Com.Ctrip.Framework.Apollo.Enums;
-using Microsoft.Extensions.Configuration;
 using System;
 using System.Configuration;
 using System.Web;

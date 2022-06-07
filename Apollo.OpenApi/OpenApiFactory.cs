@@ -1,6 +1,4 @@
-﻿using System.Net.Http.Headers;
-
-namespace Com.Ctrip.Framework.Apollo.OpenApi;
+﻿namespace Com.Ctrip.Framework.Apollo.OpenApi;
 
 public class OpenApiFactory : IOpenApiFactory
 {
