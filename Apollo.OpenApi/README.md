@@ -7,8 +7,6 @@ var factory = new OpenApiFactory();
 # 二、使用依赖注入
 
 ``` C#
-services.Configure<OpenApiOptions>(options =>
-    {
-    })
-    .AddApolloOpenApi();
+services.Configure<OpenApiOptions>(options => { }).AddApolloOpenApi();
 ```
+然后注入`IOpenApiFactory`
