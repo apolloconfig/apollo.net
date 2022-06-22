@@ -11,6 +11,9 @@ Apollo客户端依赖于`AppId`，`Environment`等环境信息来工作，所以
 
 > 默认配置依赖于[Microsoft.Extensions.Configuration](https://docs.microsoft.com/zh-cn/aspnet/core/fundamentals/configuration/)包，文档和Demo使用Json作为配置源，自定义配置源请参考[微软官方文档](https://docs.microsoft.com/zh-cn/aspnet/core/fundamentals/configuration)
 
+### 1.2.0 [指定到网络主机的最大连接数](https://docs.microsoft.com/zh-cn/dotnet/framework/configure-apps/file-schema/network/connectionmanagement-element-network-settings#example)
+> 仅.NET Framework需要配置
+
 ### 1.2.1 AppId
 
 AppId是应用的身份信息，是从服务端获取配置的一个重要信息。
