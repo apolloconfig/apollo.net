@@ -109,5 +109,7 @@ public class ApolloOptions : IApolloOptions
     /// <inheritdoc />
     public int StartupTimeout { get; set; } = 30000;
 
+    public IReadOnlyCollection<string>? SpecialDelimiter { get; set; }
+
     public void Dispose() => _handler.Dispose();
 }

@@ -48,4 +48,9 @@ public interface IApolloOptions : IDisposable
 
     /// <summary>ms, default value is 30000. If the config fails to be obtained at startup and there is no local cache, wait until successful or timeout.</summary>
     int StartupTimeout { get; }
+#if NET40
+    ReadOnlyCollection<string>? SpecialDelimiter { get; }
+#else
+    IReadOnlyCollection<string>? SpecialDelimiter { get; }
+#endif
 }
