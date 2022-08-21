@@ -70,7 +70,7 @@ public class LocalFileConfigRepository : AbstractConfigRepository, IRepositoryCh
         var properties = _fileProperties == null ? new() : new Properties(_fileProperties);
 
         if (Format == ConfigFileFormat.Properties || !ConfigAdapterRegister.TryGetAdapter(Format, out var adapter))
-            return properties;
+            return properties.SpecialDelimiter(_options.SpecialDelimiter);
 
         try
         {

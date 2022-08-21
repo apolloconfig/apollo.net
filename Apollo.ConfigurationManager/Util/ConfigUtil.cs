@@ -16,7 +16,7 @@ public class ConfigUtil : IApolloOptions
 
     private int _refreshInterval = 5 * 60 * 1000; //5 minutes
     private int _timeout = 5000; //5 seconds, c# has no connectTimeout but response timeout
-    private readonly int _startupTimeout = 30000;
+    private int _startupTimeout = 30000;
 
     public ConfigUtil()
     {
@@ -26,6 +26,14 @@ public class ConfigUtil : IApolloOptions
         InitTimeout();
         InitCluster();
         InitStartupTimeout();
+
+        var delimiter = GetAppConfig(nameof(SpecialDelimiter))
+            ?.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+#if NET40
+        SpecialDelimiter = delimiter == null ? null : new ReadOnlyCollection<string>(delimiter);
+#else
+        SpecialDelimiter = delimiter;
+#endif
     }
 
     /// <summary>
@@ -176,15 +184,19 @@ public class ConfigUtil : IApolloOptions
     {
         var startupTimeout = GetAppConfig(nameof(StartupTimeout));
 
-        if (string.IsNullOrWhiteSpace(startupTimeout) || int.TryParse(startupTimeout, out _timeout)) return;
+        if (string.IsNullOrWhiteSpace(startupTimeout) || int.TryParse(startupTimeout, out _startupTimeout)) return;
 
-        _timeout = 30000;
+        _startupTimeout = 30000;
 
-        Logger().Error($"Config for Apollo.Timeout is invalid: {startupTimeout}");
+        Logger().Error($"Config for Apollo.StartupTimeout is invalid: {startupTimeout}");
     }
 
     public int StartupTimeout => _startupTimeout;
-
+#if NET40
+    public ReadOnlyCollection<string>? SpecialDelimiter { get; }
+#else
+    public IReadOnlyCollection<string>? SpecialDelimiter { get; }
+#endif
     public HttpMessageHandler HttpMessageHandler => _handler;
 
     public static void UseHttpMessageHandler(HttpMessageHandler handler)

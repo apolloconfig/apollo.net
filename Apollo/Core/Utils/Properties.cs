@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.ObjectModel;
 
 namespace Com.Ctrip.Framework.Apollo.Core.Utils;
 
@@ -8,12 +9,11 @@ public class Properties
 
     public Properties() => _dict = new(StringComparer.OrdinalIgnoreCase);
 
-    public Properties(IDictionary<string, string>? dictionary) =>
-        _dict = dictionary == null
-            ? new(StringComparer.OrdinalIgnoreCase)
-            : new Dictionary<string, string>(dictionary, StringComparer.OrdinalIgnoreCase);
+    public Properties(IDictionary<string, string>? dictionary) => _dict = dictionary == null
+        ? new(StringComparer.OrdinalIgnoreCase)
+        : new(dictionary, StringComparer.OrdinalIgnoreCase);
 
-    public Properties(Properties source) => _dict = source._dict;
+    public Properties(Properties source) => _dict = new(source._dict, StringComparer.OrdinalIgnoreCase);
 
     public Properties(TextReader textReader)
     {
@@ -21,6 +21,29 @@ public class Properties
 
         using var reader = new JsonTextReader(textReader);
         _dict = new(new JsonSerializer().Deserialize<IDictionary<string, string>>(reader), StringComparer.OrdinalIgnoreCase);
+    }
+#if NET40
+    internal Properties SpecialDelimiter(ReadOnlyCollection<string>? specialDelimiter)
+#else
+    internal Properties SpecialDelimiter(IReadOnlyCollection<string>? specialDelimiter)
+#endif
+    {
+        if (specialDelimiter == null || specialDelimiter.Count < 1) return this;
+
+        var properties = new Properties();
+
+        foreach (var kv in _dict)
+        {
+            var key = kv.Key;
+
+            // ReSharper disable once LoopCanBeConvertedToQuery
+            foreach (var delimiter in specialDelimiter)
+                key = key.Replace(delimiter, ":");
+
+            properties._dict[key] = kv.Value;
+        }
+
+        return properties;
     }
 
     public bool TryGetProperty(string key, [NotNullWhen(true)] out string? value) => _dict.TryGetValue(key, out value);
