@@ -10,6 +10,10 @@
 ## 1.2 必选设置
 Apollo客户端依赖于`AppId`，`Environment`等环境信息来工作，所以请确保阅读下面的说明并且做正确的配置：
 
+### 1.2.0 [指定到网络主机的最大连接数](https://docs.microsoft.com/zh-cn/dotnet/framework/configure-apps/file-schema/network/connectionmanagement-element-network-settings#example)
+由于Long Poll会占用连接数量，因此可能需要配置最大连接数
+> 仅.NET Framework需要配置
+
 ### 1.2.1 AppId
 
 AppId是应用的身份信息，是从服务端获取配置的一个重要信息。
