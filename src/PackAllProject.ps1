@@ -1,4 +1,4 @@
-﻿function FindMSBuild () {
+function FindMSBuild () {
     if ($null -eq $env:OS) {
         try {
             return (Get-Command msbuild).Source;
@@ -34,10 +34,10 @@ foreach ($csproj in (Get-ChildItem -r -filter *.csproj)) {
 
 $MSBuild = FindMSBuild
 if ($null -eq $MSBuild) {
-    dotnet build -c Release
+    dotnet build -c Release /p:IsPacking=true ..
 }
 else {
-    & "$MSBuild" /r /m /v:m /p:Configuration=Release
+    & "$MSBuild" /r /m /v:m /p:Configuration=Release /p:IsPacking=true ..
 }
 
 foreach ($csproj in (Get-ChildItem -r -filter *.csproj)) {
@@ -45,7 +45,7 @@ foreach ($csproj in (Get-ChildItem -r -filter *.csproj)) {
     if (Test-Path $dir) {
 
         $nupkg = Get-ChildItem "$([System.IO.Path]::GetDirectoryName($csproj.FullName))\bin\Release" |
-        Where-Object { $_.Name.Endswith(".symbols.nupkg") } |
+        Where-Object { $_.Name.Endswith(".nupkg") } |
         Sort-Object -Property LastWriteTime -Descending |
         Select-Object -First 1;
 

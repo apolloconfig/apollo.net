@@ -2,19 +2,14 @@
 
   <PropertyGroup>
     <TargetFrameworks>net472;netcoreapp3.1</TargetFrameworks>
-
-    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.*" />
     <PackageReference Include="Moq" Version="4.*" />
-    <PackageReference Include="xunit" Version="2.*" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.*" />
 
     <Reference Include="System.Net.Http" Condition="'$(TargetFramework)' == 'net45'" />
 
-    <ProjectReference Include="..\Apollo\Apollo.csproj" />
+    <ProjectReference Include="..\..\src\Apollo\Apollo.csproj" />
   </ItemGroup>
 
 </Project>

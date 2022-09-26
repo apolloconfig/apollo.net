@@ -1,0 +1,15 @@
+﻿<Project>
+
+  <Import Project="..\Directory.Build.targets" />
+
+  <PropertyGroup>
+    <PackageProjectUrl>$(RepositoryUrl)/src/$(MSBuildProjectName)</PackageProjectUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\icon.png" Pack="true" PackagePath="\" Visible="false" />
+
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.*" PrivateAssets="All" />
+  </ItemGroup>
+
+</Project>

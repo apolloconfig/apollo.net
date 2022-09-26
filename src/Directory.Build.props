@@ -1,0 +1,19 @@
+﻿<Project>
+
+  <Import Project="..\Directory.Build.props" />
+
+  <PropertyGroup>
+    <ApolloVersion>2.9</ApolloVersion>
+    <AssemblyVersion>$(ApolloVersion).0</AssemblyVersion>
+    <DebugSymbols>True</DebugSymbols>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">True</GeneratePackageOnBuild>
+    <IncludeSymbols>True</IncludeSymbols>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageTags>apollo configcenter configuration ctrip</PackageTags>
+    <PackageIcon>icon.png</PackageIcon>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/apolloconfig/apollo.net/tree/main</RepositoryUrl>
+  </PropertyGroup>
+
+</Project>

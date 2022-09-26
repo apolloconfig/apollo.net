@@ -1,22 +1,12 @@
 ﻿<Project>
 
   <PropertyGroup>
-    <ApolloVersion>2.9</ApolloVersion>
-    <AssemblyOriginatorKeyFile>..\Apollo.snk</AssemblyOriginatorKeyFile>
-    <AssemblyVersion>$(ApolloVersion).0</AssemblyVersion>
-    <DebugSymbols>True</DebugSymbols>
-    <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">True</GeneratePackageOnBuild>
-    <IncludeSymbols>True</IncludeSymbols>
+    <AssemblyOriginatorKeyFile>..\..\Apollo.snk</AssemblyOriginatorKeyFile>
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>10.0</LangVersion>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <NoWarn>$(NoWarn);CS0414;CS0436;CS1591</NoWarn>
-    <PackageIcon>icon.png</PackageIcon>
-    <PackageTags>apollo configcenter configuration ctrip</PackageTags><PackageIcon>icon.png</PackageIcon>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/apolloconfig/apollo.net/tree/main</RepositoryUrl>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
 
@@ -27,15 +17,6 @@
     <Using Include="System.Diagnostics.CodeAnalysis" />
     <Using Include="System.Net" />
     <Using Include="System.Text" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="..\icon.png" Pack="true" PackagePath="\" Visible="false" />
-
-    <PackageReference Include="IsExternalInit" Version="1.*" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.*" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.*" PrivateAssets="All" />
-    <PackageReference Include="Nullable" Version="1.*" PrivateAssets="All" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net45</TargetFramework>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Apollo.ConfigAdapter.Yaml\Apollo.ConfigAdapter.Yaml.csproj" />
+    <ProjectReference Include="..\..\src\Apollo.ConfigurationManager\Apollo.ConfigurationManager.csproj" />
+    <ProjectReference Include="..\..\src\Apollo\Apollo.csproj" />
+  </ItemGroup>
+
+</Project>
