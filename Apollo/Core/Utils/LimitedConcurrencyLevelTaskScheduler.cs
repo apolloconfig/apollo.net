@@ -2,7 +2,7 @@
 
 // Provides a task scheduler that ensures a maximum concurrency level while
 // running on top of the thread pool.
-public class LimitedConcurrencyLevelTaskScheduler : TaskScheduler
+internal class LimitedConcurrencyLevelTaskScheduler : TaskScheduler
 {
     // Indicates whether the current thread is processing work items.
     [ThreadStatic]

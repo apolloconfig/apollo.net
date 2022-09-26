@@ -1,6 +1,6 @@
 ﻿namespace Com.Ctrip.Framework.Apollo.Core.Dto;
 
-public class ServiceDto
+internal class ServiceDto
 {
     public string AppName { get; set; } = default!;
 

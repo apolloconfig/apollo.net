@@ -1,6 +1,6 @@
 ﻿namespace Com.Ctrip.Framework.Apollo.Core.Dto;
 
-public class ApolloConfig
+internal class ApolloConfig
 {
     public string AppId { get; set; } = default!;
 

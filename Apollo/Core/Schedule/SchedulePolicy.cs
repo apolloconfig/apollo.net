@@ -1,6 +1,6 @@
 ﻿namespace Com.Ctrip.Framework.Apollo.Core.Schedule;
 
-public interface ISchedulePolicy
+internal interface ISchedulePolicy
 {
     int Fail();
 
