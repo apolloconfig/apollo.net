@@ -1,5 +1,6 @@
 ﻿using Com.Ctrip.Framework.Apollo.Core;
 using Com.Ctrip.Framework.Apollo.OpenApi;
+using Com.Ctrip.Framework.Apollo.OpenApi.Model;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -21,6 +22,8 @@ public class AppClusterTest : BaseTest
         var @default = result.FirstOrDefault(ec => ec.Env == "DEV");
 
         Assert.NotNull(@default);
+
+        Assert.NotNull(@default.Clusters);
 
         Assert.Contains(ConfigConsts.ClusterNameDefault, @default.Clusters);
     }
@@ -72,6 +75,6 @@ public class AppClusterTest : BaseTest
 
         Assert.NotNull(result);
         Assert.Contains(result, ns => ns.NamespaceName == ConfigConsts.NamespaceApplication);
-        Assert.NotEmpty(result.First(ns => ns.NamespaceName == ConfigConsts.NamespaceApplication).Items);
+        Assert.NotEmpty(result.FirstOrDefault(ns => ns.NamespaceName == ConfigConsts.NamespaceApplication)?.Items ?? Array.Empty<Item>());
     }
 }
