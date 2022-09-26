@@ -28,17 +28,23 @@ public class HttpUtil : IDisposable
 
             if (!string.IsNullOrWhiteSpace(_options.Secret))
                 foreach (var header in Signature.BuildHttpHeaders(url, _options.AppId, _options.Secret!))
-                    httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
+                    httpClient.DefaultRequestHeaders.TryAddWithoutValidation(header.Key, header.Value);
 
             using var response = await Timeout(httpClient.GetAsync(url, cts.Token), timeout, cts).ConfigureAwait(false);
             switch (response.StatusCode)
             {
                 case HttpStatusCode.OK:
+                    {
 #if NET40
-                    return new(response.StatusCode, await response.Content.ReadAsAsync<T>().ConfigureAwait(false));
+                        var task = response.Content.ReadAsAsync<T>();
+#elif NETFRAMEWORK
+                        var task = response.Content.ReadAsAsync<T>(cts.Token);
 #else
-                    return new(response.StatusCode, await response.Content.ReadAsAsync<T>(cts.Token).ConfigureAwait(false));
+                        var task = response.Content.ReadFromJsonAsync<T>(
+                            new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, DictionaryKeyPolicy = JsonNamingPolicy.CamelCase }, cts.Token);
 #endif
+                        return new(response.StatusCode, await task.ConfigureAwait(false));
+                    }
                 case HttpStatusCode.NotModified:
                     return new(response.StatusCode);
             }

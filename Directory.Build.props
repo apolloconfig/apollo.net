@@ -1,9 +1,9 @@
 ﻿<Project>
 
   <PropertyGroup>
-    <ApolloVersion>2.8</ApolloVersion>
+    <ApolloVersion>2.9</ApolloVersion>
     <AssemblyOriginatorKeyFile>..\Apollo.snk</AssemblyOriginatorKeyFile>
-    <AssemblyVersion>2.0.0</AssemblyVersion>
+    <AssemblyVersion>$(ApolloVersion).0</AssemblyVersion>
     <DebugSymbols>True</DebugSymbols>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">True</GeneratePackageOnBuild>
@@ -32,9 +32,10 @@
   <ItemGroup>
     <None Include="..\icon.png" Pack="true" PackagePath="\" Visible="false" />
 
+    <PackageReference Include="IsExternalInit" Version="1.*" PrivateAssets="All" />
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.*" PrivateAssets="All" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.*" PrivateAssets="All" />
-    <PackageReference Include="Nullable" Version="1.*" PrivateAssets="All" Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework' OR '$(TargetFramework)' == 'netstandard2.0'" />
+    <PackageReference Include="Nullable" Version="1.*" PrivateAssets="All" />
   </ItemGroup>
 
 </Project>

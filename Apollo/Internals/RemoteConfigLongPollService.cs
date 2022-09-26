@@ -6,12 +6,11 @@ using Com.Ctrip.Framework.Apollo.Exceptions;
 using Com.Ctrip.Framework.Apollo.Logging;
 using Com.Ctrip.Framework.Apollo.Util;
 using Com.Ctrip.Framework.Apollo.Util.Http;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
+using System.Web;
 
 namespace Com.Ctrip.Framework.Apollo.Internals;
 
-public class RemoteConfigLongPollService : IDisposable
+internal class RemoteConfigLongPollService : IDisposable
 {
     private static readonly Func<Action<LogLevel, string, Exception?>> Logger = () =>
         LogManager.CreateLogger(typeof(RemoteConfigLongPollService));
@@ -215,7 +214,7 @@ public class RemoteConfigLongPollService : IDisposable
         foreach (var notification in deltaNotifications)
         {
             if (string.IsNullOrEmpty(notification.NamespaceName) || notification.Messages == null ||
-                notification.Messages.IsEmpty()) continue;
+                notification.Messages.Details.Count < 1) continue;
 
             var localRemoteMessages = _remoteNotificationMessages.GetOrAdd(notification.NamespaceName, _ => new());
 
@@ -228,7 +227,7 @@ public class RemoteConfigLongPollService : IDisposable
         if (!uri.EndsWith("/", StringComparison.Ordinal)) uri += "/";
 
         var uriBuilder = new UriBuilder(uri + "notifications/v2");
-        var query = new Dictionary<string, string>();
+        var query = HttpUtility.ParseQueryString("");
 
         query["appId"] = appId;
         query["cluster"] = cluster;
@@ -245,23 +244,17 @@ public class RemoteConfigLongPollService : IDisposable
             query["ip"] = localIp;
         }
 
-        uriBuilder.Query = QueryUtils.Build(query);
+        uriBuilder.Query = query.ToString();
 
         return uriBuilder.Uri;
     }
 
-    private static readonly JsonSerializerSettings JsonSettings = new()
-    {
-        NullValueHandling = NullValueHandling.Ignore,
-        ContractResolver = new CamelCasePropertyNamesContractResolver()
-    };
-
     private static string AssembleNotifications(IDictionary<string, long?> notificationsMap) =>
-        JsonConvert.SerializeObject(notificationsMap.Select(kvp => new ApolloConfigNotification
+        JsonUtil.Serialize(notificationsMap.Select(kvp => new ApolloConfigNotification
         {
             NamespaceName = kvp.Key,
             NotificationId = kvp.Value.GetValueOrDefault(InitNotificationId)
-        }), JsonSettings);
+        }));
 
     public void Dispose()
     {
