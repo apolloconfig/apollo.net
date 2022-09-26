@@ -1,7 +1,9 @@
 ﻿<Project>
 
-  <PropertyGroup>
-    <PackageProjectUrl>$(RepositoryUrl)/$(MSBuildProjectName)</PackageProjectUrl>
-  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="IsExternalInit" Version="1.*" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.*" PrivateAssets="All" />
+    <PackageReference Include="Nullable" Version="1.*" PrivateAssets="All" />
+  </ItemGroup>
 
 </Project>
