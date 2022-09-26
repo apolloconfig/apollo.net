@@ -4,7 +4,7 @@ using Com.Ctrip.Framework.Apollo.OpenApi.Model;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Com.Ctrip.Framework.Apollo;
+namespace Apollo.OpenApi.Tests;
 
 public class AppClusterTest : BaseTest
 {

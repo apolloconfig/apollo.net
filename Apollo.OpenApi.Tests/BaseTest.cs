@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using Xunit.Abstractions;
 
-namespace Com.Ctrip.Framework.Apollo;
+namespace Apollo.OpenApi.Tests;
 
 public abstract class BaseTest
 {
