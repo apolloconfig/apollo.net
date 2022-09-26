@@ -6,7 +6,7 @@
         "Apollo:AppId": "apollo.net",
         "Apollo:Cluster": "test",
         "Apollo:EnablePlaceholder": "true",
-        "Apollo:Secret": "ffd9d01130ee4329875ac3441c0bedda",
+        "Apollo:Secret": "f55faf3729e14866ac5fc2bed2293643",
         "Apollo:MetaServer": "http://106.54.227.205:8080/"
       }
     }

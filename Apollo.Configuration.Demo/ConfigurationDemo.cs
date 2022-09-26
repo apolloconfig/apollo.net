@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace Apollo.Configuration.Demo;
 
@@ -48,7 +48,7 @@ internal class ConfigurationDemo
 
     private static void OnChanged(Value value, string name)
     {
-        Console.WriteLine(name + " has changed: " + JsonConvert.SerializeObject(value));
+        Console.WriteLine(name + " has changed: " + JsonSerializer.Serialize(value));
     }
 
     private class Value

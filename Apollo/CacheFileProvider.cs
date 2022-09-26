@@ -15,14 +15,14 @@ public class LocalPlaintextCacheFileProvider : ICacheFileProvider
     {
         if (!File.Exists(configFile)) return null;
 
-        using var reader = new StreamReader(configFile, Encoding.UTF8);
+        using var reader = new FileStream(configFile, FileMode.Open);
 
-        return new (reader);
+        return new(reader);
     }
 
     public void Save(string configFile, Properties properties)
     {
-        using var file = new StreamWriter(configFile, false, Encoding.UTF8);
+        using var file = new FileStream(configFile, FileMode.Create);
 
         properties.Store(file);
     }

@@ -1,6 +1,6 @@
 ﻿namespace Com.Ctrip.Framework.Apollo.Core.Schedule;
 
-public class ExponentialSchedulePolicy : ISchedulePolicy
+internal class ExponentialSchedulePolicy : ISchedulePolicy
 {
     private readonly int _delayTimeLowerBound;
     private readonly int _delayTimeUpperBound;

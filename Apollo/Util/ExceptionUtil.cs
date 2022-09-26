@@ -2,7 +2,7 @@
 
 internal static class ExceptionUtil
 {
-    public static string GetDetailMessage(this Exception ex)
+    public static string GetDetailMessage(this Exception? ex)
     {
         if (ex == null || string.IsNullOrEmpty(ex.Message))
         {

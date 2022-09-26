@@ -2,14 +2,14 @@
 using Com.Ctrip.Framework.Apollo.Core.Dto;
 using Com.Ctrip.Framework.Apollo.Exceptions;
 using Com.Ctrip.Framework.Apollo.Logging;
-using Com.Ctrip.Framework.Apollo.Util;
 using Com.Ctrip.Framework.Apollo.Util.Http;
+using System.Web;
 
 namespace Com.Ctrip.Framework.Apollo.Internals;
 
-public class ConfigServiceLocator : IDisposable
+internal class ConfigServiceLocator : IDisposable
 {
-    private static readonly char[] MetaServerSeparator = new[] { ',', ';' };
+    private static readonly char[] MetaServerSeparator = { ',', ';' };
     private static readonly Func<Action<LogLevel, string, Exception?>> Logger = () => LogManager.CreateLogger(typeof(ConfigServiceLocator));
 
     private readonly HttpUtil _httpUtil;
@@ -134,11 +134,13 @@ public class ConfigServiceLocator : IDisposable
 
             var uriBuilder = new UriBuilder(uri + "services/config");
 
-            var query = new Dictionary<string, string> { ["appId"] = _options.AppId };
+            var query = HttpUtility.ParseQueryString("");
+
+            query["appId"] = _options.AppId;
 
             if (!string.IsNullOrEmpty(_options.LocalIp)) query["ip"] = _options.LocalIp;
 
-            uriBuilder.Query = QueryUtils.Build(query);
+            uriBuilder.Query = query.ToString();
 
             return uriBuilder.Uri;
         })
