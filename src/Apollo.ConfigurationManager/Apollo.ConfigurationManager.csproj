@@ -13,7 +13,7 @@ $(PackageReleaseNotes)</Description>
     <PackageTags>$(PackageTags) ConfigurationBuilder ConfigurationManager</PackageTags>
     <RootNamespace>Com.Ctrip.Framework.Apollo</RootNamespace>
     <TargetFrameworks>net471;net45;net40;netstandard2.0;netstandard2.1</TargetFrameworks>
-    <Version>$(ApolloVersion).0</Version>
+    <Version>$(ApolloVersion).1</Version>
   </PropertyGroup>
 
   <ItemGroup>

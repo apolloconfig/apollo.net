@@ -2,6 +2,7 @@
 using Com.Ctrip.Framework.Apollo.Core.Dto;
 using Com.Ctrip.Framework.Apollo.Exceptions;
 using Com.Ctrip.Framework.Apollo.Logging;
+using Com.Ctrip.Framework.Apollo.Util;
 using Com.Ctrip.Framework.Apollo.Util.Http;
 using System.Web;
 
@@ -133,15 +134,20 @@ internal class ConfigServiceLocator : IDisposable
             if (uri[uri.Length - 1] != '/') uri += "/";
 
             var uriBuilder = new UriBuilder(uri + "services/config");
-
+#if NETFRAMEWORK
+            //不要使用HttpUtility.ParseQueryString()，.NET Framework里会死锁
+            var query = new Dictionary<string, string>();
+#else
             var query = HttpUtility.ParseQueryString("");
-
+#endif
             query["appId"] = _options.AppId;
 
             if (!string.IsNullOrEmpty(_options.LocalIp)) query["ip"] = _options.LocalIp;
-
+#if NETFRAMEWORK
+            uriBuilder.Query = QueryUtils.Build(query);
+#else
             uriBuilder.Query = query.ToString();
-
+#endif
             return uriBuilder.Uri;
         })
         .OrderBy(_ => Guid.NewGuid())
