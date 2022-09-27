@@ -8,8 +8,8 @@ using Com.Ctrip.Framework.Apollo.Util.Http;
 using System.Reflection;
 #else
 using System.Runtime.ExceptionServices;
-#endif
 using System.Web;
+#endif
 
 namespace Com.Ctrip.Framework.Apollo.Internals;
 
@@ -189,8 +189,12 @@ internal class RemoteConfigRepository : AbstractConfigRepository
         //Looks like .Net will handle all the url encoding for me...
         var path = $"configs/{appId}/{cluster}/{namespaceName}";
         var uriBuilder = new UriBuilder(uri + path);
+#if NETFRAMEWORK
+        //不要使用HttpUtility.ParseQueryString()，.NET Framework里会死锁
+        var query = new Dictionary<string, string>();
+#else
         var query = HttpUtility.ParseQueryString("");
-
+#endif
         if (previousConfig != null)
         {
             query["releaseKey"] = previousConfig.ReleaseKey;
@@ -211,9 +215,11 @@ internal class RemoteConfigRepository : AbstractConfigRepository
         {
             query["messages"] = JsonUtil.Serialize(remoteMessages);
         }
-
+#if NETFRAMEWORK
+        uriBuilder.Query = QueryUtils.Build(query);
+#else
         uriBuilder.Query = query.ToString();
-
+#endif
         return uriBuilder.Uri;
     }
 

@@ -227,8 +227,12 @@ internal class RemoteConfigLongPollService : IDisposable
         if (!uri.EndsWith("/", StringComparison.Ordinal)) uri += "/";
 
         var uriBuilder = new UriBuilder(uri + "notifications/v2");
+#if NETFRAMEWORK
+        //不要使用HttpUtility.ParseQueryString()，.NET Framework里会死锁
+        var query = new Dictionary<string, string>();
+#else
         var query = HttpUtility.ParseQueryString("");
-
+#endif
         query["appId"] = appId;
         query["cluster"] = cluster;
         query["notifications"] = AssembleNotifications(_notifications);
@@ -243,9 +247,11 @@ internal class RemoteConfigLongPollService : IDisposable
         {
             query["ip"] = localIp;
         }
-
+#if NETFRAMEWORK
+        uriBuilder.Query = QueryUtils.Build(query);
+#else
         uriBuilder.Query = query.ToString();
-
+#endif
         return uriBuilder.Uri;
     }
 
