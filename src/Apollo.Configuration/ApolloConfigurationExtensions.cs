@@ -9,23 +9,41 @@ namespace Microsoft.Extensions.Configuration
 {
     public static class ApolloConfigurationExtensions
     {
-        public static IApolloConfigurationBuilder AddApollo(this IConfigurationBuilder builder, IConfiguration apolloConfiguration) =>
-            builder.AddApollo(apolloConfiguration.Get<ApolloOptions>());
+        public static IApolloConfigurationBuilder AddApollo(this IConfigurationBuilder builder, IConfiguration apolloConfiguration)
+            => builder.AddApollo(apolloConfiguration.Get<ApolloOptions>());
 
-        public static IApolloConfigurationBuilder AddApollo(this IConfigurationBuilder builder, string appId, string metaServer) =>
-            builder.AddApollo(new ApolloOptions { AppId = appId, MetaServer = metaServer });
+        public static IApolloConfigurationBuilder AddApollo(this IConfigurationBuilder builder, string appId, string metaServer)
+            => builder.AddApollo(new ApolloOptions
+            {
+                AppId = appId,
+                MetaServer = metaServer
+            });
 
         public static IApolloConfigurationBuilder AddApollo(this IConfigurationBuilder builder, IApolloOptions options)
         {
+            if (builder.Properties.ContainsKey(typeof(ApolloConfigurationExtensions).FullName))
+            {
+                throw new InvalidOperationException("Do not repeat init apollo");
+            }
             var repositoryFactory = new ConfigRepositoryFactory(options ?? throw new ArgumentNullException(nameof(options)));
 
-            ApolloConfigurationManagerHelper.SetApolloOptions(repositoryFactory);
+            var apolloBuilder = new ApolloConfigurationBuilder(builder, repositoryFactory);
+            builder.Properties[typeof(ApolloConfigurationExtensions).FullName] = apolloBuilder;
 
-            var acb = new ApolloConfigurationBuilder(builder, repositoryFactory);
-            if (options is ApolloOptions { Namespaces: { } } ao)
-                foreach (var ns in ao.Namespaces) acb.AddNamespace(ns);
+            if (options is ApolloOptions ao && ao.Namespaces != null)
+                foreach (var ns in ao.Namespaces) apolloBuilder.AddNamespace(ns);
 
-            return acb;
+            return apolloBuilder;
+        }
+
+        public static IApolloConfigurationBuilder AddApollo(this IConfigurationBuilder builder)
+        {
+            if (!builder.Properties.TryGetValue(typeof(ApolloConfigurationExtensions).FullName, out var apolloBuilder))
+            {
+                throw new InvalidOperationException("Please invoke 'AddApollo(options)' init apollo at the beginning.");
+            }
+            return (ApolloConfigurationBuilder)apolloBuilder;
+
         }
     }
 }
