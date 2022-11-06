@@ -5,7 +5,7 @@
     <PackageReleaseNotes></PackageReleaseNotes>
     <Description>携程Apollo的OpenApi客户端，入口接口IOpenApiFactory</Description>
     <TargetFrameworks>net40;net45;netstandard2.0</TargetFrameworks>
-    <Version>2.1.0</Version>
+    <Version>2.1.1</Version>
     <RootNamespace>Com.Ctrip.Framework.Apollo.OpenApi</RootNamespace>
   </PropertyGroup>
 
