@@ -7,7 +7,7 @@
         "Apollo:Cluster": "test",
         "Apollo:EnablePlaceholder": "true",
         "Apollo:Secret": "f55faf3729e14866ac5fc2bed2293643",
-        "Apollo:MetaServer": "http://106.54.227.205:8080/"
+        "Apollo:MetaServer": "http://81.68.181.139:8080/"
       }
     }
   }

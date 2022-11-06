@@ -15,7 +15,7 @@ public class OpenApiFactoryTest
         {
             await new OpenApiFactory(new()
             {
-                PortalUrl = new("http://106.54.227.205:8070"),
+                PortalUrl = new("http://81.68.181.139:8070"),
                 Token = Guid.NewGuid().ToString("N")
             })
                 .CreateAppClusterClient("abc").GetAppInfo()
@@ -30,7 +30,7 @@ public class OpenApiFactoryTest
         {
             await new OpenApiFactory(new()
             {
-                PortalUrl = new("http://106.54.227.205:8070"),
+                PortalUrl = new("http://81.68.181.139:8070"),
                 Token = "19419f7d3e5a1b0b0cfe3e238b36e09718fb8e94"
             })
                 .CreateAppClusterClient("abc").GetAppInfo()
@@ -45,7 +45,7 @@ public class OpenApiFactoryTest
         {
             await new OpenApiFactory(new()
             {
-                PortalUrl = new("http://106.54.227.205:8070"),
+                PortalUrl = new("http://81.68.181.139:8070"),
                 Token = "19419f7d3e5a1b0b0cfe3e238b36e09718fb8e94"
             })
                 .CreateNamespaceClient("apollo.net", "PRO", "test", "test")
@@ -61,7 +61,7 @@ public class OpenApiFactoryTest
         {
             await new OpenApiFactory(new()
             {
-                PortalUrl = new("http://106.54.227.205:8070"),
+                PortalUrl = new("http://81.68.181.139:8070"),
                 Token = "19419f7d3e5a1b0b0cfe3e238b36e09718fb8e94"
             })
                 .CreateNamespaceClient("apollo.net", "DEV", "test", "test")
