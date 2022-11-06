@@ -1,7 +1,7 @@
 ﻿using Com.Ctrip.Framework.Apollo;
 using Microsoft.Extensions.Configuration;
 
-#if AspNetCoreHosting
+#if NETCOREAPP
 using IHostBuilder = Microsoft.AspNetCore.Hosting.IWebHostBuilder;
 
 namespace Microsoft.AspNetCore.Hosting;
@@ -16,10 +16,12 @@ public static class HostingBuilderExtensions
     /// <param name="hostBuilder"></param>
     /// <param name="fromAppConfiguration">apollo配置源，false：环境变量、命令行之类；true：appsettings.json之类</param>
     /// <param name="key">apollo配置前缀</param>
-    public static IHostBuilder AddApollo(this IHostBuilder hostBuilder, bool fromAppConfiguration = true, string key = "apollo") =>
+    public static IHostBuilder AddApollo(this IHostBuilder hostBuilder, bool fromAppConfiguration = true,
+        string key = "apollo") =>
         fromAppConfiguration
             ? hostBuilder.ConfigureAppConfiguration((_, builder) => builder.AddApollo(builder.Build().GetSection(key)))
-            : hostBuilder.ConfigureAppConfiguration((context, builder) => builder.AddApollo(context.Configuration.GetSection(key)));
+            : hostBuilder.ConfigureAppConfiguration((context, builder) =>
+                builder.AddApollo(context.Configuration.GetSection(key)));
 
     public static IHostBuilder AddApollo(this IHostBuilder hostBuilder, string appId, string metaServer)
     {

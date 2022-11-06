@@ -40,6 +40,6 @@ public class ConfigServiceLocatorTest
         var services = await locator.GetConfigServices().ConfigureAwait(false);
 
         Assert.Equal(1, services.Count);
-        Assert.Equal(options.ConfigServer.FirstOrDefault(), services[0].HomepageUrl);
+        Assert.Equal(options.ConfigServer?.FirstOrDefault(), services[0].HomepageUrl);
     }
 }
