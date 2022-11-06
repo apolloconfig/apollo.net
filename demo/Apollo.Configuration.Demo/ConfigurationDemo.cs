@@ -24,9 +24,7 @@ internal class ConfigurationDemo
         _config = host.Services.GetRequiredService<IConfiguration>();
         _anotherConfig = _config.GetSection("a");
 
-        var optionsMonitor = host.Services.GetService<IOptionsMonitor<Value>>();
-
-        optionsMonitor.OnChange(OnChanged);
+        host.Services.GetRequiredService<IOptionsMonitor<Value>>().OnChange(OnChanged);
 
         //new ConfigurationManagerDemo( host.Services.GetService<ApolloConfigurationManager>());
     }

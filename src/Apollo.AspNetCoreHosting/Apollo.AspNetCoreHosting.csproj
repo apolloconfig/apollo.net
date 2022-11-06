@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <AssemblyName>Com.Ctrip.Framework.Apollo.AspNetCoreHosting</AssemblyName>
-    <DefineConstants>$(DefineConstants);AspNetCoreHosting</DefineConstants>
     <PackageReleaseNotes>发布日志请点击打开 https://github.com/apolloconfig/apollo.net/releases</PackageReleaseNotes>
     <Description>携程Apollo客户端
 

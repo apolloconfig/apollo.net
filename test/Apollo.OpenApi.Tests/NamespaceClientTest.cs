@@ -118,8 +118,10 @@ public class NamespaceClientTest : BaseTest
         Assert.NotNull(result.Configurations);
         Assert.NotEmpty(result.Configurations!);
 
-        Assert.NotNull(await client.GetLatestActiveRelease().ConfigureAwait(false));
+        var latestActiveRelease = await client.GetLatestActiveRelease().ConfigureAwait(false);
 
-        await client.Rollback("apollo", 26864).ConfigureAwait(false);
+        Assert.NotNull(latestActiveRelease);
+
+        await client.Rollback("apollo", latestActiveRelease.Id).ConfigureAwait(false);
     }
 }
