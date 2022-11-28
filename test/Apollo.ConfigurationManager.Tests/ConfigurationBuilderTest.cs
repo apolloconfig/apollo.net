@@ -3,6 +3,13 @@ using Xunit;
 
 namespace Apollo.ConfigurationManager.Tests;
 
+/*Timeout = 00:00:30
+ConnectionStrings:abc = Test connection string
+system.serviceModel:client = <client>\n  <endpoint binding="basicHttpBinding" address="http://localhost:1234" name="test" contract="test" />\n</client>
+MaxValue = 100
+map:defg = 456
+Element:name = jkl
+Element:value = 300:00:304*/
 public class ConfigurationBuilderTest
 {
 #if NET471_OR_GREATER

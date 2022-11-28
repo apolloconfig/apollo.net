@@ -2,6 +2,8 @@
 
 public class Release : BaseModel
 {
+    public int Id { get; set; }
+
     public string? AppId { get; set; }
 
     public string? ClusterName { get; set; }
