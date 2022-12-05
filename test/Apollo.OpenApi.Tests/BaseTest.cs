@@ -11,7 +11,7 @@ public abstract class BaseTest
     public static IOpenApiFactory Factory { get; } = new OpenApiFactory(new()
     {
         PortalUrl = new("http://81.68.181.139:8070"),
-        Token = "c18d0f7bc815c9e2d9699ee3216712a275b20a8d"
+        Token = "a65ba5e0f90be078888a070672a243e9b6ec5d65"
     });
 
     public static IReadOnlyList<string> AppIds = new List<string> { "apollo.net", "SampleApp" };
