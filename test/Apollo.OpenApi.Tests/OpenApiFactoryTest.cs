@@ -54,7 +54,7 @@ public class OpenApiFactoryTest
         }
         catch (ApolloOpenApiException e)
         {
-            Assert.Equal(HttpStatusCode.InternalServerError, e.Status);
+            Assert.Equal(HttpStatusCode.Unauthorized, e.Status);
         }
 
         try
