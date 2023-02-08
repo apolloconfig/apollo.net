@@ -53,7 +53,29 @@ public class ApolloOptions : IApolloOptions
     /// <summary>Default Dev</summary>
     public virtual Env Env { get; set; } = Env.Dev;
 
-    public virtual string LocalIp { get; set; } = NetworkInterfaceManager.HostIp;
+    private string? _localIp;
+    private string? _preferLocalIpAddress;
+
+    public virtual string? PreferLocalIpAddress
+    {
+        get => this._preferLocalIpAddress;
+        set
+        {
+            this._preferLocalIpAddress = value; this._localIp = null;
+        }
+    }
+    public virtual string LocalIp
+    {
+        get
+        {
+            if (this._localIp == null)
+            {
+                this._localIp = NetworkInterfaceManager.GetHostIp(this.PreferLocalIpAddress);
+            }
+            return this._localIp;
+        }
+        set { this._localIp = value; }
+    }
 
     /// <summary>Default http://localhost:8080</summary>
     public virtual string? MetaServer
@@ -97,7 +119,7 @@ public class ApolloOptions : IApolloOptions
         }
     }
 
-    [Obsolete("请使用HttpMessageHandler", true)]
+    [Obsolete("Please using the HttpMessageHandler property to configure.", true)]
     public Func<HttpMessageHandler> HttpMessageHandlerFactory
     {
         get => () => _handler;

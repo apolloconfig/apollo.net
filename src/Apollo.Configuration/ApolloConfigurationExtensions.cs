@@ -18,7 +18,7 @@ namespace Microsoft.Extensions.Configuration
         public static IApolloConfigurationBuilder AddApollo(this IConfigurationBuilder builder, IApolloOptions options)
         {
             if (builder.Properties.ContainsKey(typeof(ApolloConfigurationExtensions).FullName))
-                throw new InvalidOperationException("Do not repeat init apollo");
+                throw new InvalidOperationException("Do not repeat init apollo.");
 
             var repositoryFactory = new ConfigRepositoryFactory(options ?? throw new ArgumentNullException(nameof(options)));
 
@@ -28,13 +28,15 @@ namespace Microsoft.Extensions.Configuration
             if (options is ApolloOptions { Namespaces: { } } ao)
                 foreach (var ns in ao.Namespaces) acb.AddNamespace(ns);
 
+            builder.Properties[typeof(ApolloConfigurationExtensions).FullName] = acb;
+
             return acb;
         }
 
         public static IApolloConfigurationBuilder AddApollo(this IConfigurationBuilder builder)
         {
             if (!builder.Properties.TryGetValue(typeof(ApolloConfigurationExtensions).FullName, out var apolloBuilder))
-                throw new InvalidOperationException("Please invoke 'AddApollo(options)' init apollo at the beginning.");
+                throw new InvalidOperationException("Please call 'AddApollo(options)' to init apollo at the beginning.");
 
             return (ApolloConfigurationBuilder)apolloBuilder;
 
@@ -46,19 +48,39 @@ namespace Com.Ctrip.Framework.Apollo
 {
     public static class ApolloConfigurationBuilderExtensions
     {
-        /// <summary>添加默认namespace: application，等价于AddNamespace(ConfigConsts.NamespaceApplication)</summary>
+        /// <summary>
+        /// Add default namespace(application)，equivalent to AddNamespace(ConfigConsts.NamespaceApplication)
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="format">The content format of the default namespace</param>
+        /// <returns></returns>
         public static IApolloConfigurationBuilder AddDefault(this IApolloConfigurationBuilder builder, ConfigFileFormat format = ConfigFileFormat.Properties) =>
             builder.AddNamespace(ConfigConsts.NamespaceApplication, null, format);
 
-        /// <summary>添加其他namespace</summary>
+        /// <summary>
+        /// Add namespace
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="namespace">The namespace name</param>
+        /// <param name="format">The content format of the <paramref name="namespace"/></param>
+        /// <returns></returns>
         public static IApolloConfigurationBuilder AddNamespace(this IApolloConfigurationBuilder builder, string @namespace, ConfigFileFormat format = ConfigFileFormat.Properties) =>
             builder.AddNamespace(@namespace, null, format);
 
-        /// <summary>添加其他namespace。如果sectionKey为null则添加到root中，可以直接读取，否则使用Configuration.GetSection(sectionKey)读取</summary>
+        /// <summary>
+        /// Add namespace
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="namespace">The namespace name</param>
+        /// <param name="sectionKey">As prefix adds to <see cref="IConfiguration"/>, Using <paramref name="sectionKey"/> as an argument to <see cref="IConfiguration.GetSection(string)"/> to get the content of <paramref name="namespace"/>.</param>
+        /// <param name="format">The content format of the <paramref name="namespace"/></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public static IApolloConfigurationBuilder AddNamespace(this IApolloConfigurationBuilder builder, string @namespace, string? sectionKey, ConfigFileFormat format = ConfigFileFormat.Properties)
         {
             if (string.IsNullOrWhiteSpace(@namespace)) throw new ArgumentNullException(nameof(@namespace));
-            if (format is < ConfigFileFormat.Properties or > ConfigFileFormat.Txt) throw new ArgumentOutOfRangeException(nameof(format), format, $"最小值{ConfigFileFormat.Properties}，最大值{ConfigFileFormat.Txt}");
+            if (format is < ConfigFileFormat.Properties or > ConfigFileFormat.Txt) throw new ArgumentOutOfRangeException(nameof(format), format, $"minimum:{ConfigFileFormat.Properties}，maximum:{ConfigFileFormat.Txt}");
 
             if (format != ConfigFileFormat.Properties) @namespace += "." + format.GetString();
 

@@ -7,7 +7,7 @@ namespace Com.Ctrip.Framework.Apollo;
 /// <summary>
 /// Entry point for client config use
 /// </summary>
-[Obsolete("不建议使用，后续版本可能删除，推荐使用Microsoft.Extensions.Configuration.IConfiguration", true)]
+[Obsolete("It is not recommended to use the following version, which may delete the recommended Microsoft.Extensions.Configuration.IConfiguration", true)]
 public class ApolloConfigurationManager
 {
     public static IConfigManager Manager => ApolloConfigurationManagerHelper.Manager;
