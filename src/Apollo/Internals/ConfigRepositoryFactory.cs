@@ -1,4 +1,5 @@
 ﻿using Com.Ctrip.Framework.Apollo.Enums;
+using Com.Ctrip.Framework.Apollo.Logging;
 using Com.Ctrip.Framework.Apollo.Util.Http;
 
 namespace Com.Ctrip.Framework.Apollo.Internals;
@@ -26,7 +27,7 @@ public class ConfigRepositoryFactory : IConfigRepositoryFactory, IDisposable
     {
         if (Env.Local.Equals(_options.Env))
         {
-            Console.WriteLine("==== Apollo is in local mode! Won\'t pull configs from remote server! ====");
+            LogManager.CreateLogger(typeof(ConfigRepositoryFactory)).Warn($"==== Apollo is in local mode! Won't pull configs '{@namespace}' from remote server! ====");
             return new LocalFileConfigRepository(@namespace, _options);
         }
 

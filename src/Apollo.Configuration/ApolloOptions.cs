@@ -119,7 +119,7 @@ public class ApolloOptions : IApolloOptions
         }
     }
 
-    [Obsolete("请使用HttpMessageHandler", true)]
+    [Obsolete("Please using the HttpMessageHandler property to configure.", true)]
     public Func<HttpMessageHandler> HttpMessageHandlerFactory
     {
         get => () => _handler;
