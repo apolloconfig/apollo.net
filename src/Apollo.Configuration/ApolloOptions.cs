@@ -54,27 +54,21 @@ public class ApolloOptions : IApolloOptions
     public virtual Env Env { get; set; } = Env.Dev;
 
     private string? _localIp;
-    private string? _preferLocalIpAddress;
+    private IReadOnlyCollection<string>? _preferSubnet;
 
-    public virtual string? PreferLocalIpAddress
+    public virtual IReadOnlyCollection<string>? PreferSubnet
     {
-        get => this._preferLocalIpAddress;
+        get => _preferSubnet;
         set
         {
-            this._preferLocalIpAddress = value; this._localIp = null;
+            _preferSubnet = value; _localIp = null;
         }
     }
+
     public virtual string LocalIp
     {
-        get
-        {
-            if (this._localIp == null)
-            {
-                this._localIp = NetworkInterfaceManager.GetHostIp(this.PreferLocalIpAddress);
-            }
-            return this._localIp;
-        }
-        set { this._localIp = value; }
+        get => _localIp ??= NetworkInterfaceManager.GetHostIp(_preferSubnet);
+        set => _localIp = value;
     }
 
     /// <summary>Default http://localhost:8080</summary>
