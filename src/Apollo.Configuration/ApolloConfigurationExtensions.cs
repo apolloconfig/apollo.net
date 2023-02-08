@@ -18,7 +18,7 @@ namespace Microsoft.Extensions.Configuration
         public static IApolloConfigurationBuilder AddApollo(this IConfigurationBuilder builder, IApolloOptions options)
         {
             if (builder.Properties.ContainsKey(typeof(ApolloConfigurationExtensions).FullName))
-                throw new InvalidOperationException("Do not repeat init apollo");
+                throw new InvalidOperationException("Do not repeat init apollo.");
 
             var repositoryFactory = new ConfigRepositoryFactory(options ?? throw new ArgumentNullException(nameof(options)));
 
@@ -28,13 +28,15 @@ namespace Microsoft.Extensions.Configuration
             if (options is ApolloOptions { Namespaces: { } } ao)
                 foreach (var ns in ao.Namespaces) acb.AddNamespace(ns);
 
+            builder.Properties[typeof(ApolloConfigurationExtensions).FullName] = acb;
+
             return acb;
         }
 
         public static IApolloConfigurationBuilder AddApollo(this IConfigurationBuilder builder)
         {
             if (!builder.Properties.TryGetValue(typeof(ApolloConfigurationExtensions).FullName, out var apolloBuilder))
-                throw new InvalidOperationException("Please invoke 'AddApollo(options)' init apollo at the beginning.");
+                throw new InvalidOperationException("Please call 'AddApollo(options)' to init apollo at the beginning.");
 
             return (ApolloConfigurationBuilder)apolloBuilder;
 
