@@ -23,7 +23,7 @@ public abstract class ContentConfigAdapter : IConfigAdapter
 
         if (!string.IsNullOrWhiteSpace(content)) return GetProperties(content!);
 
-        Logger().Warn("找不到" + ConfigConsts.ConfigFileContentKey);
+        Logger().Warn("Can not find " + ConfigConsts.ConfigFileContentKey);
 
         return properties;
     }
