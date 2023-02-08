@@ -10,7 +10,7 @@ namespace Com.Ctrip.Framework.Apollo.Foundation;
 
 public class NetworkInterfaceManager
 {
-    private static readonly UnicastIPAddressInformation[] hostIps = default!;
+    private static readonly string[] hostIps = default!;
     static NetworkInterfaceManager()
     {
         try
@@ -21,17 +21,22 @@ public class NetworkInterfaceManager
                .OrderByDescending(properties => properties.GatewayAddresses.Count)
                .SelectMany(properties => properties.UnicastAddresses)
                .Where(address => !IPAddress.IsLoopback(address.Address) && address.Address.AddressFamily == AddressFamily.InterNetwork)
+               .Select(address => address.Address.ToString())
                .ToArray();
 
             if (hostIps.Any())
             {
-                HostIp = hostIps.First().Address.ToString();
+                HostIp = hostIps.First();
             }
         }
         catch
         {
-            hostIps = Array.Empty<UnicastIPAddressInformation>();
             // ignored
+#if NETSTANDARD
+            hostIps = Array.Empty<string>();
+#else
+            hostIps = new string[0];
+#endif
         }
     }
 
@@ -46,19 +51,9 @@ public class NetworkInterfaceManager
 
         try
         {
-            foreach (var prefer in preferLocalIpAddress!.Split(','))
+            if (IsInSubnet(hostIps, preferLocalIpAddress!.Split(','), out var ip))
             {
-                if (string.IsNullOrEmpty(prefer))
-                {
-                    continue;
-                }
-                foreach (var ip in hostIps)
-                {
-                    if (IsInSubnet(ip.Address.ToString(), prefer.Trim()))
-                    {
-                        return ip.Address.ToString();
-                    }
-                }
+                return ip!;
             }
         }
         catch (Exception ex)
@@ -67,7 +62,26 @@ public class NetworkInterfaceManager
         }
         return HostIp;
     }
+    internal static bool IsInSubnet(string[] ips, string[] cidrs, out string? matchedIp)
+    {
+        foreach (var cidr in cidrs)
+        {
+            if (string.IsNullOrEmpty(cidr)) continue;
 
+            foreach (var ip in ips)
+            {
+                if (string.IsNullOrEmpty(ip)) continue;
+
+                if (IsInSubnet(ip, cidr))
+                {
+                    matchedIp = ip;
+                    return true;
+                }
+            }
+        }
+        matchedIp = default;
+        return false;
+    }
     internal static bool IsInSubnet(string ipAddress, string cidr)
     {
         string[] parts = cidr.Split('/');
