@@ -1,8 +1,5 @@
 ﻿using Com.Ctrip.Framework.Apollo.Logging;
-
-using System;
-using System.Linq;
-using System.Net;
+using System.Collections.ObjectModel;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 
@@ -10,59 +7,59 @@ namespace Com.Ctrip.Framework.Apollo.Foundation;
 
 public class NetworkInterfaceManager
 {
-    private static readonly string[] hostIps = default!;
+    private static readonly string[] HostIps = default!;
+
     static NetworkInterfaceManager()
     {
         try
         {
-            hostIps = NetworkInterface.GetAllNetworkInterfaces()
-               .Where(network => network.OperationalStatus == OperationalStatus.Up)
-               .Select(network => network.GetIPProperties())
-               .OrderByDescending(properties => properties.GatewayAddresses.Count)
-               .SelectMany(properties => properties.UnicastAddresses)
-               .Where(address => !IPAddress.IsLoopback(address.Address) && address.Address.AddressFamily == AddressFamily.InterNetwork)
-               .Select(address => address.Address.ToString())
-               .ToArray();
+            HostIps = NetworkInterface.GetAllNetworkInterfaces()
+                .Where(network => network.OperationalStatus == OperationalStatus.Up)
+                .Select(network => network.GetIPProperties())
+                .OrderByDescending(properties => properties.GatewayAddresses.Count)
+                .SelectMany(properties => properties.UnicastAddresses)
+                .Where(address => !IPAddress.IsLoopback(address.Address) && address.Address.AddressFamily == AddressFamily.InterNetwork)
+                .Select(address => address.Address.ToString())
+                .ToArray();
 
-            if (hostIps.Any())
+            if (HostIps.Length > 0)
             {
-                HostIp = hostIps.First();
+                HostIp = HostIps.First();
             }
         }
         catch
         {
             // ignored
 #if NETSTANDARD
-            hostIps = Array.Empty<string>();
+            HostIps = Array.Empty<string>();
 #else
-            hostIps = new string[0];
+            HostIps = new string[0];
 #endif
         }
     }
 
     public static string HostIp { get; } = "127.0.0.1";
-
-    public static string GetHostIp(string? preferLocalIpAddress)
+#if NET40
+    public static string GetHostIp(ReadOnlyCollection<string>? preferSubnet)
+#else
+    public static string GetHostIp(IReadOnlyCollection<string>? preferSubnet)
+#endif
     {
-        if (string.IsNullOrEmpty(preferLocalIpAddress))
-        {
-            return HostIp;
-        }
+        if (preferSubnet == null || preferSubnet.Count < 1) return HostIp;
 
         try
         {
-            if (IsInSubnet(hostIps, preferLocalIpAddress!.Split(','), out var ip))
-            {
-                return ip!;
-            }
+            if (IsInSubnet(HostIps, preferSubnet, out var ip)) return ip;
         }
         catch (Exception ex)
         {
-            LogManager.CreateLogger(typeof(NetworkInterfaceManager)).Error($"Can not get local ip address with prefer option '{preferLocalIpAddress}'.", ex);
+            LogManager.CreateLogger(typeof(NetworkInterfaceManager)).Error($"Can not get local ip address with prefer option '{preferSubnet}'.", ex);
         }
+
         return HostIp;
     }
-    internal static bool IsInSubnet(string[] ips, string[] cidrs, out string? matchedIp)
+
+    internal static bool IsInSubnet(string[] ips, IEnumerable<string> cidrs, [NotNullWhen(true)] out string? matchedIp)
     {
         foreach (var cidr in cidrs)
         {
@@ -79,20 +76,22 @@ public class NetworkInterfaceManager
                 }
             }
         }
+
         matchedIp = default;
+
         return false;
     }
-    internal static bool IsInSubnet(string ipAddress, string cidr)
+
+    private static bool IsInSubnet(string ipAddress, string cidr)
     {
-        string[] parts = cidr.Split('/');
+        var parts = cidr.Split('/');
 
-        int baseAddress = BitConverter.ToInt32(IPAddress.Parse(parts[0]).GetAddressBytes(), 0);
+        var baseAddress = BitConverter.ToInt32(IPAddress.Parse(parts[0]).GetAddressBytes(), 0);
 
-        int address = BitConverter.ToInt32(IPAddress.Parse(ipAddress).GetAddressBytes(), 0);
+        var address = BitConverter.ToInt32(IPAddress.Parse(ipAddress).GetAddressBytes(), 0);
 
-        int mask = IPAddress.HostToNetworkOrder(-1 << (32 - int.Parse(parts[1])));
+        var mask = IPAddress.HostToNetworkOrder(-1 << 32 - int.Parse(parts[1]));
 
-        return ((baseAddress & mask) == (address & mask));
-
+        return (baseAddress & mask) == (address & mask);
     }
 }

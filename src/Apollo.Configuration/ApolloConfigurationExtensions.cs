@@ -80,15 +80,19 @@ namespace Com.Ctrip.Framework.Apollo
         public static IApolloConfigurationBuilder AddNamespace(this IApolloConfigurationBuilder builder, string @namespace, string? sectionKey, ConfigFileFormat format = ConfigFileFormat.Properties)
         {
             if (string.IsNullOrWhiteSpace(@namespace)) throw new ArgumentNullException(nameof(@namespace));
-            if (format is < ConfigFileFormat.Properties or > ConfigFileFormat.Txt) throw new ArgumentOutOfRangeException(nameof(format), format, $"minimum:{ConfigFileFormat.Properties}，maximum:{ConfigFileFormat.Txt}");
+
+            if (format is < ConfigFileFormat.Properties or > ConfigFileFormat.Txt)
+                throw new ArgumentOutOfRangeException(nameof(format), format, $"minimum:{ConfigFileFormat.Properties}，maximum:{ConfigFileFormat.Txt}");
 
             if (format != ConfigFileFormat.Properties) @namespace += "." + format.GetString();
 
             var configRepository = builder.ConfigRepositoryFactory.GetConfigRepository(@namespace);
+
             var previous = builder.Sources.FirstOrDefault(source =>
                 source is ApolloConfigurationProvider apollo &&
                 apollo.SectionKey == sectionKey &&
                 apollo.ConfigRepository == configRepository);
+
             if (previous != null)
             {
                 builder.Sources.Remove(previous);

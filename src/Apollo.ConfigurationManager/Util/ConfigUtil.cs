@@ -34,6 +34,7 @@ public class ConfigUtil : IApolloOptions
 #else
         SpecialDelimiter = delimiter;
 #endif
+        LocalIp = NetworkInterfaceManager.GetHostIp(PreferSubnet);
     }
 
     /// <summary>
@@ -129,8 +130,20 @@ public class ConfigUtil : IApolloOptions
     /// </summary>
     /// <returns> the env </returns>
     public Env Env => Enum.TryParse(GetAppConfig(nameof(Env)), true, out Env env) ? env : Env.Dev;
+#if NET40
+    public ReadOnlyCollection<string>? PreferSubnet
+    {
+        get
+        {
+            var servers = GetAppConfig("PreferSubnet")?.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries);
 
-    public string LocalIp { get; set; } = NetworkInterfaceManager.HostIp;
+            return servers == null ? null : new ReadOnlyCollection<string>(servers);
+        }
+    }
+#else
+    public IReadOnlyCollection<string>? PreferSubnet => GetAppConfig("PreferSubnet")?.Split(new[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries);
+#endif
+    public string LocalIp { get; }
 
     public string MetaServer => GetAppConfig(nameof(MetaServer)) ?? MetaDomainHelper.GetDomain(Env);
 

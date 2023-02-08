@@ -23,7 +23,11 @@ public interface IApolloOptions : IDisposable
     /// </summary>
     /// <returns> the env </returns>
     Env Env { get; }
-
+#if NET40
+    ReadOnlyCollection<string>? PreferSubnet { get; }
+#else
+    IReadOnlyCollection<string>? PreferSubnet { get; }
+#endif
     string LocalIp { get; }
 
     string? MetaServer { get; }
