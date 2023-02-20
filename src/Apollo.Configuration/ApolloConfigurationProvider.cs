@@ -8,6 +8,7 @@ public class ApolloConfigurationProvider : ConfigurationProvider, IRepositoryCha
     internal string? SectionKey { get; }
     internal IConfigRepository ConfigRepository { get; }
     private Task? _initializeTask;
+    private int _buildCount;
 
     public ApolloConfigurationProvider(string? sectionKey, IConfigRepository configRepository)
     {
@@ -46,9 +47,18 @@ public class ApolloConfigurationProvider : ConfigurationProvider, IRepositoryCha
         OnReload();
     }
 
-    IConfigurationProvider IConfigurationSource.Build(IConfigurationBuilder builder) => this;
+    IConfigurationProvider IConfigurationSource.Build(IConfigurationBuilder builder)
+    {
+        Interlocked.Increment(ref _buildCount);
 
-    public void Dispose() => ConfigRepository.RemoveChangeListener(this);
+        return this;
+    }
+
+    public void Dispose()
+    {
+        if (Interlocked.Decrement(ref _buildCount) == 0)
+            ConfigRepository.RemoveChangeListener(this);
+    }
 
     public override string ToString() => string.IsNullOrEmpty(SectionKey)
         ? $"apollo {ConfigRepository}"
