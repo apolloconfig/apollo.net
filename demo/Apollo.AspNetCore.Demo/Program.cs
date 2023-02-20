@@ -1,18 +1,28 @@
 ﻿using Com.Ctrip.Framework.Apollo.ConfigAdapter;
 
-namespace Apollo.AspNetCore.Demo;
+YamlConfigAdapter.Register();
 
-public class Program
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.AddApollo(false);
+
+var app = builder.Build();
+
+app.UseDeveloperExceptionPage();
+
+app.Run(context =>
 {
-    public static Task Main(string[] args)
-    {
-        YamlConfigAdapter.Register();
+    context.Response.StatusCode = 404;
 
-        return CreateHostBuilder(args).Build().RunAsync();
-    }
+    var key = context.Request.Query["key"];
+    if (string.IsNullOrWhiteSpace(key)) return Task.CompletedTask;
 
-    public static IHostBuilder CreateHostBuilder(string[] args) =>
-        Host.CreateDefaultBuilder(args)
-            .AddApollo(false)
-            .ConfigureWebHostDefaults(builder => builder.UseStartup<Startup>());
-}
+    var value = context.RequestServices.GetRequiredService<IConfiguration>()[key];
+    if (value != null) context.Response.StatusCode = 200;
+
+    context.Response.Headers["Content-Type"] = "text/html; charset=utf-8";
+
+    return context.Response.WriteAsync(value ?? "undefined");
+});
+
+app.Run();
