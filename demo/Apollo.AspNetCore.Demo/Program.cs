@@ -14,7 +14,7 @@ app.Run(context =>
 {
     context.Response.StatusCode = 404;
 
-    var key = context.Request.Query["key"];
+    string? key = context.Request.Query["key"];
     if (string.IsNullOrWhiteSpace(key)) return Task.CompletedTask;
 
     var value = context.RequestServices.GetRequiredService<IConfiguration>()[key];
