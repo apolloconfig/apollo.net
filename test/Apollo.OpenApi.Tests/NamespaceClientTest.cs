@@ -124,4 +124,16 @@ public class NamespaceClientTest : BaseTest
 
         await client.Rollback("apollo", latestActiveRelease.Id).ConfigureAwait(false);
     }
+
+    [Fact]
+    public async Task ItemsTest()
+    {
+        var client = CreateNamespaceClient();
+
+        var result = await client.GetItems().ConfigureAwait(false);
+
+        Assert.True(result.Total > 0);
+
+        Assert.NotNull(result.Content);
+    }
 }
