@@ -100,7 +100,7 @@ namespace Com.Ctrip.Framework.Apollo
             }
             else
             {
-                builder.Add(new ApolloConfigurationProvider(sectionKey, configRepository));
+                builder.Add(new ApolloConfigurationSource(sectionKey, configRepository));
 
                 ApolloConfigurationManagerHelper.Manager.Registry.Register(@namespace, new DefaultConfigFactory(builder.ConfigRepositoryFactory));
             }

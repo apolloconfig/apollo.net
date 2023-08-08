@@ -3,27 +3,20 @@ using Com.Ctrip.Framework.Apollo.Internals;
 
 namespace Com.Ctrip.Framework.Apollo;
 
-public class ApolloConfigurationProvider : ConfigurationProvider, IRepositoryChangeListener, IConfigurationSource, IDisposable
+public class ApolloConfigurationProvider : ConfigurationProvider, IRepositoryChangeListener, IDisposable
 {
     internal string? SectionKey { get; }
     internal IConfigRepository ConfigRepository { get; }
-    private Task? _initializeTask;
-    private int _buildCount;
 
     public ApolloConfigurationProvider(string? sectionKey, IConfigRepository configRepository)
     {
         SectionKey = sectionKey;
         ConfigRepository = configRepository;
+
         ConfigRepository.AddChangeListener(this);
-        _initializeTask = ConfigRepository.Initialize();
     }
 
-    public override void Load()
-    {
-        Interlocked.Exchange(ref _initializeTask, null)?.ConfigureAwait(false).GetAwaiter().GetResult();
-
-        SetData(ConfigRepository.GetConfig());
-    }
+    public override void Load() => SetData(ConfigRepository.GetConfig());
 
     protected virtual void SetData(Properties properties)
     {
@@ -47,18 +40,7 @@ public class ApolloConfigurationProvider : ConfigurationProvider, IRepositoryCha
         OnReload();
     }
 
-    IConfigurationProvider IConfigurationSource.Build(IConfigurationBuilder builder)
-    {
-        Interlocked.Increment(ref _buildCount);
-
-        return this;
-    }
-
-    public void Dispose()
-    {
-        if (Interlocked.Decrement(ref _buildCount) == 0)
-            ConfigRepository.RemoveChangeListener(this);
-    }
+    public void Dispose() => ConfigRepository.RemoveChangeListener(this);
 
     public override string ToString() => string.IsNullOrEmpty(SectionKey)
         ? $"apollo {ConfigRepository}"
