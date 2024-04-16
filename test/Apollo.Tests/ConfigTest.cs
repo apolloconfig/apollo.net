@@ -16,7 +16,7 @@ public class ConfigTest
         var repositoryFactory = new FakeConfigRepository(ConfigConsts.NamespaceApplication,
             new(new Dictionary<string, string> { ["A"] = "3" }));
 
-        var config = await CreateConfig(repositoryFactory).ConfigureAwait(false);
+        var config = await CreateConfig(repositoryFactory);
 
         Assert.Equal("3", config.GetProperty("A", ""));
 
@@ -25,7 +25,7 @@ public class ConfigTest
 
         repositoryFactory.Change(new(new Dictionary<string, string>()));
 
-        await Task.Delay(100).ConfigureAwait(false);
+        await Task.Delay(100);
 
         Assert.NotNull(args);
     }
@@ -41,7 +41,7 @@ public class ConfigTest
                 new(new Dictionary<string, string> {["B"] = "4"})),
         };
 
-        var config = new MultiConfig(await Task.WhenAll(repositoryFactories.Select(CreateConfig).Reverse()).ConfigureAwait(false));
+        var config = new MultiConfig(await Task.WhenAll(repositoryFactories.Select(CreateConfig).Reverse()));
 
         Assert.Equal("3", config.GetProperty("A", ""));
         Assert.Equal("4", config.GetProperty("B", ""));
@@ -51,7 +51,7 @@ public class ConfigTest
 
         repositoryFactories[1].Change(new(new Dictionary<string, string>()));
 
-        await Task.Delay(100).ConfigureAwait(false);
+        await Task.Delay(100);
 
         Assert.NotNull(args);
 
@@ -59,7 +59,7 @@ public class ConfigTest
 
         repositoryFactories[1].Change(new(new Dictionary<string, string> {["B"] = "3"}));
 
-        await Task.Delay(100).ConfigureAwait(false);
+        await Task.Delay(100);
 
         Assert.Null(args);
     }

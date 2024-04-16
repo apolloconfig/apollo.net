@@ -14,7 +14,7 @@ public class NamespaceClientTest : BaseTest
     {
         var client = CreateNamespaceClient();
 
-        var result = await client.GetNamespaceInfo().ConfigureAwait(false);
+        var result = await client.GetNamespaceInfo();
 
         Assert.NotNull(result);
         Assert.Equal(client.AppId, result!.AppId);
@@ -33,8 +33,8 @@ public class NamespaceClientTest : BaseTest
         var value1 = Guid.NewGuid().ToString("N");
         var value2 = Guid.NewGuid().ToString("N");
 
-        Assert.Null(await client.GetItem(key).ConfigureAwait(false));
-        Assert.False(await client.RemoveItem(key, "apollo").ConfigureAwait(false));
+        Assert.Null(await client.GetItem(key));
+        Assert.False(await client.RemoveItem(key, "apollo"));
 
         try
         {
@@ -43,14 +43,14 @@ public class NamespaceClientTest : BaseTest
                 Key = key,
                 Value = value1,
                 DataChangeCreatedBy = "apollo"
-            }).ConfigureAwait(false);
+            });
 
             Assert.NotNull(item);
             Assert.NotNull(item.DataChangeLastModifiedTime);
             Assert.NotNull(item.DataChangeCreatedBy);
             Assert.Equal(value1, item.Value);
 
-            var item2 = await client.GetItem(key).ConfigureAwait(false);
+            var item2 = await client.GetItem(key);
 
             Assert.NotNull(item2);
             Assert.Equal(value1, item2!.Value);
@@ -58,16 +58,16 @@ public class NamespaceClientTest : BaseTest
             item2.Value = value2;
             item2.DataChangeLastModifiedBy = item2.DataChangeCreatedBy;
 
-            await client.UpdateItem(item2).ConfigureAwait(false);
+            await client.UpdateItem(item2);
 
-            item2 = await client.GetItem(key).ConfigureAwait(false);
+            item2 = await client.GetItem(key);
 
             Assert.NotNull(item);
             Assert.Equal(value2, item!.Value);
         }
         catch
         {
-            Assert.True(await client.RemoveItem(key, "apollo").ConfigureAwait(false));
+            Assert.True(await client.RemoveItem(key, "apollo"));
         }
 
         key = Guid.NewGuid().ToString("N");
@@ -78,21 +78,21 @@ public class NamespaceClientTest : BaseTest
                 Key = key,
                 Value = value1,
                 DataChangeCreatedBy = "apollo"
-            }).ConfigureAwait(false);
+            });
 
             Assert.NotNull(item);
             Assert.NotNull(item!.DataChangeLastModifiedTime);
             Assert.NotNull(item.DataChangeCreatedBy);
             Assert.Equal(value1, item.Value);
 
-            var item2 = await client.GetItem(key).ConfigureAwait(false);
+            var item2 = await client.GetItem(key);
 
             Assert.NotNull(item2);
             Assert.Equal(value1, item2!.Value);
         }
         catch
         {
-            Assert.True(await client.RemoveItem(key, "apollo").ConfigureAwait(false));
+            Assert.True(await client.RemoveItem(key, "apollo"));
         }
     }
 
@@ -108,7 +108,7 @@ public class NamespaceClientTest : BaseTest
             ReleaseTitle = $"{DateTime.Now:yyyyMMddHHmmss}-release"
         };
 
-        var result = await client.Publish(release).ConfigureAwait(false);
+        var result = await client.Publish(release);
 
         Assert.NotNull(result);
         Assert.Equal(client.AppId, result.AppId);
@@ -118,11 +118,11 @@ public class NamespaceClientTest : BaseTest
         Assert.NotNull(result.Configurations);
         Assert.NotEmpty(result.Configurations!);
 
-        var latestActiveRelease = await client.GetLatestActiveRelease().ConfigureAwait(false);
+        var latestActiveRelease = await client.GetLatestActiveRelease();
 
         Assert.NotNull(latestActiveRelease);
 
-        await client.Rollback("apollo", latestActiveRelease.Id).ConfigureAwait(false);
+        await client.Rollback("apollo", latestActiveRelease.Id);
     }
 
     [Fact]
@@ -130,7 +130,7 @@ public class NamespaceClientTest : BaseTest
     {
         var client = CreateNamespaceClient();
 
-        var result = await client.GetItems().ConfigureAwait(false);
+        var result = await client.GetItems();
 
         Assert.True(result.Total > 0);
 

@@ -18,8 +18,7 @@ public class OpenApiFactoryTest
                 PortalUrl = new("http://81.68.181.139:8070"),
                 Token = Guid.NewGuid().ToString("N")
             })
-                .CreateAppClusterClient("abc").GetAppInfo()
-                .ConfigureAwait(false);
+                .CreateAppClusterClient("abc").GetAppInfo();
         }
         catch (ApolloOpenApiException e)
         {
@@ -33,8 +32,7 @@ public class OpenApiFactoryTest
                 PortalUrl = new("http://81.68.181.139:8070"),
                 Token = "c18d0f7bc815c9e2d9699ee3216712a275b20a8d"
             })
-                .CreateAppClusterClient("abc").GetAppInfo()
-                .ConfigureAwait(false);
+                .CreateAppClusterClient("abc").GetAppInfo();
         }
         catch (ApolloOpenApiException e)
         {
@@ -49,8 +47,7 @@ public class OpenApiFactoryTest
                 Token = "c18d0f7bc815c9e2d9699ee3216712a275b20a8d"
             })
                 .CreateNamespaceClient("apollo.net", "PRO", "test", "test")
-                .GetNamespaceInfo()
-                .ConfigureAwait(false);
+                .GetNamespaceInfo();
         }
         catch (ApolloOpenApiException e)
         {
@@ -65,8 +62,7 @@ public class OpenApiFactoryTest
                 Token = "c18d0f7bc815c9e2d9699ee3216712a275b20a8d"
             })
                 .CreateNamespaceClient("apollo.net", "DEV", "test", "test")
-                .GetNamespaceInfo()
-                .ConfigureAwait(false);
+                .GetNamespaceInfo();
         }
         catch (ApolloOpenApiException e)
         {
