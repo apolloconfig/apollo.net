@@ -181,7 +181,7 @@ Apollo支持配置按照集群划分，也就是说对于一个appId和一个环
 
 ## 3.2 监听配置变化事件
 
-sdk已经完美支持Microsoft.Extensions.Configuration，请参考[IOptionsMonitor](https://docs.microsoft.com/zh-cn/aspnet/core/fundamentals/configuration/options#options-factory-monitoring-and-cache)或者[Demo](https://github.com/apolloconfig/apollo.net/blob/main/demo/Apollo.Configuration.Demo/ConfigurationDemo.cs#L46)
+sdk已经完美支持Microsoft.Extensions.Configuration，请参考[IOptionsMonitor](https://docs.microsoft.com/zh-cn/aspnet/core/fundamentals/configuration/options#options-factory-monitoring-and-cache)或者[ChangeToken](https://learn.microsoft.com/zh-cn/aspnet/core/fundamentals/change-tokens#simple-startup-change-token))
 
 ## 3.3 Demo
 
