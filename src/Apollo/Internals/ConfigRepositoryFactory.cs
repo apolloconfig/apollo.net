@@ -30,8 +30,12 @@ public class ConfigRepositoryFactory : IConfigRepositoryFactory, IDisposable
             LogManager.CreateLogger(typeof(ConfigRepositoryFactory)).Warn($"==== Apollo is in local mode! Won't pull configs '{@namespace}' from remote server! ====");
             return new LocalFileConfigRepository(@namespace, _options);
         }
-
-        return new LocalFileConfigRepository(@namespace, _options, new RemoteConfigRepository(@namespace, _options, _httpUtil, _serviceLocator, _remoteConfigLongPollService));
+        var remoteRepo = new RemoteConfigRepository(@namespace, _options, _httpUtil, _serviceLocator, _remoteConfigLongPollService);
+        if (!_options.EnableLocalFileCache)
+        {
+            return remoteRepo;
+        }
+        return new LocalFileConfigRepository(@namespace, _options, remoteRepo);
     }
 
     public void Dispose()

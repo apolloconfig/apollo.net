@@ -96,6 +96,8 @@ public class ApolloOptions : IApolloOptions
     /// <summary>ms. Default 300,000ms</summary>
     public virtual int RefreshInterval { get; set; } = 5 * 60 * 1000; //5 minutes
 
+    public bool EnableLocalFileCache { get; set; } = true;
+
     public string? LocalCacheDir { get; set; }
 
     public IDictionary<string, string> Meta { get; set; } = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);

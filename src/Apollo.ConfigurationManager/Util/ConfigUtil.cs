@@ -2,6 +2,7 @@
 using Com.Ctrip.Framework.Apollo.Enums;
 using Com.Ctrip.Framework.Apollo.Foundation;
 using Com.Ctrip.Framework.Apollo.Logging;
+
 using System.Collections.ObjectModel;
 using System.Configuration;
 
@@ -186,6 +187,8 @@ public class ConfigUtil : IApolloOptions
     }
 
     public int RefreshInterval => _refreshInterval;
+
+    public bool EnableLocalFileCache => bool.TryParse(GetAppConfig(nameof(EnableLocalFileCache)), out var enableLocalFileCache) && enableLocalFileCache;
 
     public string LocalCacheDir => GetAppConfig(nameof(LocalCacheDir)) ?? Path.Combine(ConfigConsts.DefaultLocalCacheDir, AppId);
 
