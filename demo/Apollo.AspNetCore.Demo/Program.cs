@@ -18,11 +18,13 @@ app.Run(context =>
     if (string.IsNullOrWhiteSpace(key)) return Task.CompletedTask;
 
     var value = context.RequestServices.GetRequiredService<IConfiguration>()[key];
-    if (value != null) context.Response.StatusCode = 200;
+    if (value == null) return Task.CompletedTask;
+
+    context.Response.StatusCode = 200;
 
     context.Response.Headers["Content-Type"] = "text/html; charset=utf-8";
 
-    return context.Response.WriteAsync(value ?? "undefined");
+    return context.Response.WriteAsync(value);
 });
 
 app.Run();

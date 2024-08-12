@@ -13,7 +13,7 @@ public class AppClusterTest : BaseTest
     [Fact]
     public async Task GetEnvClusterInfo()
     {
-        var result = await CreateAppClusterClient().GetEnvClusterInfo().ConfigureAwait(false);
+        var result = await CreateAppClusterClient().GetEnvClusterInfo();
 
         Dump(result);
 
@@ -31,7 +31,7 @@ public class AppClusterTest : BaseTest
     [Fact]
     public async Task GetCluster()
     {
-        var result = await CreateAppClusterClient().GetCluster("DEV").ConfigureAwait(false);
+        var result = await CreateAppClusterClient().GetCluster("DEV");
 
         Dump(result);
 
@@ -43,7 +43,7 @@ public class AppClusterTest : BaseTest
     [Fact]
     public async Task GetAppInfo()
     {
-        var result = await CreateAppClusterClient().GetAppInfo().ConfigureAwait(false);
+        var result = await CreateAppClusterClient().GetAppInfo();
 
         Dump(result);
 
@@ -55,10 +55,10 @@ public class AppClusterTest : BaseTest
     [Fact]
     public async Task GetAppsInfo()
     {
-        var result = await CreateAppClusterClient().GetAppsInfo().ConfigureAwait(false);
+        var result = await CreateAppClusterClient().GetAppsInfo();
 
         Assert.NotNull(result);
-        Assert.NotEmpty(result); result = await CreateAppClusterClient().GetAppsInfo(AppIds).ConfigureAwait(false);
+        Assert.NotEmpty(result); result = await CreateAppClusterClient().GetAppsInfo(AppIds);
 
         Dump(result);
 
@@ -69,7 +69,7 @@ public class AppClusterTest : BaseTest
     [Fact]
     public async Task GetNamespaces()
     {
-        var result = await CreateAppClusterClient().GetNamespaces(Env).ConfigureAwait(false);
+        var result = await CreateAppClusterClient().GetNamespaces(Env);
 
         Dump(result);
 
