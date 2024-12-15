@@ -14,6 +14,14 @@
     <PackageIcon>icon.png</PackageIcon>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/apolloconfig/apollo.net/tree/main</RepositoryUrl>
+
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" Condition="Exists('README.md')" />
+    <None Include="$(SolutionDir)\README.md" Pack="true" PackagePath="\" Condition="!Exists('README.md')" />
+  </ItemGroup>
 
 </Project>
