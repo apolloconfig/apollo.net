@@ -1,4 +1,4 @@
-﻿﻿﻿# 一、准备工作
+﻿# 一、准备工作
 
 > 如果想将传统的config配置（如web.config）转成json配置，可以使用[config2json](https://github.com/andrewlock/dotnet-config2json)工具
 
