@@ -9,6 +9,7 @@
   <ItemGroup>
     <None Include="..\..\icon.png" Pack="true" PackagePath="\" Visible="false" />
 
+    <PackageReference Include="ConfigureAwaitChecker.Analyzer" Version="5.*" PrivateAssets="All" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.*" PrivateAssets="All" />
   </ItemGroup>
 
