@@ -4,14 +4,16 @@ namespace Com.Ctrip.Framework.Apollo;
 
 internal class ApolloConfigurationSource : IConfigurationSource
 {
-    private readonly string? _sectionKey;
-    private readonly IConfigRepository _configRepository;
     private Task? _initializeTask;
+
+    public string? SectionKey { get; }
+
+    public IConfigRepository ConfigRepository { get; }
 
     public ApolloConfigurationSource(string? sectionKey, IConfigRepository configRepository)
     {
-        _sectionKey = sectionKey;
-        _configRepository = configRepository;
+        SectionKey = sectionKey;
+        ConfigRepository = configRepository;
         _initializeTask = configRepository.Initialize();
     }
 
@@ -19,10 +21,10 @@ internal class ApolloConfigurationSource : IConfigurationSource
     {
         Interlocked.Exchange(ref _initializeTask, null)?.ConfigureAwait(false).GetAwaiter().GetResult();
 
-        return new ApolloConfigurationProvider(_sectionKey, _configRepository);
+        return new ApolloConfigurationProvider(SectionKey, ConfigRepository);
     }
 
-    public override string ToString() => string.IsNullOrEmpty(_sectionKey)
-        ? $"apollo {_configRepository}"
-        : $"apollo {_configRepository}[{_sectionKey}]";
+    public override string ToString() => string.IsNullOrEmpty(SectionKey)
+        ? $"apollo {ConfigRepository}"
+        : $"apollo {ConfigRepository}[{SectionKey}]";
 }
