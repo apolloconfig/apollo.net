@@ -97,6 +97,7 @@ internal class RemoteConfigRepository : AbstractConfigRepository
         var appId = _options.AppId;
         var cluster = _options.Cluster;
         var dataCenter = _options.DataCenter;
+        var label = _options.Label;
 
         var configServices = await _serviceLocator.GetConfigServices().ConfigureAwait(false);
 
@@ -117,7 +118,7 @@ internal class RemoteConfigRepository : AbstractConfigRepository
 
             foreach (var configService in randomConfigServices)
             {
-                url = AssembleQueryConfigUrl(configService.HomepageUrl, appId, cluster, Namespace, dataCenter, _remoteMessages!, _configCache!);
+                url = AssembleQueryConfigUrl(configService.HomepageUrl, appId, cluster, Namespace, dataCenter, label, _remoteMessages!, _configCache!);
 
                 Logger().Debug($"Loading config from {url}");
 
@@ -179,6 +180,7 @@ internal class RemoteConfigRepository : AbstractConfigRepository
         string cluster,
         string? namespaceName,
         string? dataCenter,
+        string? label,
         ApolloNotificationMessages? remoteMessages,
         ApolloConfig? previousConfig)
     {
@@ -203,6 +205,11 @@ internal class RemoteConfigRepository : AbstractConfigRepository
         if (!string.IsNullOrEmpty(dataCenter))
         {
             query["dataCenter"] = dataCenter!;
+        }
+
+        if (!string.IsNullOrEmpty(label))
+        {
+            query["label"] = label!;
         }
 
         var localIp = _options.LocalIp;

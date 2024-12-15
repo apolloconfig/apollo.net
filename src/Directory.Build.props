@@ -3,7 +3,7 @@
   <Import Project="..\Directory.Build.props" />
 
   <PropertyGroup>
-    <ApolloVersion>2.10</ApolloVersion>
+    <ApolloVersion>2.11</ApolloVersion>
     <AssemblyVersion>$(ApolloVersion).0</AssemblyVersion>
     <DebugSymbols>True</DebugSymbols>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>

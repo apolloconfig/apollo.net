@@ -26,6 +26,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Apollo.ConfigurationManager.Demo", "demo\Apollo.ConfigurationManager.Demo\Apollo.ConfigurationManager.Demo.csproj", "{51A78BF1-4708-45EC-9F2E-59A24D64DB05}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demo", "Demo", "{12417079-E62C-4F29-ADDE-5EABD77331E2}"
+	ProjectSection(SolutionItems) = preProject
+		demo\Directory.Build.targets = demo\Directory.Build.targets
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.AspNet.Demo", "demo\Apollo.AspNet.Demo\Apollo.AspNet.Demo.csproj", "{E1EF936E-182E-47BD-B658-87C0D872AB0C}"
 EndProject

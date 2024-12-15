@@ -136,7 +136,7 @@ namespace Com.Ctrip.Framework.Apollo.OpenApi
         {
             if (client == null) throw new ArgumentNullException(nameof(client));
 
-            var result = await client.Get<PageModel<Item>>($"envs/{client.Env}/apps/{client.AppId}/clusters/{client.Cluster}/namespaces/{client.Namespace}/items?page={page}&size={size}", cancellationToken);
+            var result = await client.Get<PageModel<Item>>($"envs/{client.Env}/apps/{client.AppId}/clusters/{client.Cluster}/namespaces/{client.Namespace}/items?page={page}&size={size}", cancellationToken).ConfigureAwait(false);
 
             return result ?? new PageModel<Item>();
         }

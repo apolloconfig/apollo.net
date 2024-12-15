@@ -61,7 +61,7 @@ public class LocalFileConfigRepository : AbstractConfigRepository, IRepositoryCh
             _upstream.AddChangeListener(this);
 
             //sync with upstream immediately
-            await TrySyncFromUpstream();
+            await TrySyncFromUpstream().ConfigureAwait(false);
         }
     }
 

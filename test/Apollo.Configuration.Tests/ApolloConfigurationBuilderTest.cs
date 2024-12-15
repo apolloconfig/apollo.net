@@ -16,7 +16,7 @@ public class ApolloConfigurationBuilderTest
         builder.AddNamespace("test");
         builder.AddNamespace(ConfigConsts.NamespaceApplication);
 
-        var sources = builder.Sources.OfType<ApolloConfigurationProvider>().ToArray();
+        var sources = builder.Sources.OfType<ApolloConfigurationSource>().ToArray();
         Assert.Equal(2, sources.Length);
         Assert.Equal(builder.ConfigRepositoryFactory.GetConfigRepository("test"), sources[0].ConfigRepository);
         Assert.Equal(builder.ConfigRepositoryFactory.GetConfigRepository(ConfigConsts.NamespaceApplication), sources[1].ConfigRepository);

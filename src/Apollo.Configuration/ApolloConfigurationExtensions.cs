@@ -77,7 +77,7 @@ namespace Com.Ctrip.Framework.Apollo
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        public static IApolloConfigurationBuilder AddNamespace(this IApolloConfigurationBuilder builder, string @namespace, string? sectionKey, ConfigFileFormat format = ConfigFileFormat.Properties)
+        public static IApolloConfigurationBuilder  AddNamespace(this IApolloConfigurationBuilder builder, string @namespace, string? sectionKey, ConfigFileFormat format = ConfigFileFormat.Properties)
         {
             if (string.IsNullOrWhiteSpace(@namespace)) throw new ArgumentNullException(nameof(@namespace));
 
@@ -89,7 +89,7 @@ namespace Com.Ctrip.Framework.Apollo
             var configRepository = builder.ConfigRepositoryFactory.GetConfigRepository(@namespace);
 
             var previous = builder.Sources.FirstOrDefault(source =>
-                source is ApolloConfigurationProvider apollo &&
+                source is ApolloConfigurationSource apollo &&
                 apollo.SectionKey == sectionKey &&
                 apollo.ConfigRepository == configRepository);
 

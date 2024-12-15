@@ -12,7 +12,7 @@
       "commandName": "IISExpress",
       "environmentVariables": {
         "DOTNET_Apollo:MetaServer": "http://81.68.181.139:8080/",
-        "DOTNET_Apollo:Secret": "8dfdf40b419841a3b8a6e1629aeb8eab",
+        "DOTNET_Apollo:Secret": "78cea9ce373b4728bf5695c3cee8748a",
         "DOTNET_ENVIRONMENT": "Development",
         "DOTNET_Apollo:AppId": "apollo.net",
         "DOTNET_Apollo:Namespaces:4": "application",
