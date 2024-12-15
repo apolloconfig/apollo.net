@@ -127,5 +127,7 @@ public class ApolloOptions : IApolloOptions
 
     public IReadOnlyCollection<string>? SpecialDelimiter { get; set; }
 
+    public string? Label { get; set; }
+
     public void Dispose() => _handler.Dispose();
 }

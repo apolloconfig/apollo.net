@@ -210,6 +210,8 @@ public class ConfigUtil : IApolloOptions
 #else
     public IReadOnlyCollection<string>? SpecialDelimiter { get; }
 #endif
+    public string? Label => GetAppConfig(nameof(Label));
+
     public HttpMessageHandler HttpMessageHandler => _handler;
 
     public static void UseHttpMessageHandler(HttpMessageHandler handler)

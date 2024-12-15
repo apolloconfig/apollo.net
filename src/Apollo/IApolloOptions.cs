@@ -57,4 +57,9 @@ public interface IApolloOptions : IDisposable
 #else
     IReadOnlyCollection<string>? SpecialDelimiter { get; }
 #endif
+#if NETSTANDARD2_1_OR_GREATER
+    string? Label => string.Empty;
+#else
+    string? Label { get; }
+#endif
 }
