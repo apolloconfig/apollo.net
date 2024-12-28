@@ -186,8 +186,8 @@ sdk已经完美支持Microsoft.Extensions.Configuration，请参考[IOptionsMoni
 ## 3.3 Demo
 
 apollo.net项目中有多个样例客户端的项目：
-* [Apollo.AspNetCore.Demo](https://github.com/apolloconfig/apollo.net/tree/main/demo/Apollo.AspNetCore.Demo)（使用appsettings.json配置）
-* [Apollo.Configuration.Demo](https://github.com/apolloconfig/apollo.net/tree/main/demo/Apollo.Configuration.Demo)（使用环境变量配置）
+* [Apollo.AspNetCore.Demo](https://github.com/apolloconfig/apollo.net/tree/main/demo/Apollo.AspNetCore.Demo)（使用环境变量配置）
+* [Apollo.Configuration.Demo](https://github.com/apolloconfig/apollo.net/tree/main/demo/Apollo.Configuration.Demo)（使用appsettings.json配置）
 
 # 四、FAQ
 
