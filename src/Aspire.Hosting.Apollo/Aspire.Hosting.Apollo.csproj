@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>Aspire.Com.Ctrip.Framework.Apollo.Configuration</AssemblyName>
+    <PackageReleaseNotes>发布日志请点击打开 https://github.com/apolloconfig/apollo.net/releases</PackageReleaseNotes>
+    <Description>Aspire hosting integration for Apollo Configuration Center
+
+　　Provides extension methods and resource definitions for a .NET Aspire AppHost to configure Apollo configuration resources.
+
+$(PackageReleaseNotes)</Description>
+    <RootNamespace>Aspire.Hosting</RootNamespace>
+    <TargetFramework>net9.0</TargetFramework>
+    <Version>$(ApolloVersion).0</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Apollo.Configuration\Apollo.Configuration.csproj" />
+
+    <PackageReference Include="Aspire.Hosting" Version="9.0.0" />
+  </ItemGroup>
+
+</Project>
