@@ -76,16 +76,28 @@ In your service projects, the Apollo configuration will be automatically availab
 - `Apollo__MetaServer`: The Apollo meta server URL
 - `Apollo__Namespaces`: Comma-separated list of namespaces (if specified)
 
-These can be used with the existing Apollo.NET client libraries:
+These can be used with the existing Apollo.NET client libraries. The Apollo client will automatically read these environment variables, or you can explicitly configure it:
 
 ```csharp
 var builder = WebApplication.CreateBuilder(args);
 
 // Apollo configuration is automatically available from environment variables
-builder.Configuration.AddApollo(builder.Configuration.GetSection("apollo"));
+// The AddApollo extension will read Apollo__AppId, Apollo__MetaServer, etc.
+builder.Configuration.AddApollo(builder.Configuration.GetSection("Apollo"));
 
 var app = builder.Build();
 app.Run();
+```
+
+Alternatively, if you have additional configuration in appsettings.json, it will be merged with the environment variables (environment variables take precedence):
+
+```json
+{
+  "Apollo": {
+    "Cluster": "default",
+    "Secret": "your-secret-here"
+  }
+}
 ```
 
 ## Additional Documentation
