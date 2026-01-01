@@ -108,8 +108,7 @@ var apollo = builder.AddApollo("apollo",
     metaServer: "http://apollo-config-server:8080");
 
 var myService = builder.AddProject<Projects.MyService>("myservice")
-                       .WithReference(apollo, 
-                           namespaces: new[] { "application", "database" });
+                       .WithReference(apollo, namespaces: new[] { "application", "database" });
 
 builder.Build().Run();
 ```
